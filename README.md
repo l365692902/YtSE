@@ -17,3 +17,4 @@ Walked through first two example of firefox webextension. No code uploaded.
 * case sensitive, what language isn't?  
 * 目前感觉基本兼容c/c++语法  
 * 字符串的部分像python
+* label used in switch...case... can be used in other place
