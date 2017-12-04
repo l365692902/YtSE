@@ -11,5 +11,6 @@ Walked through first two example of firefox webextension. No code uploaded.
 * ```js
         x=document.getElementById("demo")
         x.innerHTML="Hello JavaScript";//check out what is this
-  ```    
+  ```
+* case sensitive, what language isn't?
 -end-
