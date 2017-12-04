@@ -9,6 +9,7 @@ YouTube subscribe extension
 Walked through first two example of firefox webextension. No code uploaded.  
 
 * ```js
+        //我发现这段代码的x没有用var声明，虽然在函数内部
         x=document.getElementById("demo")
         x.innerHTML="Hello JavaScript";//check out what is this
   ```
