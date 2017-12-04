@@ -10,6 +10,7 @@ Walked through first two example of firefox webextension. No code uploaded.
 
 * ```js
         //我发现这段代码的x没有用var声明，虽然在函数内部
+        //soga, 向未声明的变量赋值，变量自动作为全局变量，页面关闭时释放
         x=document.getElementById("demo")
         x.innerHTML="Hello JavaScript";//check out what is this
   ```
