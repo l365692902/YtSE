@@ -6,4 +6,10 @@ YouTube subscribe extension
 * dim the uninteresting content or make it 50% transpatent
 
 ## 2017Dec04
-Walked through first two example of firefox webextension. No code uploaded.
+Walked through first two example of firefox webextension. No code uploaded.  
+
+* ```js
+        x=document.getElementById("demo")
+        x.innerHTML="Hello JavaScript";//check out what is this
+  ```    
+-end-
