@@ -5,6 +5,9 @@ YouTube subscribe extension
 * length of video to filter
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec05
+* 查找元素，id、标签、类
+
 ## 2017Dec04
 Walked through first two example of firefox webextension. No code uploaded.  
 
