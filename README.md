@@ -12,6 +12,7 @@ YouTube subscribe extension
         var child=document.getElementById("p1");
         child.parentNode.removeChild(child);//傻X吗，打儿子还非得叫上爸爸
   ```
+* js单线程运行，setTimeout()会开新进程放到等待队列，然后父线程继续执行到结束，所以不会无限嵌套下去
 
 ## 2017Dec04
 Walked through first two example of firefox webextension. No code uploaded.  
