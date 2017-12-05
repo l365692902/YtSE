@@ -7,6 +7,7 @@ YouTube subscribe extension
 
 ## 2017Dec05
 * 查找元素，id、标签、类
+* navigator.cookieEnabled
 
 ## 2017Dec04
 Walked through first two example of firefox webextension. No code uploaded.  
