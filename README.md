@@ -8,6 +8,10 @@ YouTube subscribe extension
 ## 2017Dec05
 * 查找元素，id、标签、类
 * navigator.cookieEnabled
+* ```js
+        var child=document.getElementById("p1");
+        child.parentNode.removeChild(child);//傻X吗，打儿子还非得叫上爸爸
+  ```
 
 ## 2017Dec04
 Walked through first two example of firefox webextension. No code uploaded.  
