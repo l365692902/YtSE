@@ -1,0 +1,39 @@
+{
+    "manifest_version": 2,
+    "name": "YtSE",
+    "description": "YouTube subscribe extension, highlight interesting contents",
+    "version": "2017Dec05.alpha001",
+    "browser_action": {
+        "browser_style": true,
+        "default_icon": {
+            "16": "icons/red_16.png",
+            "32": "icons/red_32.png",
+            "64": "icons/red_64.png"
+        },
+        "default_title": "left click to run, right click to configure"
+    },
+    // "content_scripts": [
+    //     {
+    //         "matches": [
+    //             "*://*.youtube.com/*"
+    //         ],
+    //         "js": "content_scripts/main.js"
+    //     }
+    // ],
+    "background":{
+        "scripts":["background.js"]
+    },
+    "icons": {
+        "48": "icons/red_48.png",
+        "96": "icons/red_96.png"
+    },
+    // "optional_permissions": [
+    //     "activeTab",
+    //     "notifications"
+    // ],this is f**king bu****it
+    "permissions":[
+        // "activeTab",
+        "notifications"
+    ],
+    "author": "c4r"
+}
