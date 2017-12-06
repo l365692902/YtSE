@@ -5,6 +5,9 @@ YouTube subscribe extension
 * length of video to filter
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec06
+今天被整了。。。permisions。。。不加权限就啥都不干。。。报错也不好好报。。。直接告诉我没权限不行么。。。还不能用optional_permission
+
 ## 2017Dec05
 * 查找元素，id、标签、类
 * navigator.cookieEnabled
