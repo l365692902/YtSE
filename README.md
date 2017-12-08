@@ -8,6 +8,9 @@ YouTube subscribe extension
 ## 2017Dec08
 今天心情十分沉重。。。fgo两发十连不出货。。。
 * 惊奇地发现，js居然支持😭😭这样的字符，可以搜索出东西，厉害厉害
+* 今天的更新，先加载插件，然后打开某个youtube网页，然后按f12打开控制台应该能看到输出的内容。
+功能是搜索在所有的链接里搜索关键词“完整版”，它会把找到的所有结果都打印到控制台。可以到content_scripts/content.js里修改要搜索的关键词，目前测试过的中英文字符和😭都支持。
+* 务必保持所有的代码文件编码格式是utf-8
 
 ## 2017Dec07
 * borderify example seems not working with youtube, make me concerned about how much could we change the youtube web page
