@@ -12,14 +12,12 @@
         },
         "default_title": "left click to run, right click to configure"
     },
-    // "content_scripts": [
-    //     {
-    //         "matches": [
-    //             "*://*.youtube.com/*"
-    //         ],
-    //         "js": "content_scripts/main.js"
-    //     }
-    // ],
+    "content_scripts": [
+        {
+            "matches": ["*://*.youtube.com/*"],
+            "js": ["content_scripts/content.js"]
+        }
+    ],
     "background":{
         "scripts":["background.js"]
     },

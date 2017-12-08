@@ -5,6 +5,17 @@ YouTube subscribe extension
 * length of video to filter
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec08
+今天心情十分沉重。。。fgo两发十连不出货。。。
+* 惊奇地发现，js居然支持😭😭这样的字符，可以搜索出东西，厉害厉害
+
+## 2017Dec07
+* borderify example seems not working with youtube, make me concerned about how much could we change the youtube web page
+* ```js
+        <a id="video-title" class="yt-simple-endpoint style-scope ytd-grid-video-renderer" aria-label="《爸爸的旅程回忆录》甜！齁！泡芙嗯哼偶像剧全集！我爱你我喜欢你可以吗？他们的友谊就开在这些片段中呀！【湖南卫视官方频道】 来自湖南卫视芒果TV官方频道 China HunanTV Official Channel 1 小时前 13分钟 1,272次观看" title="《爸爸的旅程回忆录》甜！齁！泡芙嗯哼偶像剧全集！我爱你我喜欢你可以吗？他们的友谊就开在这些片段中呀！【湖南卫视官方频道】" href="/watch?v=ccpd6ClCcFM">《爸爸的旅程回忆录》甜！齁！泡芙嗯哼偶像剧全集！我爱你我喜欢你可以吗？他们的友谊就开在这些片段中呀！【湖南卫视官方频道】</a>
+
+* id="video-title" class="yt-simple-endpoint style-scope ytd-grid-video-render" title="blabla..."
+
 ## 2017Dec06
 今天被整了。。。permisions。。。不加权限就啥都不干。。。报错也不好好报。。。直接告诉我没权限不行么。。。还不能用optional_permission
 
