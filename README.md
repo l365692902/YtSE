@@ -1,11 +1,16 @@
 # YtSE
 YouTube subscribe extension
 * highlight most interesting content, in your subscribe
+
 * user can add keywords to filter content
+
 * length of video to filter
+
 * dim the uninteresting content or make it 50% transpatent
 
-# 2017Dec09 
+  ​
+
+## 2017Dec09
 
 *21:32:08 GMT+0100 (CET)*
 
@@ -23,7 +28,7 @@ YouTube subscribe extension
 
 
 
-# 2017Dec09
+## 2017Dec09
 
 ### youtube搜索命名规则 
 
