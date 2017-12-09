@@ -5,6 +5,24 @@ YouTube subscribe extension
 * length of video to filter
 * dim the uninteresting content or make it 50% transpatent
 
+# 2017Dec09 
+
+*21:32:08 GMT+0100 (CET)*
+
+以实现: 给定关键词后, 返回关键词搜索页面.
+
+现在已经可以得到页面. 但是页面内容对不对还没有进行检查.
+
+
+
+返回的页面储存在`list_SearchResults`变量里. 
+
+`list_SearchResults`长度为1, 只含有对`阅后即瞎`的搜索结果.
+
+搜索页面`list_SearchResults[0]`长度是1452678
+
+
+
 # 2017Dec09
 
 ### youtube搜索命名规则 
