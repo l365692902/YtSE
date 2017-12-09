@@ -7,7 +7,7 @@ YouTube subscribe extension
 
 # 2017Dec09
 
-youtube搜索命名规则
+### youtube搜索命名规则 
 
 - 网址以https://www.youtube.com/results?作为开始
 
@@ -50,6 +50,56 @@ youtube搜索命名规则
 例子 : 如果我想要搜索"阅后即瞎"的channel
 
 https://www.youtube.com/results?search_query=阅后即瞎&sp=EgIQAg%253D%253D
+
+
+
+### 搜索页面储存格式
+
+``` html
+<ol id="item-section-228858" class="item-section">
+  <li>  
+    <!--视频的储存格式-->
+    <deiv class="yt-lockup yt-lockup-tile yt-lockup-video clearfix" data-context-item-id="视频编号" data-visibility-tracking="...">
+    ::before
+      <div class="yt-lockup-dismissable yt-uix-tile">
+        <div class="yt-lockup-thumbnail contains-addto">
+          <!--视频截图,视频时长-->
+        </div>
+        <div class="yt-lockup-content">
+          <!--标题,上传时间,观看次数,频道,简介-->
+          
+          <h3 class="yt-lockup-title ">
+            <a class="yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink      spf-link " href="/watch?v=视频编号" data-sessionlink="..." title="标题"  ...>
+              ::before
+              标题
+              ::after
+            </a>
+            <span id="description-id-469716" class="accessible-description" >
+             - 时长：14:03。
+            </span>
+          </h3>
+          <div class="yt-lockup-byline">
+            <a class="yt-uix-sessionlink       spf-link " href="/user/用户名" ...>
+            用户名
+            </a>
+          </div>
+          <!--...-->
+        </div>
+      </div>
+    ::after
+    </deiv>
+  </li>
+  <!--频道储存格式-->
+  <li>...</li>
+  <!--列表储存格式-->
+  <li>...</li>
+  <li>...</li>
+</ol>
+```
+
+
+
+
 
 
 
