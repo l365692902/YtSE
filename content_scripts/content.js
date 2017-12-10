@@ -5,13 +5,13 @@ var debug = true;
 
 
 function findLinkByKeyWord(keyWord) {
-    var temp = document.getElementsByTagName("a")
+    var temp = document.getElementsByTagName("a");
     //get all link
-    console.log("got " + temp.length +" links in total")
+    console.log("got " + temp.length +" links in total");
     for (var i = 0; i < temp.length; i++) {
         if (temp[i].offsetParent != null && temp[i].innerText.search(keyWord) != -1) {
             //check if it is visible && search keyword
-            console.log(temp[i].innerText)
+            console.log(temp[i].innerText);
         }
     }
 }
@@ -19,15 +19,18 @@ function findLinkByKeyWord(keyWord) {
 
 function InnitialKeyWorld(list_KeyWord){
 
-// 目前只储存一个
+// 目前只储存两个
 
-KeyWord = new Object();
-KeyWord.word = "阅后即瞎";
-KeyWord.channel = "";
-KeyWord.list = "";
+list_KeyWord[0] = new Object();
+list_KeyWord[0].word = "阅后即瞎";
+list_KeyWord[0].channel = "";
+list_KeyWord[0].list = "";
 
+list_KeyWord[1] = new Object();
+list_KeyWord[1].word = "爸爸去哪";
+list_KeyWord[1].channel = "";
+list_KeyWord[1].list = "";
 
-list_KeyWord[0] = KeyWord;
 
 }
 
@@ -52,7 +55,7 @@ if (KeyWord.channel /= '') {
 }
 
 if( debug) {
-console.log("search url : "+ url)
+console.log("search url : "+ url);
 }
 
 
@@ -82,8 +85,23 @@ xmlHttp.send(null);
 return SearchResults;
 }
 
+function GetResearchList(list_KeyWord,list_Results){
+	
+	var list_p = new Array(list_KeyWord.length);
+	for (let i=0; i < list_KeyWord.length; i++){
+		var temp = i;
+		list_p[temp] = new Promise(function(){
+			list_Results[temp] = GetSearchResultsByKeyWord(list_KeyWord[temp]);
+		});
+	}
+	//获取全部状态
+	var p_all = Promise.all(list_p);
+	//等待执行完毕
+	p_all.then();
+}
 
 
+// =============================================
 var myTime = new Date();
 console.log("%c"+myTime.toTimeString() + ": this is line 1 of content.js","color:#00ff00");
 
@@ -114,17 +132,22 @@ if (debug) {
 // 输出关键字信息
 console.log("初始化完成");
 console.log("num :" +list_KeyWord.length);
-console.log("关键词 : " + list_KeyWord[0].word);
+for (i=0;i<list_KeyWord.length;i++){
+	console.log((i+1),"-th 关键词 : " + list_KeyWord[i].word);
+}
 console.log("----------");
 }
 
 
 // 获取搜索页面
-list_SearchResults[0] = GetSearchResultsByKeyWord(list_KeyWord[0]);
+GetResearchList(list_KeyWord,list_SearchResults);
+
 
 if ( debug) {
-
-console.log("length of results : " + list_SearchResults[0].length);
+	
+	for (i=0; i< list_SearchResults.length; i++){
+		console.log( (i+1) +"-th : length of results : " + list_SearchResults[i].length);
+	}
 //console.log(list_SearchResults[0]);
 }
 
