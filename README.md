@@ -143,6 +143,7 @@ https://www.youtube.com/results?search_query=阅后即瞎&sp=EgIQAg%253D%253D
     * https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86 搜索播放列表
     * https://www.youtube.com/results?search_query=%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86&sp=EgIQBA%253D%253D 电影
     * https://www.youtube.com/results?sp=EgIQBQ%253D%253D&search_query=%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86 节目
+* 还有一个问题是，搜索页面里并不显示所有的搜索结果，当页面滑到最底下的时候才会加载出来，需要研究下这里的动作
 
 
 ## 2017Dec08
