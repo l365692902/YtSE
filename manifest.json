@@ -31,7 +31,8 @@
     // ],this is f**king bu****it
     "permissions":[
         // "activeTab",
-        "notifications"
+        "notifications",
+        "*://*.youtube.com/*"
     ],
     "author": "c4r"
 }

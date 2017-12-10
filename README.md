@@ -8,7 +8,15 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
-  ​
+## 2017Dec10-L
+今天肚子疼。。。
+* arrow function & callback
+    * regular functions would have their this value set to the global object if they were used as callbacks
+    * Arrow functions do not have their own this value. The value of this inside an arrow function is always inherited from the enclosing scope.
+        * Use non-arrow functions for methods that will be called using the object.method() syntax. Those are the functions that will receive a meaningful this value from their caller.
+        * Use arrow functions for everything else.
+* background script的console输出需要点debug才能看到，content script的console输出可以在web console看到
+* OK今天又遇到了permission坑，backgroundscript需要在permission里加入网址才能请求xmlhttprequest
 
 ## 2017Dec09
 
