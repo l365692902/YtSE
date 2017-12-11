@@ -12,6 +12,12 @@ xmlHttp = new XMLHttpRequest()
 xmlHttp.onreadystatechange = () => {
   if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
     popUpNotification("got web page " + xmlHttp.status + " " + xmlHttp.status + xmlHttp.responseText.length)
+    console.log(xmlHttp.response)
+    console.log(document)
+    // document.write("<h1>This is a heading</h1>")
+    var newDiv=document.createElement("div")
+    var newContent=document.createTextNode("Hi, test")
+    newDiv.appendChild(newContent)
   }
 }
 
@@ -19,6 +25,10 @@ browser.browserAction.onClicked.addListener(() => {
   xmlHttp.open("GET", "https://www.youtube.com/results?search_query=阅后即瞎", true)
   xmlHttp.send()
   popUpNotification("request has been sent...waiting for respond")
+  // var creating = browser.tabs.create({
+  //   url:"https://example.org"
+  // });
+  // creating.then(onCreated, onError);
 })
 
-
+//moz-extension://5e3adf10-b4c4-4c14-8df4-1c801cbe68d7/_generated_background_page.html

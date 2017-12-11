@@ -8,6 +8,11 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec11-L
+今天白天没干啥正事。。
+* https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Example.3a_Asynchronous_request 重要链接，介绍正统怎么分析xmlhttprequest返回结果的方法。
+* 自己乱试的方法，覆写到background.html上，地址是moz-extension://5e3adf10-b4c4-4c14-8df4-1c801cbe68d7/_generated_background_page.html，中间一段时浏览器分配的uuid。结果是会被安全策略墙，控制台会弹无数的红字。尝试只写些一般的内容，也不成功。回去研究正道吧![](readme/emoji/ac10呆.png)
+
 ## 2017Dec10-L
 今天肚子疼。。。
 * arrow function & callback
@@ -16,7 +21,7 @@ YouTube subscribe extension
         * Use non-arrow functions for methods that will be called using the object.method() syntax. Those are the functions that will receive a meaningful this value from their caller.
         * Use arrow functions for everything else.
 * background script的console输出需要点debug才能看到，content script的console输出可以在web console看到
-* OK今天又遇到了permission坑，backgroundscript需要在permission里加入网址才能请求xmlhttprequest
+* OK今天又遇到了permission坑，backgroundscript需要在permission里加入网址才能请求xmlhttprequest。否则status会返回0，意思是网络错误，奇奇怪怪的错都往permission上想就对了
 
 ## 2017Dec09
 
