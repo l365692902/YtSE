@@ -21,9 +21,9 @@ xmlHttp = new XMLHttpRequest()
 //   }
 // }
 xmlHttp.onload = () => {
-  popUpNotification("got web page " + xmlHttp.status + " " + xmlHttp.status + xmlHttp.responseText.length)
+  popUpNotification("got web page ")// + xmlHttp.status + " " + xmlHttp.status + xmlHttp.responseText.length)
   console.log(xmlHttp.response)
-  var blobFile = new Blob([xmlHttp.response], { type: "text/plain" })
+  var blobFile = new Blob([xmlHttp.response], { type: "text/html" })
   var blobUrl = URL.createObjectURL(blobFile)
   var creating = browser.tabs.create({
     url: blobUrl
@@ -40,6 +40,7 @@ xmlHttp.onerror = () => {
 
 browser.browserAction.onClicked.addListener(() => {
   xmlHttp.open("GET", "https://www.youtube.com/results?search_query=阅后即瞎", true)
+  xmlHttp.responseType = "blob"
   xmlHttp.send()
   popUpNotification("request has been sent...waiting for respond")
   // var creating = browser.tabs.create({
