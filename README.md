@@ -8,6 +8,21 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec12-L
+越来越冷。。。
+* 发现一个重大问题![](readme/emoji/ac27惊.png)，从xmlhttprequest返回的response里并不能还原渲染成网页，甚至提取不到我们要的链接，因为里面很多地方看起来是变量名，不是字符串，例如
+  * <a id="video-title" class="yt-simple-endpoint style-scope ytd-video-renderer" aria-label$="[[data.title.accessibility.accessibilityData.label]]" href$="[[computeHref_(data.navigationEndpoint)]]" title$="[[getSimpleString(data.title)]]" data="[[data.navigationEndpoint]]">
+                    [[getSimpleString(data.title)]]
+                  </a>
+* 按照以往的经验，这里的href应该指向youtube.com/watch?v=的地址
+* background script 要操纵tab内容似乎得通过content与background之间互相送消息。
+* xml
+    * XML 被设计为传输和存储数据，其焦点是数据的内容。
+    * HTML 被设计用来显示数据，其焦点是数据的外观。
+    * HTML 旨在显示信息，而 XML 旨在传输信息。
+* 要不先研究存储，把获取到的网页存成html再给浏览器打开？
+* https://chrome.google.com/webstore/detail/agenty-advanced-web-scrap/gpolcofcjjiooogejfbaamdgmgfehgff 这是chrome的一个爬虫插件，可以解开看看
+
 ## 2017Dec11-L
 今天白天没干啥正事。。
 * https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Example.3a_Asynchronous_request 重要链接，介绍正统怎么分析xmlhttprequest返回结果的方法。
