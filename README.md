@@ -8,6 +8,14 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec13-L
+* 无fuck说，百度的搜索结果页面就能显示出来呢
+* 有意思，google的搜索页面会返回机器人验证。。。厉害厉害
+* 我觉得问题变成了怎么去针对youtube。。。
+* https://www.channelcrawler.com/ 一个网页版的youtube crawler，既然做成了网站，背后应该跑着node
+* node底层不像jquery是用js写的，所以jQuery可以用在webextension里，node用不了
+* web_scrapbook/core/background.js 最后一个函数，有关于给请求加head的描述，也许可以骗开google的机器人验证
+
 ## 2017Dec12-L
 越来越冷。。。
 * 我现在怀疑问题出在，搜索结果并不是以html形式存在服务器上，如果是要获取一个.html文件大概xmlhttprequest已经可以工作了（这个还没测试）。所以别的爬虫是怎么处理这个搜索结果页面的呢？

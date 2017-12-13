@@ -39,7 +39,8 @@ xmlHttp.onerror = () => {
 }
 
 browser.browserAction.onClicked.addListener(() => {
-  xmlHttp.open("GET", "https://www.youtube.com/results?search_query=阅后即瞎", true)
+  // xmlHttp.open("GET", "https://www.youtube.com/results?search_query=阅后即瞎", true)
+  xmlHttp.open("GET", "https://www.youtube.com/results?sp=EgIQAg%253D%253D&search_query=proko", true)
   xmlHttp.responseType = "blob"
   xmlHttp.send()
   popUpNotification("request has been sent...waiting for respond")
