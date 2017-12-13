@@ -8,13 +8,24 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec14-L
+* 搜这么多，我隐约觉得https://www.youtube.com/results?search_query=阅后即瞎 的方法基本不可能了
+* 替代方案1，google，如果能解决机器人验证的问题，不行就用bing大概也行
+* 替代方案2，youtube api，如果舍得贡献一个google账号
+* 替代方案3，让用户本地运行node，然后与webextension通讯
+* 个人首选替代方案1，二三并列，
+
 ## 2017Dec13-L
+* https://noembed.com/embed?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ 第三方网站解析视频信息，需要视频地址
+* https://stackoverflow.com/questions/42052944/is-it-possible-to-retrieve-the-description-of-a-youtube-video-without-authentica 不用api得到youtube视频描述，需要视频的地址
 * 无fuck说，百度的搜索结果页面就能显示出来呢
 * 有意思，google的搜索页面会返回机器人验证。。。厉害厉害
 * 我觉得问题变成了怎么去针对youtube。。。
 * https://www.channelcrawler.com/ 一个网页版的youtube crawler，既然做成了网站，背后应该跑着node
+* https://github.com/96AA48/node-youtube-crawler/blob/master/index.js github上一个项目
 * node底层不像jquery是用js写的，所以jQuery可以用在webextension里，node用不了
 * web_scrapbook/core/background.js 最后一个函数，有关于给请求加head的描述，也许可以骗开google的机器人验证
+* web_scrapbook/core/common.js line.1359 有个resolve(xhr)函数，也许可以参考怎么解析xhr结果
 
 ## 2017Dec12-L
 越来越冷。。。
