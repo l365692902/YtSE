@@ -8,6 +8,18 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec15-L
+
+* 新发现，firefox提供添加搜索引擎的功能，实际上是一种叫opensearch的技术还是标准还是约定？，youtube似乎也有官方支持
+* https://www.youtube.com/opensearch
+* 在reference 文件夹里是youtube和google两个搜索引擎的安装文件，就只是很短几行xml而已。
+* captcha 验证码，What Google considers automated traffic:
+  * Sending searches from a robot, computer program, automated service, or search scraper
+  * Using software that sends searches to Google to see how a website or webpage ranks on Google  
+This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests. If you share your network connection, ask your administrator for help — a different computer using the same IP address may be responsible.
+Sometimes you may be asked to solve the CAPTCHA if you are using advanced terms that robots are known to use, or sending requests very quickly.
+* https://www.webnots.com/fix-im-not-a-robot-captcha-issue-in-google-search/ 有关captcha的一些说明
+
 ## 2017Dec14-L
 * 搜这么多，我隐约觉得https://www.youtube.com/results?search_query=阅后即瞎 的方法基本不可能了
 * 替代方案1，google，如果能解决机器人验证的问题，不行就用bing大概也行
