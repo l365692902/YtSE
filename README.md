@@ -8,7 +8,10 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
-### 2017Dec15-BS
+## 2017Dec16-L
+* 我觉得发现一个firefox的bug，notification弹窗写在promise里位置会飞
+
+## 2017Dec15-BS
 
 通过添加setRequestHeader对youtube进行反-反爬虫.
 
@@ -60,6 +63,7 @@ YouTube subscribe extension
 * 新发现，firefox提供添加搜索引擎的功能，实际上是一种叫opensearch的技术还是标准还是约定？，youtube似乎也有官方支持
 * https://www.youtube.com/opensearch
 * 在reference 文件夹里是youtube和google两个搜索引擎的安装文件，就只是很短几行xml而已。
+* github上有个javascript的opensearch项目，叫OpenSearchlight，但是要调用node
 * captcha 验证码，What Google considers automated traffic:
   * Sending searches from a robot, computer program, automated service, or search scraper
   * Using software that sends searches to Google to see how a website or webpage ranks on Google  
