@@ -67,7 +67,7 @@ function searchListOnline(list) {
 	for (let i = 0; i < list.length; i++) {
 		if(list[i].channel != "") {
 			if(list[i].channelUrl != "") {
-				url = "https://www.youtube.com/" + list[i].channelUrl + "/?search_query=" + list[i].self;
+				url = "https://www.youtube.com/" + list[i].channelUrl + "/search?query=" + list[i].self;
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			} else {
@@ -116,8 +116,8 @@ let list_SearchResults = new Array();
 console.log("开始初始化");
 // 目前只储存两个
 list_KeyWord[0] = new keyWord("【阅后即瞎】");
-list_KeyWord[1] = new keyWord("【阅后即瞎】","阅后即瞎");
-list_KeyWord[2] = new keyWord("【ENG SUB】Dad Where Are We Going","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+list_KeyWord[1] = new keyWord("老师","阅后即瞎");
+list_KeyWord[2] = new keyWord("Dad Where Are We Going S04","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 
 // 寻找youtuber对应字符
 searchChannelNum(list_KeyWord[0]);
