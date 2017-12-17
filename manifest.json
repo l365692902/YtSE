@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "YtSE",
     "description": "YouTube subscribe extension, highlight interesting contents",
-    "version": "2017Dec05.alpha001",
+    "version": "2017Dec17.alpha001",
     "browser_action": {
         "browser_style": true,
         "default_icon": {

@@ -8,6 +8,9 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec17-L
+* 这将是里程碑式的一次提交
+
 ## 2017Dec16-L
 * 我觉得发现一个firefox的bug，notification弹窗写在promise里位置会飞
 

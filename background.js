@@ -1,3 +1,4 @@
+//for debug
 function popUpNotification(message) {
 	browser.notifications.create({
 		"type": "basic",
@@ -15,19 +16,20 @@ class keyWord {
 	}
 }
 
+//for debug
 function checkResponse(xhr) {
 	// console.log(xhr.response)
 	// console.log(xhr.getResponseHeader("Content-Type"))
-	var blobFile = new Blob([xhr.response], { type: "text/html;charset=UTF-8" })
+	let blobFile = new Blob([xhr.response], { type: "text/html;charset=UTF-8" })
 	// var blobFile = new Blob([xmlHttp.response], { type: "text/plain;charset=UTF-8" })
-	var blobUrl = URL.createObjectURL(blobFile)
-	var creating = browser.tabs.create({
+	let blobUrl = URL.createObjectURL(blobFile)
+	let creating = browser.tabs.create({
 		url: blobUrl
 	})
 }
 
-//promised asynchronous xmlHttpRequest
-function pmdAsynHttpRequest(method, url) {
+//promise based asynchronous xmlHttpRequest
+function asynHttpRequest(method, url) {
 	return new Promise((resolve, reject) => {
 		const xhr = new XMLHttpRequest()
 		xhr.open(method, url, true)
@@ -49,73 +51,39 @@ function pmdAsynHttpRequest(method, url) {
 	})
 }
 
-//not used
-function searchKeyWord(KeyWord) {
-	// 搜索页面网址
-	if (KeyWord.word + KeyWord.channel + KeyWord.channel == '') {
-		console.log("error: empty KeyWord");
-	}
-	var url = "https://www.youtube.com/results?search_query=" + KeyWord.word;
-	if (KeyWord.channel /= '') {
-
-	}
-	if (KeyWord.list /= '') {
-
-	}
-	if (KeyWord.channel /= '') {
-
-	}
-	if (debug) {
-		console.log("search url : " + url);
-	}
-	//用于创建XMLHttpRequest对象
-	var xmlHttp = new XMLHttpRequest();                  //FireFox、Opera等浏览器支持的创建方式
-
-	var searchResult //储存返回内容
-	//设置回调函数
-	xmlHttp.onload = () => {
-		popUpNotification("got web page ")// + xmlHttp.status + " " + xmlHttp.status + xmlHttp.responseText.length)
-		checkResponse(xmlHttp)
-		searchResult = xmlHttp.response
-	}
-	xmlHttp.onerror = () => {
-		popUpNotification("Error")//debug use, will be removed after
-	}
-	xmlHttp.open("GET", url, true); //不使用异步
-	// xmlHttp.responseType = "text"
-	// xmlHttp.setRequestHeader ('Accept', 'text/html');
-	// xmlHttp.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');//this line comes with "POST"
-	// xmlHttp.setRequestHeader ('Content-Length', '19' );
-	// xmlHttp.setRequestHeader ('Accept-Charset', 'utf-8' );
-	xmlHttp.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:43.0) Gecko/20100101 Firefox/43.0')
-	xmlHttp.send();
-	popUpNotification("request has been sent...waiting for response")
-	return searchResult;
-}
-
-function searchList(list) {
-	var url
-	var list_p = new Array(list.length);
+function searchListOnline(list) {
+	let url
+	let list_p = new Array(list.length);
 	for (let i = 0; i < list.length; i++) {
 		url = "https://www.youtube.com/results?search_query=" + list[i].self
 		console.log(i + "th " + url)
-		list_p[i] = pmdAsynHttpRequest("GET", url)
+		list_p[i] = asynHttpRequest("GET", url)
 	}
 	return Promise.all(list_p)
 }
 
-//======================================================START FROM HERE===============================
-// 关键词储存在对象里
-// 对象KeyWord
-// word 储存关键字, 空为不指定
-// channel 储存所属频道, 空为不指定
-// list 储存关键字所属列表, 空为不指定
-// word channel list 三个变量不能同时为零
+//not used, moved from content script, temp[i].offsetParent might be handy
+function searchLinkOnPage(keyWord) {
+    let temp = document.getElementsByTagName("a");
+    //get all link
+    console.log("got " + temp.length +" links in total");
+    for (let i = 0; i < temp.length; i++) {
+        if (temp[i].offsetParent != null && temp[i].innerText.search(keyWord) != -1) {
+            //check if it is visible && search keyword
+            console.log(temp[i].innerText);
+        }
+    }
+}
+
+//=================================START FROM HERE=============================
+// 关键词储存在类里
+// 类KeyWord
+// self 储存关键字, 空为不指定
 
 // 储存关键词
-var list_KeyWord = new Array();
+let list_KeyWord = new Array();
 // 关键词对应的搜索页面
-var list_SearchResults = new Array();
+let list_SearchResults = new Array();
 
 console.log("开始初始化");
 // 目前只储存两个
