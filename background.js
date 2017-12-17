@@ -67,7 +67,7 @@ function searchListOnline(list) {
 	for (let i = 0; i < list.length; i++) {
 		if(list[i].channel != "") {
 			if(list[i].channelUrl != "") {
-				url = "https://www.youtube.com/" + list[i].channelNum + "/?search_query=" + list[i].self;
+				url = "https://www.youtube.com/" + list[i].channelUrl + "/?search_query=" + list[i].self;
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			} else {
