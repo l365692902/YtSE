@@ -8,7 +8,26 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+### 2017Dec17-BS
+
+添加搜索youtuber页面功能,将结果也储存在list_SearchResults里
+
+对于主页搜索和之前完成的全局搜索基本差不多
+
+地址格式为 www.youtube.com/"channelurl"/?search_query="要搜索的内容"
+
+channelurl有两种
+
+- channel开头 
+
+  比如阅后即瞎官方主页 https://www.youtube.com/channel/UCHCb7_nHscX38PI0L182GGA
+
+- user开头
+
+  比如爸爸去哪主页 https://www.youtube.com/user/imgotv
+
 ## 2017Dec17-L
+
 * 这将是里程碑式的一次提交
 
 ## 2017Dec16-L
