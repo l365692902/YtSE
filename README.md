@@ -8,6 +8,39 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec21-L
+* jQuery被CSP墙，要让它能用，以下几种方法
+  * 在about:config里关掉CSP
+  * 或，远程引用jQuery
+    * 先从https://code.jquery.com/中拷贝jQuery CDN 代码到你的html中，
+    * 并开启权限 "content_security_policy": "script-src 'self' https://code.jquery.com
+    * 然后将调用jQuery的inline js代码，粘贴到https://report-uri.com/home/hash 里计算sha256值
+    * 并开权限"content_security_policy":"script-src 'self' 'sha256-/nLaDjLjCQs9I0v3MGE2bIX/U6rHqCAVc4r/uI3I34o='
+    * 惊了！复杂到哭![](readme/emoji/ac27惊.png)
+  * 或，也可以本地引用
+    * 上个方法第一步中的https://code.jquery.com/中还可以直接下载到js文件
+    * 还是用CDN码，只用把copy到的代码里把src改成本地的地址即可
+    * 俺老孙服了![](readme/emoji/2044认真.png)
+## 2017Dec20-L
+* jquery 的sortable在setting page 里失效了
+  * 想办法让它生效
+  * 搞清楚怎么用https://lukasoppermann.github.io/html5sortable/index.html
+* 我打算实现网页里的拖放排序，经过简单调查（也就是StackOverflow），暂时决定使用jQuery而不使用html5原生的浏览器支持，原因如下
+  * html5的拖放很渣
+  * html5各个浏览器的支持可能不同，包括移动端的支持。而jQuery已经处理好大部分兼容
+  * jQuery是js层的lib，跑得慢，但是我们需要的功能能也很少，我觉得可以接受
+
+## 2017Dec18-L
+* ```js
+        if(typeof(Worker)!=="undefined")
+        {
+        if(typeof(w)=="undefined")
+        {
+        w=new Worker("/example/html5/demo_workers.js");
+        }
+
+* HTML 链接 Target 属性，你可以定义被链接的文档在何处显示，例如新窗口
+
 ## 2017Dec17-L
 * 这将是里程碑式的一次提交
 
