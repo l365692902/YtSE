@@ -8,6 +8,11 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec22-L
+* 设置页基本成型
+* 发现有storage.sync和storage.local两种可选，目前测试使用的后者，而前者可以实现账号下同步
+* storage.local.get()即使没有获取到想要的对象也会获取成功，只是返回一个空对象而已
+
 ## 2017Dec21-L
 * jQuery被CSP墙，要让它能用，以下几种方法
   * 在about:config里关掉CSP
@@ -21,6 +26,9 @@ YouTube subscribe extension
     * 上个方法第一步中的https://code.jquery.com/中还可以直接下载到js文件
     * 还是用CDN码，只用把copy到的代码里把src改成本地的地址即可
     * 俺老孙服了![](readme/emoji/2044认真.png)
+* 欸。。。奇怪。。今天测试。。。引用jquery这一步随便引一下都可以了。。没有报csp的错。。。昨天见鬼了吗。。。还是今天见鬼了
+* 进一步发现，把js的代码移出到单独的js文件，就能绕开inline script的使用
+* 然后就不用打开任何权限了，啥！
 ## 2017Dec20-L
 * jquery 的sortable在setting page 里失效了
   * 想办法让它生效

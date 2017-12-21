@@ -1,19 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html>
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Sortable - Default functionality</title>
+  <title>YtSE Configuration</title>
   <style>
-    #sortable {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      width: 60%;
-    }
-
-    #sortable li {
+    li {
       margin: 0 3px 3px 3px;
       padding: 0.4em;
       padding-left: 1.5em;
@@ -21,41 +13,49 @@
       height: 18px;
     }
 
-    #sortable li span {
+    li span {
       position: absolute;
       margin-left: -1.3em;
     }
+
+    #sortable .ui-selecting {
+      background: #ccc;
+    }
+
+    #sortable .ui-selected {
+      background: #999;
+    }
   </style>
-  <script src="../lib/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
-  <script src="../lib/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-    crossorigin="anonymous"></script>
-  <script>$(function () {
-      $("#sortable").sortable();
-      $("#sortable").disableSelection();
-    })</script>
+  <script src="../lib/jquery-3.2.1.min.js"></script>
+  <script src="../lib/jquery-ui.min.js"></script>
+  <script src="options.js"></script>
 </head>
 
 <body>
-
+  <form id="add">
+    add new keyword:
+    <input type="text" value="hey boy" id="newKeyWord">
+    <input type="submit" value="add">
+  </form>
+  <hr>
   <ul id="sortable">
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.1 拖动我们</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.2 来拖拖看呀</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.3 往上拖</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.4 往下拖</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.5 好不好玩</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.6 再拖拖看</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>No.7 能打乱成啥样</li>
+    <li>
+      No.1 拖动我们</li>
+    <li>
+      No.2 来拖拖看呀</li>
+    <li>
+      No.3 往上拖</li>
+    <li>
+      No.4 往下拖</li>
+    <li>
+      No.5 好不好玩</li>
+    <li>
+      No.6 再拖拖看</li>
+    <li>
+      No.7 能打乱成啥样</li>
   </ul>
-
-
+  <hr>
+  <input type="button" name="button" id="delete" value="delete">
 </body>
 
 </html>
