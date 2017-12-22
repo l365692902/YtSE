@@ -18,7 +18,7 @@ $(document).ready(function () {
     list.then((e) => {
         console.log("first get list")
         console.log(e.list_KeyWord)
-        if(e.list_KeyWord===undefined){
+        if (e.list_KeyWord === undefined) {
             console.log("no settings yet, it will give a error when first run \n don't worry, that's ok")
         }
         console.log(e.list_KeyWord.length)
@@ -27,7 +27,7 @@ $(document).ready(function () {
             console.log(e.list_KeyWord[i].self)
             $("#sortable").append("<li>" + e.list_KeyWord[i].self + "</li>")
         }
-    },(error)=>{
+    }, (error) => {
         window.alert("no settings")
     })
     $("ul").sortable();
@@ -45,11 +45,12 @@ $(document).ready(function () {
 
     })
     $("#delete").click(() => {
+        list_KeyWord.length = 0
         $("#sortable").find("li").last().remove()
         $("#sortable").find("li").each((i, e) => {
             list_KeyWord[i] = new keyWord(e.innerText)
         })
         let store = browser.storage.local.set({ list_KeyWord })
-   })
+    })
     // $("#sortable").disableSelection();
 })
