@@ -23,6 +23,7 @@ class keyWord {
 		this.playList = playList
 		
 	}
+	
 }
 
 //for debug
@@ -67,14 +68,14 @@ function searchListOnline(list) {
 	for (let i = 0; i < list.length; i++) {
 		if(list[i].channel != "") {
 			if(list[i].channelUrl != "") {
-				url = "https://www.youtube.com/" + list[i].channelUrl + "/search?query=" + list[i].self;
+				url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAI%253D&query=" + list[i].self.split(';').join(' ');
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			} else {
 				// 需要更新channel信息
 			}
 		} else {
-			url = "https://www.youtube.com/results?search_query=" + list[i].self;
+			url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + list[i].self.split(';').join(' ');
 			console.log(i + "th " + url);
 			list_p[i] = asynHttpRequest("GET", url);
 		}
@@ -97,6 +98,28 @@ function searchChannelNum(KeyWord) {
 
 
 
+// 过滤搜索页
+function filterSearch(list_Keyword, list_SearchResults) {
+		/*\ 
+		|| 根据关键字过滤搜索页
+		\*/
+	if (list_SearchResults.length != list_Keyword.length){
+		console.log("-----length neq-----");
+		//长度不等
+		return;
+	}
+	for (let i = 0; i < list_SearchResults.length; i++) {
+		// string to Document
+		console.log("-----result1-----");
+		doc =  convertStringToDocument(list_SearchResults[i]);
+		//var allelement = doc.getElementById('item-section-616819'); //id号还不确定
+		console.log("-----result2-----");
+		//console.log(doc);
+	}
+}
+
+
+
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
 // 对象KeyWord
@@ -115,14 +138,14 @@ let list_SearchResults = new Array();
 
 console.log("开始初始化");
 // 目前只储存两个
-list_KeyWord[0] = new keyWord("【阅后即瞎】");
-list_KeyWord[1] = new keyWord("老师","阅后即瞎");
-list_KeyWord[2] = new keyWord("Dad Where Are We Going S04","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+list_KeyWord[0] = new keyWord("爸爸去哪5;完整版;end sub");
+//list_KeyWord[1] = new keyWord("老师","阅后即瞎");
+//list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 
 // 寻找youtuber对应字符
 searchChannelNum(list_KeyWord[0]);
-searchChannelNum(list_KeyWord[1]);
-searchChannelNum(list_KeyWord[2]);
+//searchChannelNum(list_KeyWord[1]);
+//searchChannelNum(list_KeyWord[2]);
 
 console.log("初始化完成");
 
@@ -140,6 +163,7 @@ browser.browserAction.onClicked.addListener(() => {
 		console.log("final:")
 		//console.log(list_SearchResults)
 		console.log(list_SearchResults.length)
+		filterSearch(list_KeyWord,list_SearchResults)
 	})
 })
 
