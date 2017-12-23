@@ -111,7 +111,7 @@ function filterSearch(list_Keyword, list_SearchResults) {
 	for (let i = 0; i < list_SearchResults.length; i++) {
 		// string to Document
 		console.log("-----result1-----");
-		doc =  convertStringToDocument(list_SearchResults[i]);
+		doc =  $.parseHTML( list_SearchResults[i] );
 		//var allelement = doc.getElementById('item-section-616819'); //id号还不确定
 		console.log("-----result2-----");
 		//console.log(doc);
