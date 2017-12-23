@@ -8,6 +8,10 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+### 2017Dec23-BS
+添加了网页对关键字过滤功能,并将符合条件的视频信息储存在数组里.
+目前完成了对youtube全局搜索和对频道进行搜索. 对列表的处理还没有添加.
+
 ### 2017Dec17-BS
 
 添加搜索youtuber页面功能,将结果也储存在list_SearchResults里

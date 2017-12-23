@@ -19,7 +19,10 @@
         }
     ],
     "background":{
-        "scripts":["background.js"]
+	"scripts":[
+		"lib/jquery-3.2.1.min.js",
+		"background.js"
+	]
     },
     "icons": {
         "48": "icons/red_48.png",
