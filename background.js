@@ -104,23 +104,34 @@ function asynHttpRequest(method, url) {
 	})
 }
 
-//根据关键字列表索取youtube页面
+// 根据关键字列表索取youtube页面
 function searchListOnline(list) {
 	let url
 	let list_p = new Array(list.length);
 	for (let i = 0; i < list.length; i++) {
-		if(list[i].channel != "") {
-			if(list[i].channelUrl != "") {
-				url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAI%253D&query=" + list[i].self.split(';').join(' ');
+		if(list[i].self != "") {
+		// 对keyword查询
+			if(list[i].channel != "") {
+				if(list[i].channelUrl != "") {
+					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAI%253D&query=" + list[i].self.split(';').join(' ');
+					console.log(i + "th " + url);
+					list_p[i] = asynHttpRequest("GET", url);
+				} else {
+					// 需要更新channel信息
+				}
+			} else {
+				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + list[i].self.split(';').join(' ');
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
-			} else {
-				// 需要更新channel信息
 			}
-		} else {
-			url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + list[i].self.split(';').join(' ');
+		} else if(list[i].list != ""){
+		// 对list进行查询
+			url = "https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=" + list[i].playList;
 			console.log(i + "th " + url);
 			list_p[i] = asynHttpRequest("GET", url);
+		} else {
+		// 只含有channel信息,返回空
+			list_p[i] = "";
 		}
 	}
 	return Promise.all(list_p);
@@ -232,10 +243,11 @@ function filterSearch(list_Keyword, list_SearchResults) {
 		doc = $($(list_SearchResults[i]))
 		if(list_Keyword[i].channel == ''){
 			doc.find('[id*=item-section-]').children().each(function( index ) {
-	  			// console.log( "P : " + index + '------------');
+	  			console.log( "P : " + index + '------------');
 				//console.log(this);
-
+				
 				vInfo = getVideoInfo(this);
+				// vInfo.show();
 				if (satisfyKeyWord(list_Keyword[i],vInfo) ) {
 					// vInfo.show();
 					list_vInfo.push(vInfo);
@@ -292,8 +304,10 @@ if(jQuery){
 
 console.log("开始初始化");
 // 目前只储存两个
-list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
-list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
+
+list_KeyWord[0] = new keyWord("","","Season One - THE Acapella Producer");
+// list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+// list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 
 // 寻找youtuber对应字符
