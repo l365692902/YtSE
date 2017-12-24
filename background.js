@@ -110,19 +110,8 @@ function searchListOnline(list) {
 	let url
 	let url_list
 	let list_p = new Array(list.length);
-	// 统计list个数
-	let num_playList = 0
-	
 
-	for (let i = 0; i < list.length; i++) {
-		if(list[i].playList != ""){
-			num_playList++;
-		}
-	}
 
-	let list_playList = new Array(num_playList);
-
-	let i_layList = 0
 	for (let i = 0; i < list.length; i++) {
 		if(list[i].self != "") {
 		// 对keyword查询
@@ -141,20 +130,59 @@ function searchListOnline(list) {
 			}
 		} else if(list[i].list != ""){
 		// 对list进行查询
-			i_layList ++;
+
 			url = "https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=" + list[i].playList;
 			console.log(i + "th " + url);
 			list_p[i] = asynHttpRequest("GET", url);
-			
-			url_list = "https://www.youtube.com" + list[i].playListUrl;
-			list_playList[i_layList] = asynHttpRequest("GET", url);
+
 			
 		} else {
 		// 只含有channel信息,返回空
 
 		}
 	}
-	return Promise.all(list_p,list_playList);
+	return Promise.all(list_p);
+}
+
+// 根据关键字列表索取youtube页面
+function searchPlayListOnline(list) {
+	let url
+	let url_list
+	let list_p = new Array(list.length);
+	let list_playList = new Array(list.length);
+
+	for (let i = 0; i < list.length; i++) {
+		if(list[i].self != "") {
+		// 对keyword查询
+			if(list[i].channel != "") {
+				if(list[i].channelUrl != "") {
+					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAI%253D&query=" + list[i].self.split(';').join(' ');
+					console.log(i + "th " + url);
+					list_p[i] = asynHttpRequest("GET", url);
+				} else {
+					// 需要更新channel信息
+				}
+			} else {
+				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + list[i].self.split(';').join(' ');
+				console.log(i + "th " + url);
+				list_p[i] = asynHttpRequest("GET", url);
+			}
+		} else if(list[i].list != ""){
+		// 对list进行查询
+
+			url = "https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=" + list[i].playList;
+			console.log(i + "th " + url);
+			list_p[i] = asynHttpRequest("GET", url);
+
+			url_list = "https://www.youtube.com" + list[i].playListUrl;
+			list_playList[i] = asynHttpRequest("GET", url);
+			
+		} else {
+		// 只含有channel信息,返回空
+
+		}
+	}
+	return [Promise.all(list_p),Promise.all(list_playList)];
 }
 
 // 得到channel对应的编号
@@ -331,8 +359,8 @@ if(jQuery){
 console.log("开始初始化");
 // 目前只储存两个
 
-// list_KeyWord[0] = new keyWord("","","Season One - THE Acapella Producer");
-list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+ list_KeyWord[0] = new keyWord("","","Season One - THE Acapella Producer");
+//list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 // list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 
@@ -356,7 +384,7 @@ console.log("----------");
 browser.browserAction.onClicked.addListener(() => {
 	// 筛选出符合关键词的视频
 	let list_vedio = new Array();
-	searchListOnline(list_KeyWord).then((list_SearchResults,list_Playlistmainpage) => {
+	searchPlayListOnline(list_KeyWord).then((list_SearchResults) => {
 		console.log("final:");
 		//console.log(list_SearchResults)
 		console.log(list_SearchResults.length);
