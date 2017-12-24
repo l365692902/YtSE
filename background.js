@@ -22,51 +22,51 @@ class keyWord {
 		this.channelUrl = ''
 		this.playList = playList
 		this.playListUrl = ''
-		
+
 	}
-	
+
 }
 
 class infoVideo {
-	constructor(il="", title = "", videoUrl="", coverUrl="", videoTime="", channelName="", channelUrl="", upTime = "", time = "" ) {
+	constructor(il = "", title = "", videoUrl = "", coverUrl = "", videoTime = "", channelName = "", channelUrl = "", upTime = "", time = "") {
 		/*\ 
 		|| 用来储存视频信息
 		\*/
-	//il储存原始html信息
-	this.il = il;	
+		//il储存原始html信息
+		this.il = il;
 
-	this.title = title;
-	this.videoUrl = videoUrl;
-	
-	//获取时长,和封面
-	this.coverUrl = coverUrl;
-	this.videoTime = videoTime;
-	
-	// 获取频道信息
-	this.channelName = channelName;
-	this.channelUrl = channelUrl;
+		this.title = title;
+		this.videoUrl = videoUrl;
 
-	this.upTime = upTime;
-	
-	this.time = time;  // 查询词条的当前时间
-		
+		//获取时长,和封面
+		this.coverUrl = coverUrl;
+		this.videoTime = videoTime;
+
+		// 获取频道信息
+		this.channelName = channelName;
+		this.channelUrl = channelUrl;
+
+		this.upTime = upTime;
+
+		this.time = time;  // 查询词条的当前时间
+
 	};
-	
-	
-	show(){
-	
+
+
+	show() {
+
 		console.log("title : ", this.title);
 		console.log("video Url : ", this.videoUrl);
 		console.log("cover : ", this.coverUrl);
 		console.log("last time : ", this.videoTime);
 		console.log("channel : ", this.channelName);
 		console.log("channel url : ", this.channelUrl);
-		console.log("uptime : ", this.upTime);	
+		console.log("uptime : ", this.upTime);
 		console.log("time : ", this.time);
-		return	
+		return
 
 	};
-	
+
 
 }
 
@@ -113,10 +113,10 @@ function searchListOnline(list) {
 
 
 	for (let i = 0; i < list.length; i++) {
-		if(list[i].self != "") {
-		// 对keyword查询
-			if(list[i].channel != "") {
-				if(list[i].channelUrl != "") {
+		if (list[i].self != "") {
+			// 对keyword查询
+			if (list[i].channel != "") {
+				if (list[i].channelUrl != "") {
 					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAI%253D&query=" + list[i].self.split(';').join(' ');
 					console.log(i + "th " + url);
 					list_p[i] = asynHttpRequest("GET", url);
@@ -128,16 +128,16 @@ function searchListOnline(list) {
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			}
-		} else if(list[i].list != ""){
-		// 对list进行查询
+		} else if (list[i].list != "") {
+			// 对list进行查询
 
 			url = "https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=" + list[i].playList;
 			console.log(i + "th " + url);
 			list_p[i] = asynHttpRequest("GET", url);
 
-			
+
 		} else {
-		// 只含有channel信息,返回空
+			// 只含有channel信息,返回空
 
 		}
 	}
@@ -151,11 +151,11 @@ function searchPlayListOnline(list) {
 	let list_playList = new Array(list.length);
 
 	for (let i = 0; i < list.length; i++) {
-		
-		if(list[i].self != "") {
-		// 对keyword查询
-			if(list[i].channel != "") {
-				if(list[i].channelUrl != "") {
+
+		if (list[i].self != "") {
+			// 对keyword查询
+			if (list[i].channel != "") {
+				if (list[i].channelUrl != "") {
 					list_playList[i] = ""
 				} else {
 					// 需要更新channel信息
@@ -163,14 +163,14 @@ function searchPlayListOnline(list) {
 			} else {
 				list_playList[i] = ""
 			}
-		} else if(list[i].list != ""){
-		// 对list进行查询
+		} else if (list[i].list != "") {
+			// 对list进行查询
 
 			url_list = "https://www.youtube.com" + list[i].playListUrl;
 			list_playList[i] = asynHttpRequest("GET", url_list);
-			
+
 		} else {
-		// 只含有channel信息,返回空
+			// 只含有channel信息,返回空
 
 		}
 	}
@@ -179,7 +179,7 @@ function searchPlayListOnline(list) {
 
 // 得到channel对应的编号
 function searchChannelNum(KeyWord) {
-	
+
 	// 目前只有阅后即瞎一个频道的number
 	if (KeyWord.channel == "阅后即瞎 - 官方频道") {
 		KeyWord.channelUrl = "channel/UCHCb7_nHscX38PI0L182GGA";
@@ -187,11 +187,11 @@ function searchChannelNum(KeyWord) {
 	if (KeyWord.channel == "湖南卫视芒果TV官方频道 China HunanTV Official Channel") {
 		KeyWord.channelUrl = "user/imgotv";
 	}
-	
-	if (KeyWord.playList == "Season One - THE Acapella Producer" ) {
+
+	if (KeyWord.playList == "Season One - THE Acapella Producer") {
 		KeyWord.playListUrl == "/playlist?list=PLbyCk6TexHN5ULEKWeMfgvlglmNNG21X9"
 	}
-	
+
 
 }
 
@@ -206,46 +206,46 @@ function getVideoInfo(il_video) {
 	titleObj = $(il_video).find("a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link");
 	var title = $(titleObj).text();
 	var videoUrl = $(titleObj).attr("href");
-	
+
 	//获取时长,和封面
 	coverObj = $(il_video).find("a.yt-uix-sessionlink.spf-link").find("div.yt-thumb.video-thumb").find("span.yt-thumb-simple");
 
-	var coverUrl_onload = $(coverObj).find("img").attr("data-thumb"); 
-	if( coverUrl_onload === undefined) {
+	var coverUrl_onload = $(coverObj).find("img").attr("data-thumb");
+	if (coverUrl_onload === undefined) {
 		var coverUrl = $(coverObj).find("img").attr("src");
-	}else {
+	} else {
 		var coverUrl = coverUrl_onload;
 	}
 
 	var videoTime = $(coverObj).find("span").text();
-	
+
 	// 获取频道信息
 	channelObj = $(il_video).find("div.yt-lockup-content").find("div.yt-lockup-byline").find("a.yt-uix-sessionlink.spf-link");
 	var channelName = $(channelObj).text();
 	var channelUrl = $(channelObj).attr("href");
-	
+
 	// 获取更新时间
 	timeObj = $(il_video).find("div.yt-lockup-content").find("div.yt-lockup-meta").find("ul.yt-lockup-meta-info");
 	//timeObj = $(il_video).find("ul.yt-lockup-meta-info");
 	uptimeli = $(timeObj).find("li").toArray()[0];
 	uptimeStr = $(uptimeli).text();
-	
 
-	vInfo= new infoVideo(il_video,title,videoUrl,coverUrl,videoTime,channelName,channelUrl,uptimeStr, new Date());
-	
+
+	vInfo = new infoVideo(il_video, title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, new Date());
+
 	return vInfo;
 	// vInfo.show();
-	
+
 }
 // satisfyKeyWord
 // 判断视频是否满足Keyword
-function satisfyKeyWord(keyWord,vInfo) {
-	
+function satisfyKeyWord(keyWord, vInfo) {
+
 
 	satisfied = true;
 
 	// 是否是指定频道
-	if (keyWord.channel != '' && vInfo.channelName != keyWord.channel){
+	if (keyWord.channel != '' && vInfo.channelName != keyWord.channel) {
 		satisfied = satisfied && false;
 		console.log(vInfo.channelName);
 		console.log(keyWord.channel);
@@ -253,13 +253,13 @@ function satisfyKeyWord(keyWord,vInfo) {
 		return satisfied;
 
 	}
-	
+
 	// 是否包含key word
 	list_world = keyWord.self.split(';');
 
 	for (let i = 0; i < list_world.length; i++) {
 		satisfied = satisfied && vInfo.title.includes($.trim(list_world[i]));
-		if( !  satisfied){
+		if (!satisfied) {
 			//console.log('+++++++++');
 			//console.log(vInfo.title);
 			//console.log(list_world[i]);
@@ -272,11 +272,11 @@ function satisfyKeyWord(keyWord,vInfo) {
 
 // 过滤搜索页
 function filterSearch(list_Keyword, list_SearchResults) {
-		/*\ 
-		|| 根据关键字过滤搜索页
-		\*/
+	/*\ 
+	|| 根据关键字过滤搜索页
+	\*/
 	let list_vInfo = new Array();
-	if (list_SearchResults.length != list_Keyword.length){
+	if (list_SearchResults.length != list_Keyword.length) {
 		console.log("-----length neq-----");
 		//长度不等
 		return;
@@ -286,41 +286,41 @@ function filterSearch(list_Keyword, list_SearchResults) {
 		// string to Document
 		// doc = $.parseHTML(list_SearchResults[i]);
 		doc = $($(list_SearchResults[i]))
-		if(list_Keyword[i].channel == ''){
-			doc.find('[id*=item-section-]').children().each(function( index ) {
-	  			console.log( "P : " + index + '------------');
-				//console.log(this);
-				
-				vInfo = getVideoInfo(this);
-				// vInfo.show();
-				if (satisfyKeyWord(list_Keyword[i],vInfo) ) {
-					// vInfo.show();
-					list_vInfo.push(vInfo);
-				}else {
-					// console.log("not satisfied keyword.");
-				}
-			
-			});
-		}else{
-		// 在频道搜索
-			doc.find('li.feed-item-container.yt-section-hover-container.browse-list-item-container.branded-page-box').each(function( index ) {
-	  			// console.log( "P : " + index + '------------');
+		if (list_Keyword[i].channel == '') {
+			doc.find('[id*=item-section-]').children().each(function (index) {
+				console.log("P : " + index + '------------');
 				//console.log(this);
 
 				vInfo = getVideoInfo(this);
-				if (satisfyKeyWord(list_Keyword[i],vInfo) ) {
+				// vInfo.show();
+				if (satisfyKeyWord(list_Keyword[i], vInfo)) {
 					// vInfo.show();
 					list_vInfo.push(vInfo);
-				}else {
+				} else {
 					// console.log("not satisfied keyword.");
 				}
-			
+
+			});
+		} else {
+			// 在频道搜索
+			doc.find('li.feed-item-container.yt-section-hover-container.browse-list-item-container.branded-page-box').each(function (index) {
+				// console.log( "P : " + index + '------------');
+				//console.log(this);
+
+				vInfo = getVideoInfo(this);
+				if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+					// vInfo.show();
+					list_vInfo.push(vInfo);
+				} else {
+					// console.log("not satisfied keyword.");
+				}
+
 			});
 
 		}
 
 	}
-	
+
 	return list_vInfo;
 }
 
@@ -344,14 +344,14 @@ let list_Playlistmainpage = new Array();
 
 
 
-if(jQuery){
+if (jQuery) {
 	console.log("jQuery loaded")
 }
 
 console.log("开始初始化");
 // 目前只储存两个
 
-list_KeyWord[0] = new keyWord("","","Season One - THE Acapella Producer");
+list_KeyWord[0] = new keyWord("", "", "Season One - THE Acapella Producer");
 //list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 //list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
@@ -368,7 +368,7 @@ console.log("初始化完成");
 // 输出关键字信息
 console.log("list_length :" + list_KeyWord.length);
 for (let i = 0; i < list_KeyWord.length; i++) {
-	console.log((i + 1), "-th \n关键词 : " + list_KeyWord[i].self + "\nchannel : " + list_KeyWord[i].channel + "\nchannel Url : " + list_KeyWord[i].channelUrl );
+	console.log((i + 1), "-th \n关键词 : " + list_KeyWord[i].self + "\nchannel : " + list_KeyWord[i].channel + "\nchannel Url : " + list_KeyWord[i].channelUrl);
 }
 console.log("----------");
 
@@ -380,17 +380,9 @@ browser.browserAction.onClicked.addListener(() => {
 		console.log("final:");
 		//console.log(list_SearchResults)
 		console.log(list_SearchResults.length);
-		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
-		//console.log("num video : ", list_vedio.length);
-		//// debug
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	console.log("<-----" + i+"-th video----->");
-		//	list_vedio[i].show();
-		//}
-	});
-	searchPlayListOnline(list_KeyWord).then((list_Playlistmainpage) => {
+		return searchPlayListOnline(list_KeyWord);
+	}).then((list_Playlistmainpage) => {
 		console.log("final:");
-		//console.log(list_SearchResults)
 		console.log(list_Playlistmainpage.length);
 		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
 		//console.log("num video : ", list_vedio.length);
