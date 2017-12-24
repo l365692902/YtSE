@@ -283,8 +283,7 @@ function filterSearch(list_Keyword, list_SearchResults) {
 let list_KeyWord = new Array();
 // 关键词对应的搜索页面
 let list_SearchResults = new Array();
-// 筛选出符合关键词的视频
-let list_vedio = new Array();
+
 
 
 if(jQuery){
@@ -315,6 +314,8 @@ console.log("----------");
 
 
 browser.browserAction.onClicked.addListener(() => {
+	// 筛选出符合关键词的视频
+	let list_vedio = new Array();
 	searchListOnline(list_KeyWord).then((list_SearchResults) => {
 		console.log("final:");
 		//console.log(list_SearchResults)
@@ -326,7 +327,7 @@ browser.browserAction.onClicked.addListener(() => {
 			console.log("<-----" + i+"-th video----->");
 			list_vedio[i].show();
 		}
-	})
+	});
 })
 
 
