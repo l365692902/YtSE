@@ -10,6 +10,18 @@ YouTube subscribe extension
 
 ### 2017Dec24-BS
 
+迎来一次重大更新
+
+- 实现根据channel或playlist自己添加url
+
+- 实现对list的检索与过滤
+
+- 实现对youtube返回视频更新时间的格式转化 
+
+  如 2天前 -> 时间数字
+
+### 2017Dec24-BS
+
 关于变量的生存周期.
 
 在第一次加载插件的时候,脚本从头运行,声明所有变量.
