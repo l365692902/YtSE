@@ -4,28 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>YtSE Configuration</title>
-  <style>
-    li {
-      margin: 0 3px 3px 3px;
-      padding: 0.4em;
-      padding-left: 1.5em;
-      font-size: 1.4em;
-      height: 18px;
-    }
-
-    li span {
-      position: absolute;
-      margin-left: -1.3em;
-    }
-
-    #sortable .ui-selecting {
-      background: #ccc;
-    }
-
-    #sortable .ui-selected {
-      background: #999;
-    }
-  </style>
+  <link rel="stylesheet" href="options.css">
   <script src="../lib/jquery-3.2.1.min.js"></script>
   <script src="../lib/jquery-ui.min.js"></script>
   <script src="options.js"></script>
@@ -33,29 +12,25 @@
 
 <body>
   <form id="add">
-    add new keyword:
-    <input type="text" value="hey boy" id="newKeyWord">
-    <input type="submit" value="add">
+    <div class="tooltip">
+      Add keyword:
+      <span class="tooltiptext">Tips text here bro</span>
+    </div>
+    <input type="text" value="hey boy" id="newKeyWord" class="tooltip">
+    <input type="submit" value="add" class="button">
   </form>
   <hr>
   <ul id="sortable">
-    <li>
-      No.1 拖动我们</li>
-    <li>
-      No.2 来拖拖看呀</li>
-    <li>
-      No.3 往上拖</li>
-    <li>
-      No.4 往下拖</li>
-    <li>
-      No.5 好不好玩</li>
-    <li>
-      No.6 再拖拖看</li>
-    <li>
-      No.7 能打乱成啥样</li>
+    <li>No.1 拖动我们</li>
+    <li>No.2 来拖拖看呀</li>
+    <li>No.3 往上拖</li>
+    <li>No.4 往下拖</li>
+    <li>No.5 好不好玩</li>
+    <li>No.6 再拖拖看</li>
+    <li>No.7 能打乱成啥样</li>
   </ul>
   <hr>
-  <input type="button" name="button" id="delete" value="delete">
+  <input type="button" name="button" id="delete" value="delete" class="button">
 </body>
 
 </html>

@@ -30,9 +30,15 @@ $(document).ready(function () {
     }, (error) => {
         window.alert("no settings")
     })
-    $("ul").sortable();
+    // $(document).tooltip();
+    $("ul").sortable({
+        start: (event, ui) => {
+            console.log("dragging..." + ui.item[0].innerText)
+            $("#newKeyWord").val(ui.item[0].innerText)
+        }
+    });
     $("#add").submit((e) => {
-        // e.preventDefault()//debug
+        e.preventDefault()//debug
         console.log("got a new one")
         console.log($("#newKeyWord").val())
         $("#sortable").prepend("<li>" + $("#newKeyWord").val() + "</li>")
@@ -52,5 +58,4 @@ $(document).ready(function () {
         })
         let store = browser.storage.local.set({ list_KeyWord })
     })
-    // $("#sortable").disableSelection();
 })

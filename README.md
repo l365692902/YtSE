@@ -8,6 +8,12 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2017Dec25-L
+* 稍微调整了下设置页，效果应该更好了
+  * 拖动元素时会把内容写到输入框，方便修改
+  * 鼠标悬浮在“add keyword”上会显示提示信息
+  * 调整了几处字体，位置
+
 ## 2017Dec22-L
 * 设置页基本成型
 * 发现有storage.sync和storage.local两种可选，目前测试使用的后者，而前者可以实现账号下同步
