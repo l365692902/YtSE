@@ -146,7 +146,7 @@ function searchListOnline(list) {
 			}
 		} else if (list[i].playList != "") {
 			// 对list进行查询
-			console.log("debug : list");
+			//console.log("debug : list");
 			url = "https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=" + removeNChar(list[i].playList);
 			console.log(i + "th " + url);
 			list_p[i] = asynHttpRequest("GET", url);
@@ -582,11 +582,12 @@ function satisfyKeyWord(keyWord, vInfo) {
 	if (keyWord.playList != '' ) {
 		if(vInfo.title == keyWord.playList){
 			satisfied = satisfied && true;
-			console.log(vInfo.title);
+			//console.log(vInfo.title);
 			return satisfied;
 		}else{
 			satisfied = satisfied && false;
-			console.log('false list');
+			//console.log(vInfo.title);
+			//console.log('false list');
 			return satisfied;	
 		}
 	}
@@ -693,7 +694,8 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 		return;
 	}
 	for (let i = 0; i < list_SearchResults.length; i++) {
-		// console.log( "K : " +  i + '------------');
+		//console.log( "K : " +  i + '------------');
+		//list_Keyword[i].show();
 		// string to Document
 		// doc = $.parseHTML(list_SearchResults[i]);
 		doc = $($(list_SearchResults[i]))
@@ -701,13 +703,14 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 			
 		} else {
 			// 在频道搜索
+			//console.log("filterChannelSearch -> in channel");
 			doc.find('ol.item-section').children().each(function (index) {
-				// console.log( "P : " + index + '------------');
+				//console.log( "P : " + index + '------------');
 				//console.log(this);
 
 				vInfo = getChannelInfo(this);
 				//vInfo.show();
-				if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+				if (vInfo.channelName == list_Keyword[i].channel) {
 					//vInfo.show();
 					list_vInfo.push(vInfo);
 				} else {
@@ -727,67 +730,135 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 }
 
 // 在添加关键字后查找channel或list对应的Url
+//function initialUrl(key_word){
+//	// class赋值 直接 key_word_local=key_word 是指针, 两个变量指向一个地址
+//	key_word_local = new  keyWord(key_word.self,key_word.channel,key_word.playList);
+//
+//	console.log("----查找URL------");
+//	//key_word_local.show();
+//	//console.log(key_world.playList)
+//	if( key_word.playList != "" && key_word.playListUrl == ""){
+//		//需要查找playlist的URL
+//		console.log("查找play list");
+//		//key_word_local.show();
+//		let vedio = new Array();
+//		key_word_local.self = "";
+//		searchListOnline([key_word_local]).then((list_SearchResults) => {
+//			console.log("initial final:");
+//			//console.log(list_SearchResults)
+//			console.log(list_SearchResults.length);
+//			
+//			vedio.push.apply(vedio, filterSearch([key_word_local],list_SearchResults));
+//			console.log("initial num video : ", vedio.length);
+//			// debug
+//			
+//			if(vedio.length >0){
+//			// 我们只用查找出来第一个的
+//				//vedio[0].show();
+//				key_word.channel = vedio[0].channelName;
+//				key_word.channelUrl = vedio[0].channelUrl;
+//				key_word.playListUrl = vedio[0].videoUrl;
+//				console.log("找到play list");
+//				key_word.show();
+//			}else{
+//				//没有查找到list
+//				console.log("没有找到play list");
+//			}
+//			
+//		});
+//	}else if(key_word.channel != "" && key_word.channelUrl == ""){
+//		// 查找channel
+//		console.log("查找channel");
+//		//key_word_local.show();
+//		let vedio = new Array();
+//		key_word_local.self = "";
+//		searchListOnline([key_word_local]).then((list_SearchResults) => {
+//			console.log("initial final:");
+//			//console.log(list_SearchResults)
+//			console.log(list_SearchResults.length);
+//			
+//			vedio.push.apply(vedio, filterChannelSearch([key_word_local],list_SearchResults));
+//			console.log("initial num channel : ", vedio.length);
+//			// debug
+//			
+//			if(vedio.length >0){
+//			// 我们只用查找出来第一个的
+//				//vedio[0].show();
+//				key_word.channel = vedio[0].channelName;
+//				key_word.channelUrl = vedio[0].channelUrl;
+//				console.log("找到Channel");
+//				key_word.show();
+//			}else{
+//				//没有查找到list
+//				console.log("没有找到Channel");
+//			}
+//		});
+//	}
+//	
+//	
+//}
+
+// 在添加关键字后查找channel或list对应的Url
 function initialUrl(key_word){
 	// class赋值 直接 key_word_local=key_word 是指针, 两个变量指向一个地址
-	key_word_local = new  keyWord(key_word.self,key_word.channel,key_word.playList);
+	let key_word_local = new  keyWord(key_word.self,key_word.channel,key_word.playList);
 
 	console.log("----查找URL------");
+	//key_word_local.show();
 	//console.log(key_world.playList)
-	if( key_word.playList != "" && key_word.playListUrl == ""){
-		//需要查找playlist的URL
-		let vedio = new Array();
-		key_word_local.self = "";
-		searchListOnline([key_word_local]).then((list_SearchResults) => {
-			console.log("initial final:");
-			//console.log(list_SearchResults)
-			console.log(list_SearchResults.length);
-			
+	let vedio = new Array();
+	key_word_local.self = "";
+	searchListOnline([key_word_local]).then((list_SearchResults) => {
+		
+		//console.log("initial final : ",list_SearchResults.length);
+		//console.log(list_SearchResults)
+		//key_word_local.show();
+		if( key_word.playList != "" && key_word.playListUrl == ""){
+			//key_word.show();
+			console.log("查找play list");
+			////key_word.show();
 			vedio.push.apply(vedio, filterSearch([key_word_local],list_SearchResults));
-			console.log("initial num video : ", vedio.length);
-			// debug
-			
-			if(vedio.length >0){
-			// 我们只用查找出来第一个的
-				//vedio[0].show();
+		}else if(key_word.channel != "" && key_word.channelUrl == ""){
+			//key_word.show();
+			console.log("查找channel");
+			////key_word.show();
+			vedio.push.apply(vedio, filterChannelSearch([key_word_local],list_SearchResults));
+		}
+		
+		//console.log("initial num video : ", vedio.length);
+		// debug
+
+		if(vedio.length >0){
+		// 我们只用查找出来第一个的
+			//vedio[0].show();
+			if( key_word.playList != "" && key_word.playListUrl == ""){
+				//需要查找playlist的URL
+				
+				//key_word_local.show();
 				key_word.channel = vedio[0].channelName;
 				key_word.channelUrl = vedio[0].channelUrl;
 				key_word.playListUrl = vedio[0].videoUrl;
+				console.log("找到play list");
+				//key_word.show();		
+			}else if(key_word.channel != "" && key_word.channelUrl == ""){
 				
-			}else{
-				//没有查找到list
-				console.log("没有找到play list");
-			}
-			
-		});
-	}else if(key_word.channel != "" && key_word.channelUrl == ""){
-		// 查找channel
-		console.log("查找channel");
-		let vedio = new Array();
-		key_word_local.self = "";
-		searchListOnline([key_word_local]).then((list_SearchResults) => {
-			console.log("initial final:");
-			//console.log(list_SearchResults)
-			console.log(list_SearchResults.length);
-			
-			vedio.push.apply(vedio, filterChannelSearch([key_word_local],list_SearchResults));
-			console.log("initial num channel : ", vedio.length);
-			// debug
-			
-			if(vedio.length >0){
-			// 我们只用查找出来第一个的
-				//vedio[0].show();
 				key_word.channel = vedio[0].channelName;
 				key_word.channelUrl = vedio[0].channelUrl;
-				key_word.show();
-			}else{
-				//没有查找到list
-				console.log("没有找到Channel");
+				console.log("找到Channel");
+				//key_word.show();
 			}
-		});
-	}
-	
+
+		}else{
+			//没有查找到list
+			console.log("没有找到Url");
+		}
+		console.log("-------------->");
+	});	
 	
 }
+
+
+
 
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
@@ -808,14 +879,16 @@ let list_KeyWord = new Array();
 
 
 if (jQuery) {
-	console.log("jQuery loaded")
+	console.log("jQuery loaded");
+	
 }
 
 console.log("开始初始化");
 // 目前只储存两个
 
-//list_KeyWord[0] = new keyWord("", "", "Season One - THE Acapella Producer");
+
 list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
 //list_KeyWord[0] = new keyWord("","","【超清】《爸爸去哪儿》第五季Dad Where Are We Going S05——王牌亲子综艺节目再度回归【马来西亚地区已可以观看全13期+特别版】");
 //list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
@@ -825,6 +898,7 @@ for (let i = 0; i < list_KeyWord.length; i++) {
 	// searchChannelNum(list_KeyWord[i]);
 	//list_KeyWord[i].show();
 	initialUrl(list_KeyWord[i]);
+	console.log("=======");
 	
 }
 
