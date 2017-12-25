@@ -96,30 +96,30 @@ function checkResponse(xhr) {
 //promise based asynchronous xmlHttpRequest
 function asynHttpRequest(method, url) {
 	return new Promise((resolve, reject) => {
-		const xhr = new XMLHttpRequest()
-		xhr.open(method, url, true)
+		const xhr = new XMLHttpRequest();
+		xhr.open(method, url, true);
 		xhr.onload = () => {
-			checkResponse(xhr)//DEBUG
-			resolve(xhr.response)
-		}
+			checkResponse(xhr);//DEBUG
+			resolve(xhr.response);
+		};
 		xhr.onerror = () => {
-			console.log("error occur while accessing " + url)
-			reject("error")
-		}
+			console.log("error occur while accessing " + url);
+			reject("error");
+		};
 		if (method == "POST") {
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-		}//needed in post mode
+		};//needed in post mode
 		//counter-anit-scraping
 		xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:37.0) Gecko/20100101 Firefox/37.0');
-		xhr.send()
-		popUpNotification("in asyn... request sent")//DEBUG)
-	})
+		xhr.send();
+		popUpNotification("in asyn... request sent");//DEBUG)
+	});
 }
 
 // 根据关键字列表索取youtube页面
 function searchListOnline(list) {
-	let url
-	let url_list
+	let url;
+	let url_list;
 	let list_p = new Array(list.length);
 
 	//console.log("debug : " + list.length);
@@ -257,6 +257,7 @@ function convertReTime2Int(timeStr) {
 	
 	// 曾经直播标志
 	var stream_Zh = "直播时间：";
+	var stream_Zhf= "曾經串流";
 	var stream_En = "Streamed";
 
 	
@@ -264,6 +265,8 @@ function convertReTime2Int(timeStr) {
 	if(timeStr.includes("前")){
 		if(timeStr.includes(stream_Zh)){
 			timeStr_local = timeStr.substring(stream_Zh.length);
+		}else if(timeStr.includes(stream_Zhf)){ //5 小時前曾經串流
+			timeStr_local = timeStr.substring(0,timeStr.length-stream_Zhf.length);
 		}else{
 			timeStr_local = timeStr;
 		}
@@ -277,6 +280,11 @@ function convertReTime2Int(timeStr) {
 			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
 			//console.log(cont);
 			return -cont*2629800000;
+		}else if(timeStr_local.includes("個月前")){
+			var timel = "個月前";
+			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
+			//console.log(cont);
+			return -cont*2629800000;
 		}else if(timeStr_local.includes("天前")){
 			var timel = "天前";
 			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
@@ -287,8 +295,18 @@ function convertReTime2Int(timeStr) {
 			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
 			//console.log(cont);
 			return -cont*604800016;
+		}else if(timeStr_local.includes("週前")){
+			var timel = "週前";
+			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
+			//console.log(cont);
+			return -cont*604800016;
 		}else if(timeStr_local.includes("小时前")){
 			var timel = "小时前";
+			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
+			//console.log(cont);
+			return -cont*3600000;
+		}else if(timeStr_local.includes("小時前")){
+			var timel = "小時前";
 			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
 			//console.log(cont);
 			return -cont*3600000;
@@ -297,6 +315,16 @@ function convertReTime2Int(timeStr) {
 			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
 			//console.log(cont);
 			return -cont*60000;
+		}else if(timeStr_local.includes("分鐘前")){
+			var timel = "分鐘前";
+			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
+			//console.log(cont);
+			return -cont*60000;
+		}else if(timeStr_local.includes("今日")){
+			var timel = "今日";
+			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
+			//console.log(cont);
+			return -cont*43200000; // 0.5 day
 		}else{
 			// 没有合适的
 			console.log("error : no switched time tag : " + timeStr_local);
@@ -370,6 +398,11 @@ function convertReTime2Int(timeStr) {
 			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
 			//console.log(cont);
 			return -cont*60000;
+		}else if(timeStr_local.includes("today")){
+			var timel = "today";
+			var cont = parseInt(timeStr_local.substring(0,timeStr_local.length-timel.length));
+			//console.log(cont);
+			return -cont*43200000;
 		}else{
 			// 没有合适的
 			console.log("error : no switched time tag : " + timeStr_local);
@@ -413,13 +446,22 @@ function getVideoInfo(il_video) {
 	
 		// 获取更新时间
 		timeObj = $(il_video).find("div.yt-lockup-content").find("div.yt-lockup-meta").find("ul.yt-lockup-meta-info");
-		//timeObj = $(il_video).find("ul.yt-lockup-meta-info");
-		uptimeli = $(timeObj).find("li").toArray()[0];
-		//console.log("----------------");
-		//console.log($(uptimeli).text(),convertReTime2Int($(uptimeli).text()));
-		
 		var tNow = new Date();
-		uptimeStr = convertReTime2Int($(uptimeli).text())+tNow.valueOf();
+		if($(timeObj).find("li").toArray().length == 2){
+			uptimeli = $(timeObj).find("li").toArray()[0];
+			uptimeStr = convertReTime2Int($(uptimeli).text())+tNow.valueOf();
+		}else{
+			// 可能在直播
+			if($(il_video).find("div.yt-lockup-content").find("div.yt-lockup-badges").find("ul.yt-badge-list").find("span.yt-badge.yt-badge-live").length > 0){
+				// 在直播
+				uptimeStr = tNow.valueOf();
+			}else{
+				// 不知道类别
+				uptimeStr = tNow.valueOf();
+			}
+		}
+		
+
 	
 		vInfo = new infoVideo(il_video, title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, tNow);
 		
@@ -524,6 +566,10 @@ function updatePlayListInfo(vInfo, ListPage){
 	
 	var Zhtime1 = "最后更新时间：";
 	var Zhtime2 = "更新";
+	
+	var Zhftime1 = "上次更新時間：";
+	var Zhftime2 = "更新";	
+	
 	var Entime1 = "Last updated on ";
 	var Entime1 = "Updated";
 	// 获取更新时间
@@ -532,6 +578,12 @@ function updatePlayListInfo(vInfo, ListPage){
 	// console.log(uptimeStr);
 	
 	if(uptimeStr.includes(Zhtime1)){
+	// 繁体中文 "上次更新時間：xxxx年xx月xx日"
+		var timeStr = uptimeStr.substring(Zhftime1.length);
+		
+		vInfo.upTime = convertAbTime2Int(timeStr);
+		
+	} else if(uptimeStr.includes(Zhtime1)){
 	// 中文 "最后更新时间：xxxx年xx月xx日"
 		var timeStr = uptimeStr.substring(Zhtime1.length);
 		
@@ -729,74 +781,7 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 	return list_vInfo;
 }
 
-// 在添加关键字后查找channel或list对应的Url
-//function initialUrl(key_word){
-//	// class赋值 直接 key_word_local=key_word 是指针, 两个变量指向一个地址
-//	key_word_local = new  keyWord(key_word.self,key_word.channel,key_word.playList);
-//
-//	console.log("----查找URL------");
-//	//key_word_local.show();
-//	//console.log(key_world.playList)
-//	if( key_word.playList != "" && key_word.playListUrl == ""){
-//		//需要查找playlist的URL
-//		console.log("查找play list");
-//		//key_word_local.show();
-//		let vedio = new Array();
-//		key_word_local.self = "";
-//		searchListOnline([key_word_local]).then((list_SearchResults) => {
-//			console.log("initial final:");
-//			//console.log(list_SearchResults)
-//			console.log(list_SearchResults.length);
-//			
-//			vedio.push.apply(vedio, filterSearch([key_word_local],list_SearchResults));
-//			console.log("initial num video : ", vedio.length);
-//			// debug
-//			
-//			if(vedio.length >0){
-//			// 我们只用查找出来第一个的
-//				//vedio[0].show();
-//				key_word.channel = vedio[0].channelName;
-//				key_word.channelUrl = vedio[0].channelUrl;
-//				key_word.playListUrl = vedio[0].videoUrl;
-//				console.log("找到play list");
-//				key_word.show();
-//			}else{
-//				//没有查找到list
-//				console.log("没有找到play list");
-//			}
-//			
-//		});
-//	}else if(key_word.channel != "" && key_word.channelUrl == ""){
-//		// 查找channel
-//		console.log("查找channel");
-//		//key_word_local.show();
-//		let vedio = new Array();
-//		key_word_local.self = "";
-//		searchListOnline([key_word_local]).then((list_SearchResults) => {
-//			console.log("initial final:");
-//			//console.log(list_SearchResults)
-//			console.log(list_SearchResults.length);
-//			
-//			vedio.push.apply(vedio, filterChannelSearch([key_word_local],list_SearchResults));
-//			console.log("initial num channel : ", vedio.length);
-//			// debug
-//			
-//			if(vedio.length >0){
-//			// 我们只用查找出来第一个的
-//				//vedio[0].show();
-//				key_word.channel = vedio[0].channelName;
-//				key_word.channelUrl = vedio[0].channelUrl;
-//				console.log("找到Channel");
-//				key_word.show();
-//			}else{
-//				//没有查找到list
-//				console.log("没有找到Channel");
-//			}
-//		});
-//	}
-//	
-//	
-//}
+
 
 // 在添加关键字后查找channel或list对应的Url
 function initialUrl(key_word){
@@ -808,52 +793,56 @@ function initialUrl(key_word){
 	//console.log(key_world.playList)
 	let vedio = new Array();
 	key_word_local.self = "";
-	searchListOnline([key_word_local]).then((list_SearchResults) => {
-		
-		//console.log("initial final : ",list_SearchResults.length);
-		//console.log(list_SearchResults)
-		//key_word_local.show();
-		if( key_word.playList != "" && key_word.playListUrl == ""){
-			//key_word.show();
-			console.log("查找play list");
-			////key_word.show();
-			vedio.push.apply(vedio, filterSearch([key_word_local],list_SearchResults));
-		}else if(key_word.channel != "" && key_word.channelUrl == ""){
-			//key_word.show();
-			console.log("查找channel");
-			////key_word.show();
-			vedio.push.apply(vedio, filterChannelSearch([key_word_local],list_SearchResults));
-		}
-		
-		//console.log("initial num video : ", vedio.length);
-		// debug
-
-		if(vedio.length >0){
-		// 我们只用查找出来第一个的
-			//vedio[0].show();
+	
+	
+	if(key_word.playList != "" || key_word.channel != "" ){
+		searchListOnline([key_word_local]).then((list_SearchResults) => {
+			
+			//console.log("initial final : ",list_SearchResults.length);
+			//console.log(list_SearchResults)
+			//key_word_local.show();
 			if( key_word.playList != "" && key_word.playListUrl == ""){
-				//需要查找playlist的URL
-				
-				//key_word_local.show();
-				key_word.channel = vedio[0].channelName;
-				key_word.channelUrl = vedio[0].channelUrl;
-				key_word.playListUrl = vedio[0].videoUrl;
-				console.log("找到play list");
-				//key_word.show();		
-			}else if(key_word.channel != "" && key_word.channelUrl == ""){
-				
-				key_word.channel = vedio[0].channelName;
-				key_word.channelUrl = vedio[0].channelUrl;
-				console.log("找到Channel");
 				//key_word.show();
+				console.log("查找play list");
+				////key_word.show();
+				vedio.push.apply(vedio, filterSearch([key_word_local],list_SearchResults));
+			}else if(key_word.channel != "" && key_word.channelUrl == ""){
+				//key_word.show();
+				console.log("查找channel");
+				////key_word.show();
+				vedio.push.apply(vedio, filterChannelSearch([key_word_local],list_SearchResults));
 			}
-
-		}else{
-			//没有查找到list
-			console.log("没有找到Url");
-		}
-		console.log("-------------->");
-	});	
+			
+			//console.log("initial num video : ", vedio.length);
+			// debug
+	
+			if(vedio.length >0){
+			// 我们只用查找出来第一个的
+				//vedio[0].show();
+				if( key_word.playList != "" && key_word.playListUrl == ""){
+					//需要查找playlist的URL
+					
+					//key_word_local.show();
+					key_word.channel = vedio[0].channelName;
+					key_word.channelUrl = vedio[0].channelUrl;
+					key_word.playListUrl = vedio[0].videoUrl;
+					console.log("找到play list");
+					//key_word.show();		
+				}else if(key_word.channel != "" && key_word.channelUrl == ""){
+					
+					key_word.channel = vedio[0].channelName;
+					key_word.channelUrl = vedio[0].channelUrl;
+					console.log("找到Channel");
+					//key_word.show();
+				}
+	
+			}else{
+				//没有查找到list
+				console.log("没有找到Url");
+			}
+			console.log("-------------->");
+		});									
+	}
 	
 }
 
@@ -887,8 +876,9 @@ console.log("开始初始化");
 // 目前只储存两个
 
 
-list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
-list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+//list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+//list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+list_KeyWord[0] = new keyWord("Christmas Songs for Kids | Christmas Songs | Nursery Rhymes and Baby Songs from Dave and Ava");
 //list_KeyWord[0] = new keyWord("","","【超清】《爸爸去哪儿》第五季Dad Where Are We Going S05——王牌亲子综艺节目再度回归【马来西亚地区已可以观看全13期+特别版】");
 //list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
