@@ -30,4 +30,41 @@ gettingItem.then((Obj) =>{
 
 	console.log("load " + list_vedio.length + " videos");
 	
+	// 开始解析网页
+	$(document).ready(function(){
+		console.log("ready to load");
+	//Obj = $("div.multirow-shelf").find("ul.shelf-content");
+	//尝试插入
+	//console.log("<ytd-grid-video-renderer class=\"style-scope ytd-grid-renderer\">"+
+	//  list_vedio[0].il +
+	//  "</ytd-grid-video-renderer>");
+	//$("<ytd-grid-video-renderer class=\"style-scope ytd-grid-renderer\">"+
+	//  list_vedio[0].il +
+	//  "</ytd-grid-video-renderer>").insertAfter($("div.style-scope.ytd-grid-renderer"));
+	//debug_1 = new infoVideo();
+	//debug_1 = getVideoInfo(list_vedio[0].il);
+	//debug_1.show();
+	
+	//新版
+	//$("<ytd-grid-video-renderer class=\"style-scope ytd-grid-renderer\">"+
+	//  list_vedio[0].il +
+	//  "</ytd-grid-video-renderer>").insertAfter(
+	//								  $("ytd-grid-renderer.style-scope.ytd-shelf-renderer")
+	//								  .find("div.style-scope.ytd-grid-renderer")
+	//								  .find("ytd-grid-video-renderer.style-scope.ytd-grid-renderer"));
+	
+	//旧版
+	Obj = $("div.multirow-shelf").find("ul.shelf-content").find("li.yt-shelf-grid-item");
+	//console.log("<li class=\"yt-shelf-grid-item\">"+list_vedio[0].il +"</li>");
+	$(Obj).each(function(index){
+		if(index == 0){
+			$("<li class=\"yt-shelf-grid-item\">"+
+			list_vedio[0].il +
+			"</li>").insertAfter($(this));
+		}
+		
+	});
+		
+	
+	});
 });
