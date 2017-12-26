@@ -1,12 +1,3 @@
-class keyWord {
-    constructor(keyWord = "", youTuber = "", channel = "", playList = "") {
-        this.self = keyWord
-        this.youTuber = youTuber
-        this.channel = channel
-        this.playList = playList
-    }
-}
-
 $(document).ready(function () {
     // $("#sortable").selectable();
     let list_KeyWord = new Array();
