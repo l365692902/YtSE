@@ -8,6 +8,18 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+### 2017Dec27-BS
+
+悲剧了
+
+- Youtube现在有新的界面,和老版格式不太相同. 
+
+  插入视频后youtube会自己刷新一下,手动插入的部分无法显示出来
+
+  通过访问youtube.com/new可以切换到新版. 通过右上角头像可以切换回旧版.
+
+- 老版Youtube手动插入可以正常加载. 但是发现搜索抓出来的html格式和订阅页面有所不同,所以也不能加载出来. 需要一个转化函数,还需要一个针对订阅页面筛选视频信息的函数
+
 ### 2017Dec25-BS
 
 发现youtube搜索对一些字符不支持
@@ -125,6 +137,7 @@ channelurl有两种
         {
         w=new Worker("/example/html5/demo_workers.js");
         }
+    ```
 
 * HTML 链接 Target 属性，你可以定义被链接的文档在何处显示，例如新窗口
 
