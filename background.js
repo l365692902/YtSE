@@ -99,8 +99,10 @@ console.log("----------");
 
 
 browser.browserAction.onClicked.addListener(() => {
-	searchList(list_KeyWord).then((e) => {
-		console.log("final:")
-		console.log(e)
-	})
+	// searchListOnline(list_KeyWord).then((e) => {
+	// 	console.log("final:")
+	// 	console.log(e)
+	// })
+	//browser.storage.local.get("color").then((e)=>{popUpNotification(e.color)})
+	browser.runtime.openOptionsPage()
 })
