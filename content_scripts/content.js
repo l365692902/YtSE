@@ -2,5 +2,6 @@
 
 
 // =============================START FROM HERE================================
-var myTime = new Date();
-console.log("%c"+myTime.toTimeString() + ": this is line 1 of content.js","color:#00ff00");
+let test=new keyWord("this is a test")
+test.show()
+window.alert("Hey boy")
