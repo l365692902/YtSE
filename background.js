@@ -1,3 +1,25 @@
+
+// 对infoVideo数组中,视频更新顺序进行排序. 从新到旧
+function videoMergeSort(array) {  //采用自上而下的递归方法
+  var length = array.length;
+  if(length < 2) {
+    return array;
+  }
+  var m = (length >> 1),
+      left = array.slice(0, m),
+      right = array.slice(m); //拆分为两个子数组
+  return merge(videoMergeSort(left), videoMergeSort(right));//子数组继续递归拆分,然后再合并
+}
+function merge(left, right){ //合并两个子数组
+  var result = [];
+  while (left.length && right.length) {
+    var item = left[0].upTime >= right[0].upTime ? left.shift() : right.shift();//注意:判断的条件是小于或等于,如果只是小于,那么排序将不稳定.
+    result.push(item);
+  }
+  return result.concat(left.length ? left : right);
+}
+
+
 //for debug
 function popUpNotification(message) {
 	browser.notifications.create({
@@ -485,7 +507,10 @@ browser.browserAction.onClicked.addListener(() => {
 		}
 		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
 		//console.log("num video : ", list_vedio.length);
+		list_vedio = videoMergeSort(list_vedio);
+
 		//// debug
+
 		for (let i = 0; i < list_vedio.length; i++) {
 			console.log("<-----" + i + "-th video----->");
 			list_vedio[i].show();
