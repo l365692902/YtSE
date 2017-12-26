@@ -243,9 +243,10 @@ function updatePlayListInfo(vInfo, ListPage) {
 	// 获取更新时间
 	uptimeObj = $(ListPage).find("div.pl-header-content").find("ul.pl-header-details").find("li").toArray()[3];
 	var uptimeStr = $(uptimeObj).text();
-	// console.log(uptimeStr);
+	//console.log("-----debug--------");
+	//console.log(uptimeStr);
 
-	if (uptimeStr.includes(Zhtime1)) {
+	if (uptimeStr.includes(Zhftime1)) {
 		// 繁体中文 "上次更新時間：xxxx年xx月xx日"
 		var timeStr = uptimeStr.substring(Zhftime1.length);
 
@@ -254,7 +255,7 @@ function updatePlayListInfo(vInfo, ListPage) {
 	} else if (uptimeStr.includes(Zhtime1)) {
 		// 中文 "最后更新时间：xxxx年xx月xx日"
 		var timeStr = uptimeStr.substring(Zhtime1.length);
-
+		//console.log(timeStr);
 		vInfo.upTime = convertAbTime2Int(timeStr);
 
 	} else if (uptimeStr.includes(Zhtime2)) {
@@ -476,7 +477,11 @@ browser.browserAction.onClicked.addListener(() => {
 		// 或得playList更新时间
 		for (let i = 0; i < list_KeyWord.length; i++) {
 			if (list_KeyWord[i].playList != "") {
-				updatePlayListInfo(list_vedio[i], list_Playlistmainpage[i])
+				for (let j=0; j< list_vedio.length; j++) {
+					if (list_KeyWord[i].channel == list_vedio[j].channelName && list_KeyWord[i].playList == list_vedio[j].title){
+						updatePlayListInfo(list_vedio[j], list_Playlistmainpage[i]);
+					}
+				}
 			}
 		}
 		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
@@ -485,7 +490,17 @@ browser.browserAction.onClicked.addListener(() => {
 		for (let i = 0; i < list_vedio.length; i++) {
 			console.log("<-----" + i + "-th video----->");
 			list_vedio[i].show();
-		}
+		}		
+		//let list_vedio_local = new Array();
+		//for (let i = 0; i < list_vedio.length; i++) {
+		//	list_vedio_local[i] = new infoVideo();
+		//	list_vedio[i].clone(list_vedio_local[i]);
+		//}
+		//for (let i = 0; i < list_vedio.length; i++) {
+		//	console.log("<-----" + i + "-th video----->");
+		//	list_vedio_local[i].show();
+		//}		
+		//let  storageVideo = browser.storage.local.set({list_KeyWord});
 	});
 })
 
