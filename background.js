@@ -179,7 +179,7 @@ function getChannelInfo(il_video) {
 	var tNow = new Date();
 	uptimeStr = tNow.valueOf();
 
-	vInfo = new infoVideo(il_video, "", "", coverUrl, "", channelName, channelUrl, "", tNow);
+	vInfo = new infoVideo($(il_video).html(), "", "", coverUrl, "", channelName, channelUrl, "", tNow);
 
 	//vInfo.show();
 	return vInfo;
@@ -222,7 +222,7 @@ function getPlayListInfo(il_video) {
 	uptimeStr = '' // 更新时间无法在搜索页面拿到,要在主页拿到; 在updatePlayListInfo函数中
 	var videoUrl = $(listUrlObj).find("li").children().attr("href");
 
-	vInfo = new infoVideo(il_video, title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, new Date());
+	vInfo = new infoVideo($(il_video).html(), title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, new Date());
 
 	return vInfo;
 	// vInfo.show();
@@ -414,7 +414,6 @@ let list_KeyWord = new Array();
 //let list_Playlistmainpage = new Array();
 
 
-
 if (jQuery) {
 	console.log("jQuery loaded");
 
@@ -440,7 +439,7 @@ for (let i = 0; i < list_KeyWord.length; i++) {
 
 }
 
-
+//browser.storage.local.clear();
 console.log("初始化完成");
 //convertReTime2Int("2 小时前");
 
@@ -491,16 +490,9 @@ browser.browserAction.onClicked.addListener(() => {
 			console.log("<-----" + i + "-th video----->");
 			list_vedio[i].show();
 		}		
-		//let list_vedio_local = new Array();
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	list_vedio_local[i] = new infoVideo();
-		//	list_vedio[i].clone(list_vedio_local[i]);
-		//}
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	console.log("<-----" + i + "-th video----->");
-		//	list_vedio_local[i].show();
-		//}		
-		//let  storageVideo = browser.storage.local.set({list_KeyWord});
+		
+		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
+		let  storageVideo = browser.storage.local.set({list_vedio});
 	});
 })
 
