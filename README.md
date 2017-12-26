@@ -8,6 +8,79 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+### 2017Dec25-BS
+
+发现youtube搜索对一些字符不支持
+
+一些中文字符,符号字符
+
+目前发现的:
+
+**部分emoji** 
+
+隶属字符集 : Miscellaneous Symbols and Pictographs 范围 : 1F300—1F5FF
+
+无效 : 🎁
+
+有效 : 💄
+
+**部分中文字符** 
+
+隶属字符集 : CJK Symbols and Punctuation 范围 :3000—303F
+
+无效 : 《 》
+
+有效 : 【
+
+目前只是在程序里处理了《 》,其他字符没关,因为没有发现什么规律. 
+
+所以建议用户添加关键词的时候确认关键词好用.
+
+### 2017Dec24-BS
+
+迎来一次重大更新
+
+- 实现根据channel或playlist自己添加url
+
+- 实现对list的检索与过滤
+
+- 实现对youtube返回视频更新时间的格式转化 
+
+  如 2天前 -> 时间数字
+
+### 2017Dec24-BS
+
+关于变量的生存周期.
+
+在第一次加载插件的时候,脚本从头运行,声明所有变量.
+
+全局变量将会被一直保留,
+
+再运行插件的时候是从点击按钮开始.
+
+### 2017Dec23-BS
+
+添加了网页对关键字过滤功能,并将符合条件的视频信息储存在数组里.
+目前完成了对youtube全局搜索和对频道进行搜索. 对列表的处理还没有添加.
+
+### 2017Dec17-BS
+
+添加搜索youtuber页面功能,将结果也储存在list_SearchResults里
+
+对于主页搜索和之前完成的全局搜索基本差不多
+
+地址格式为 www.youtube.com/"channelurl"/?search_query="要搜索的内容"
+
+channelurl有两种
+
+- channel开头 
+
+  比如阅后即瞎官方主页 https://www.youtube.com/channel/UCHCb7_nHscX38PI0L182GGA
+
+- user开头
+
+  比如爸爸去哪主页 https://www.youtube.com/user/imgotv
+
 ## 2017Dec25-L
 * 稍微调整了下设置页，效果应该更好了
   * 拖动元素时会把内容写到输入框，方便修改
@@ -56,6 +129,7 @@ YouTube subscribe extension
 * HTML 链接 Target 属性，你可以定义被链接的文档在何处显示，例如新窗口
 
 ## 2017Dec17-L
+
 * 这将是里程碑式的一次提交
 
 ## 2017Dec16-L
