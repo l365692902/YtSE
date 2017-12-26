@@ -14,30 +14,36 @@
     },
     "content_scripts": [
         {
-            "matches": ["*://*.youtube.com/*"],
-            "js": ["content_scripts/content.js"]
+            "matches": [
+                "*://*.youtube.com/*"
+            ],
+            "js": [
+                "content_scripts/content.js"
+            ]
         }
     ],
-    "background":{
-	"scripts":[
-		"lib/jquery-3.2.1.min.js",
-		"background.js"
-	]
+    "background": {
+        "scripts": [
+            "lib/jquery-3.2.1.min.js",
+            "background.js"
+        ]
     },
     "icons": {
         "48": "icons/red_48.png",
         "96": "icons/red_96.png"
     },
-    // "optional_permissions": [
-    //     "activeTab",
-    //     "notifications"
-    // ],this is f**king bu****it
-    "permissions":[
+    "options_ui": {
+        "page":"settings/options.html",
+        // "page": "lib/test.html",
+        "open_in_tab": false
+    },
+    "permissions": [
         // "activeTab",
         "notifications",
         "*://*.youtube.com/*",
-        "<all_urls>"
+        "<all_urls>",
+        "storage"
     ],
-    // "content_security_policy":"script-src 'self' 'unsafe-eval';object-src 'self'",
+    // "content_security_policy": "script-src 'self' 'sha256-/nLaDjLjCQs9I0v3MGE2bIX/U6rHqCAVc4r/uI3I34o='; object-src 'self'",
     "author": "c4r"
 }

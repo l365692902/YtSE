@@ -1,61 +1,38 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
+<style>
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Sortable - Default functionality</title>
-  <style>
-    #sortable {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      width: 60%;
-    }
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
 
-    #sortable li {
-      margin: 0 3px 3px 3px;
-      padding: 0.4em;
-      padding-left: 1.5em;
-      font-size: 1.4em;
-      height: 18px;
-    }
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
 
-    #sortable li span {
-      position: absolute;
-      margin-left: -1.3em;
-    }
-  </style>
-  <script src="jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
-  <script src="jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-    crossorigin="anonymous"></script>
-  <script>$(function () {
-      $("#sortable").sortable();
-      $("#sortable").disableSelection();
-    })</script>
-</head>
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+</style>
+<body style="text-align:center;">
 
-<body>
+<p>Move the mouse over the text below:</p>
 
-  <ul id="sortable">
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
-    <li class="ui-state-default">
-      <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
-  </ul>
+<div class="tooltip">Hover over me
+  <span class="tooltiptext">Tooltip text</span>
+</div>
 
+<p>Note that the position of the tooltip text isn't very good. Go back to the tutorial and continue reading on how to position the tooltip in a desirable way.</p>
 
 </body>
-
 </html>
