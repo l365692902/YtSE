@@ -6,7 +6,22 @@
 //test.show()
 //window.alert("Hey boy")
 
+function convertSearchToFeed(ObjM, VedioInfo){
+	// 替换观看历史
+	// 替换标题
+	// 替换up主
+	ObjM_local = ObjM.clone();
+	
+	// 首先替换封面
+	$(ObjM_local).find("span.yt-thumb-simple").find("img").attr('src', VedioInfo.coverUrl);
+	
+	// 替换时长
+	$(ObjM_local).find("span.video-time").text( VedioInfo.videoTime);
+	
+	// 替换标题
 
+	return ObjM_local;
+}
 
 
 
@@ -54,16 +69,27 @@ gettingItem.then((Obj) =>{
 	//								  .find("ytd-grid-video-renderer.style-scope.ytd-grid-renderer"));
 	
 	//旧版
+	// 首先复制一个视频作为模板
 	Obj = $("div.multirow-shelf").find("ul.shelf-content").find("li.yt-shelf-grid-item");
+	
 	//console.log("<li class=\"yt-shelf-grid-item\">"+list_vedio[0].il +"</li>");
 	$(Obj).each(function(index){
 		if(index == 0){
-			$("<li class=\"yt-shelf-grid-item\">"+
-			list_vedio[0].il +
-			"</li>").insertAfter($(this));
+			ObjInsertModel=$(this).clone();
+			//console.log(ObjInsertModel);
 		}
 		
 	});
+	
+	
+	
+	$(Obj).each(function(index){
+		if(index == 1){
+			$(convertSearchToFeed(ObjInsertModel,list_vedio[0])).insertAfter($(this));
+		}
+		
+	});
+	
 		
 	
 	});
