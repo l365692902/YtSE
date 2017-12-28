@@ -7,14 +7,51 @@ function convertSearchToFeed(ObjM, VedioInfo) {
 
 	// 首先替换封面
 	$(ObjM_local).find("span.yt-thumb-simple").find("img").attr('src', VedioInfo.coverUrl);
+	//console.log($(ObjList).find("img").attr("width"));
 	// 替换封面链接
-	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").find("a.yt-uix-sessionlink.spf-link").remove();
-	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").prepend(
-		function () {
-			return $(VedioInfo.il).find("div.yt-lockup-thumbnail").find("a.yt-uix-sessionlink").attr("classs", " yt-uix-sessionlink      spf-link ");
-		}
-	)
-
+	
+	//$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").find("a.yt-uix-sessionlink.spf-link").remove();
+	//console.log("change cover");
+	//$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").prepend(
+	//	function () {
+	//		console.log("change cover2 ");
+	//		if($(VedioInfo.il).find("div.yt-lockup-thumbnail").find("a.yt-uix-sessionlink").length > 0){
+	//			console.log("existed");
+	//			return $(VedioInfo.il).find("div.yt-lockup-thumbnail").find("a.yt-uix-sessionlink").attr("classs", " yt-uix-sessionlink      spf-link ");
+	//		}else{
+	//			console.log("no existed");
+	//			return $(VedioInfo.il).find("div.yt-lockup-thumbnail.yt-pl-thumb").find("a.yt-pl-thumb-link.yt-uix-sessionlink.spf-link")
+	//			.attr("classs", " yt-uix-sessionlink      spf-link ");
+	//		}
+	//	}
+	//)
+	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-addto").find("a.yt-uix-sessionlink.spf-link")
+	.attr("href",  $(VedioInfo.il).find("div.yt-lockup-thumbnail.yt-pl-thumb")
+	.find("a.yt-pl-thumb-link.yt-uix-sessionlink.spf-link").attr("href"));
+	
+	//console.log("change cover");
+	//$(ObjM_local).find("div.yt-lockup-thumbnail.contains-addto").prepend(
+	//	function () {
+	//		console.log("change cover2 ");
+	//		//if(VedioInfo){
+	//			//console.log("list existed");
+	//			ObjList = $(VedioInfo.il).find("div.yt-lockup-thumbnail.yt-pl-thumb")
+	//			.find("a.yt-pl-thumb-link.yt-uix-sessionlink.spf-link").attr("class", " yt-uix-sessionlink      spf-link ").clone();
+	//			//删除列表
+	//			$(ObjList).find("div.sidebar").remove();
+	//			// 更改图片尺寸
+	//			//$(ObjList).find("img").attr("width", "196");
+	//			//$(ObjList).find("img").attr("height", "110");
+	//			return $(ObjList);
+	//		//}else{
+	//			//console.log("no existed");
+	//			//return $(VedioInfo.il).find("div.yt-lockup-thumbnail.yt-pl-thumb").find("a.yt-pl-thumb-link.yt-uix-sessionlink.spf-link")
+	//			//.attr("classs", " yt-uix-sessionlink      spf-link ");
+	//		//}
+	//	}
+	//)
+	
+	
 	// 替换时长
 	$(ObjM_local).find("span.video-time").text(VedioInfo.videoTime);
 
@@ -111,12 +148,17 @@ gettingItem.then((Obj) => {
 			}
 
 		});
-
-
-
+		
+		
+		// 准备插入
+		let indexBegin = 0;
+		//for (let i = 0; i < list.length; i++) {
+		//	
+		//}
+		//console.log(list_vedio[13].il);
 		$(Obj).each(function (index) {
 			if (index == 1) {
-				$(convertSearchToFeed(ObjInsertModel, list_vedio[0])).insertAfter($(this));
+				$(convertSearchToFeed(ObjInsertModel, list_vedio[13])).insertAfter($(this));
 			}
 
 		});
