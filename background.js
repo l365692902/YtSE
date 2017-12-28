@@ -1,22 +1,22 @@
 
 // 对infoVideo数组中,视频更新顺序进行排序. 从新到旧
 function videoMergeSort(array) {  //采用自上而下的递归方法
-  var length = array.length;
-  if(length < 2) {
-    return array;
-  }
-  var m = (length >> 1),
-      left = array.slice(0, m),
-      right = array.slice(m); //拆分为两个子数组
-  return merge(videoMergeSort(left), videoMergeSort(right));//子数组继续递归拆分,然后再合并
+	var length = array.length;
+	if (length < 2) {
+		return array;
+	}
+	var m = (length >> 1),
+		left = array.slice(0, m),
+		right = array.slice(m); //拆分为两个子数组
+	return merge(videoMergeSort(left), videoMergeSort(right));//子数组继续递归拆分,然后再合并
 }
-function merge(left, right){ //合并两个子数组
-  var result = [];
-  while (left.length && right.length) {
-    var item = left[0].upTime >= right[0].upTime ? left.shift() : right.shift();//注意:判断的条件是小于或等于,如果只是小于,那么排序将不稳定.
-    result.push(item);
-  }
-  return result.concat(left.length ? left : right);
+function merge(left, right) { //合并两个子数组
+	var result = [];
+	while (left.length && right.length) {
+		var item = left[0].upTime >= right[0].upTime ? left.shift() : right.shift();//注意:判断的条件是小于或等于,如果只是小于,那么排序将不稳定.
+		result.push(item);
+	}
+	return result.concat(left.length ? left : right);
 }
 
 
@@ -48,7 +48,7 @@ function asynHttpRequest(method, url) {
 		const xhr = new XMLHttpRequest();
 		xhr.open(method, url, true);
 		xhr.onload = () => {
-			checkResponse(xhr);//DEBUG
+			// checkResponse(xhr);//DEBUG
 			resolve(xhr.response);
 		};
 		xhr.onerror = () => {
@@ -498,8 +498,8 @@ browser.browserAction.onClicked.addListener(() => {
 		// 或得playList更新时间
 		for (let i = 0; i < list_KeyWord.length; i++) {
 			if (list_KeyWord[i].playList != "") {
-				for (let j=0; j< list_vedio.length; j++) {
-					if (list_KeyWord[i].channel == list_vedio[j].channelName && list_KeyWord[i].playList == list_vedio[j].title){
+				for (let j = 0; j < list_vedio.length; j++) {
+					if (list_KeyWord[i].channel == list_vedio[j].channelName && list_KeyWord[i].playList == list_vedio[j].title) {
 						updatePlayListInfo(list_vedio[j], list_Playlistmainpage[i]);
 					}
 				}
@@ -514,13 +514,45 @@ browser.browserAction.onClicked.addListener(() => {
 		for (let i = 0; i < list_vedio.length; i++) {
 			console.log("<-----" + i + "-th video----->");
 			list_vedio[i].show();
-		}		
-		
+		}
+
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
-		let  storageVideo = browser.storage.local.set({list_vedio});
+		let storageVideo = browser.storage.local.set({ list_vedio });
 	});
+	//按按钮发消息
+	browser.tabs.query({
+		url: "*://*.youtube.com/feed/subscription*"
+	}).then((tabs) => {
+		for (let tab of tabs) {
+			browser.tabs.sendMessage(
+				tab.id,
+				{ greeting: "Hey boy, from background" }
+			)
+		}
+	}).catch((error) => { console.log(`Error:${error}`) })
 })
 
+// browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
+// 	console.log("onHistoryStateUpdated: " + details.url);
+// 	console.log("Transition type: " + details.transitionType);
+// 	console.log("Transition qualifiers: " + details.transitionQualifiers);
+// }, { url: [{ urlPrefix: "https://www.youtube.com/feed/subscriptions" }] });
 
 
+//检测tab变化发消息
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
+	if (changeInfo.url == "https://www.youtube.com/feed/subscriptions") {
+		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+		browser.tabs.query({
+			url: "*://*.youtube.com/feed/subscription*"
+		}).then((tabs) => {
+			for (let tab of tabs) {
+				browser.tabs.sendMessage(
+					tab.id,
+					{ greeting: "Hey boy, quest from background" }
+				)
+			}
+		}).catch((error) => { console.log(`Error:${error}`) })
+	}
+});
 
