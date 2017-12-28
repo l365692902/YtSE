@@ -519,40 +519,69 @@ browser.browserAction.onClicked.addListener(() => {
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
 	});
-	//按按钮发消息
-	browser.tabs.query({
-		url: "*://*.youtube.com/feed/subscription*"
-	}).then((tabs) => {
-		for (let tab of tabs) {
-			browser.tabs.sendMessage(
-				tab.id,
-				{ greeting: "Hey boy, from background" }
-			)
-		}
-	}).catch((error) => { console.log(`Error:${error}`) })
+	// //按按钮发消息
+	// browser.tabs.query({
+	// 	url: "*://*.youtube.com/feed/subscription*"
+	// }).then((tabs) => {
+	// 	for (let tab of tabs) {
+	// 		browser.tabs.sendMessage(
+	// 			tab.id,
+	// 			{ greeting: "Hey boy, from background" }
+	// 		)
+	// 	}
+	// }).catch((error) => { console.log(`Error:${error}`) })
 })
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
-// 	console.log("onHistoryStateUpdated: " + details.url);
-// 	console.log("Transition type: " + details.transitionType);
-// 	console.log("Transition qualifiers: " + details.transitionQualifiers);
+// 	console.log(details);
+// 	browser.tabs.query({
+// 		url: "*://*.youtube.com/feed/subscription*"
+// 	}).then((tabs) => {
+// 		for (let tab of tabs) {
+// 			browser.tabs.sendMessage(
+// 				tab.id,
+// 				{ greeting: "Hey boy, from background" }
+// 			)
+// 		}
+// 	}).catch((error) => { console.log(`Error:${error}`) })
 // }, { url: [{ urlPrefix: "https://www.youtube.com/feed/subscriptions" }] });
 
 
-//检测tab变化发消息
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
-	if (changeInfo.url == "https://www.youtube.com/feed/subscriptions") {
+function handleTabUpdate(tabId, changeInfo, tabInfo) {
+	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
 		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+		console.log(changeInfo)
 		browser.tabs.query({
 			url: "*://*.youtube.com/feed/subscription*"
 		}).then((tabs) => {
+			console.log("refreshing it")
 			for (let tab of tabs) {
-				browser.tabs.sendMessage(
-					tab.id,
-					{ greeting: "Hey boy, quest from background" }
-				)
+				browser.tabs.reload(tab.Id)
 			}
+			browser.tabs.onUpdated.removeListener(handleTabUpdate)
+			setTimeout(() => { browser.tabs.onUpdated.addListener(handleTabUpdate) }, 30000)
 		}).catch((error) => { console.log(`Error:${error}`) })
 	}
-});
+}
+browser.tabs.onUpdated.addListener(handleTabUpdate);
+
+
+// browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
+// 	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
+// 		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+// 		console.log(changeInfo)
+// 		browser.tabs.query({
+// 			url: "*://*.youtube.com/feed/subscription*"
+// 		}).then((tabs) => {
+// 			console.log("manually injecting...")
+// 			for (let tab of tabs) {
+// 				browser.tabs.executeScript({ file: "lib/jquery-3.2.1.min.js" }).then(() => {
+// 					return browser.tabs.executeScript({ file: "lib/core.js" })
+// 				}).then(() => {
+// 					return browser.tabs.executeScript({ file: "content_scripts/content.js" })
+// 				})
+// 			}
+// 		}).catch((error) => { console.log(`Error:${error}`) })
+// 	}
+// });
 
