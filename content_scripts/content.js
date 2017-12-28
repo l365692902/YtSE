@@ -15,7 +15,7 @@ function convertSearchToFeed(ObjM, VedioInfo){
 	// 首先替换封面
 	$(ObjM_local).find("span.yt-thumb-simple").find("img").attr('src', VedioInfo.coverUrl);
 	// 替换封面链接
-	$(ObjM_local).find("a.yt-uix-sessionlink.spf-link").remove();
+	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").find("a.yt-uix-sessionlink.spf-link").remove();
 	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").prepend(
 		function(){
 			return $(VedioInfo.il).find("div.yt-lockup-thumbnail").find("a.yt-uix-sessionlink").attr("classs", " yt-uix-sessionlink      spf-link ");
