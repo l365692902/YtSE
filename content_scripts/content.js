@@ -85,6 +85,78 @@ function convertSearchToFeed(ObjM, VedioInfo) {
 	return ObjM_local;
 }
 
+function getFeedVideoInfo(il_video) {
+    /*\ 
+    || 
+    \*/
+    if ($(il_video).find("ul.yt-lockup-meta.yt-lockup-playlist-items").length > 0) {
+        // 在对channel页面进行搜索的时候无法屏蔽列表,所以这里过滤一下是否为列表
+        //该条目是列表
+        vInfo = new infoVideo(il_video);
+        return vInfo;
+    } else {
+        // 不是列表
+//        titleObj = $(il_video).find("a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link");
+//        var title = $(titleObj).text();
+//        var videoUrl = $(titleObj).attr("href");
+//
+//        //获取时长,和封面
+//        //coverObj = $(il_video).find("a.yt-uix-sessionlink.spf-link").find("div.yt-thumb.video-thumb").find("span.yt-thumb-simple");
+//		//if(coverObj === undefined){
+//		//	var coverUrl_onload = $(coverObj).find("img").attr("data-thumb");
+//		//}else{
+//		//	var coverUrl_onload = $(coverObj).find("img").attr("data-thumb");
+//		//	if (coverUrl_onload === undefined) {
+//		//		var coverUrl = $(coverObj).find("img").attr("src");
+//		//	} else {
+//		//		var coverUrl = coverUrl_onload;
+//		//	}			
+//		//}
+//		var coverUrl_onload = $(il_video).find("img").attr("data-thumb");
+//		if (coverUrl_onload === undefined) {
+//			var coverUrl = $(il_video).find("img").attr("src");
+//		}else{
+//			var coverUrl = coverUrl_onload;
+//		}
+		
+        //var videoTime = $(il_video).find("span.video-time").text();
+        ////console.log(videoTime);
+        //// 获取频道信息
+        //channelObj = $(il_video).find("div.yt-lockup-content").find("div.yt-lockup-byline").find("a.yt-uix-sessionlink.spf-link");
+        //var channelName = $(channelObj).text();
+        //var channelUrl = $(channelObj).attr("href");
+
+        // 获取更新时间
+        timeObj = $(il_video).find("div.yt-lockup-content").find("div.yt-lockup-meta").find("ul.yt-lockup-meta-info");
+        var tNow = new Date();
+        if ($(timeObj).find("li").toArray().length == 2) {
+            uptimeli = $(timeObj).find("li").toArray()[1];
+            uptimeStr = convertReTime2Int($(uptimeli).text()) + tNow.valueOf();
+        } else {
+            // 可能在直播
+            if ($(il_video).find("div.yt-lockup-content").find("div.yt-lockup-badges").find("ul.yt-badge-list").find("span.yt-badge.yt-badge-live").length > 0) {
+                // 在直播
+                uptimeStr = tNow.valueOf();
+            } else {
+                // 不知道类别
+                uptimeStr = tNow.valueOf();
+            }
+        }
+
+
+
+        //vInfo = new infoVideo($(il_video).html(), title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, tNow);
+		vInfo = new infoVideo("", "", "", "", "", "", "", uptimeStr, tNow);
+
+        //vInfo.show();
+        return vInfo;
+
+    }
+
+    // vInfo.show();
+
+}
+
 // =============================START FROM HERE================================
 //let test=new keyWord("this is a test")
 //test.show()
@@ -152,21 +224,34 @@ gettingItem.then((Obj) => {
 		
 		// 准备插入
 		let indexBegin = 0;
-		//for (let i = 0; i < list.length; i++) {
-		//	
-		//}
-		//console.log(list_vedio[13].il);
-		$(Obj).each(function (index) {
-			if (index == 1) {
-				$(convertSearchToFeed(ObjInsertModel, list_vedio[13])).insertAfter($(this));
-			}
+		for (let i = 0; i < list_vedio.length; i++) {
+			let haveLoaded = false;
+			$(Obj).each(function (index) {
+				if (index >= indexBegin && !haveLoaded) {
+					
+					//$(convertSearchToFeed(ObjInsertModel, list_vedio[13])).insertAfter($(this));
+					// 输出订阅列表时间
+					//let vInfo = new infoVideo();
+					vInfo = getFeedVideoInfo(this); // 没有title和videoUrl
+					if(vInfo.upTime < list_vedio[i].upTime){
+						$(convertSearchToFeed(ObjInsertModel, list_vedio[i])).insertBefore($(this));
+						indexBegin = indexBegin + 1;
+						haveLoaded = true;
+					}
+					//vInfo.show();
+				}
 
-		});
+			});
+		}
+		//console.log(list_vedio[13].il);
+		
 
 
 
 	});
 });
+
+
 
 // //接收到消息插入信息
 
