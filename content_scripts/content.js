@@ -14,12 +14,44 @@ function convertSearchToFeed(ObjM, VedioInfo){
 	
 	// 首先替换封面
 	$(ObjM_local).find("span.yt-thumb-simple").find("img").attr('src', VedioInfo.coverUrl);
+	// 替换封面链接
+	$(ObjM_local).find("a.yt-uix-sessionlink.spf-link").remove();
+	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").prepend(
+		function(){
+			return $(VedioInfo.il).find("div.yt-lockup-thumbnail").find("a.yt-uix-sessionlink").attr("classs", " yt-uix-sessionlink      spf-link ");
+		}
+	)
 	
 	// 替换时长
 	$(ObjM_local).find("span.video-time").text( VedioInfo.videoTime);
 	
 	// 替换标题
+	//删除原标题
+	$(ObjM_local).find("h3.yt-lockup-title.contains-action-menu").children().remove();
+	// 添加新标题,时长
+	$(ObjM_local).find("h3.yt-lockup-title.contains-action-menu").prepend($(VedioInfo.il).find("h3.yt-lockup-title").children());
+	
+	// 替换up
+	$(ObjM_local).find("div.yt-lockup-byline.yt-ui-ellipsis.yt-ui-ellipsis-2").children().remove();
+	$(ObjM_local).find("div.yt-lockup-byline.yt-ui-ellipsis.yt-ui-ellipsis-2").prepend($(VedioInfo.il).find("div.yt-lockup-byline").children());
+	
+	// 替换观看次数 更新时间
+	$(ObjM_local).find("ul.yt-lockup-meta-info").children().remove();
+	$(VedioInfo.il).find("ul.yt-lockup-meta-info").children().each(function (index){
+		$(ObjM_local).find("ul.yt-lockup-meta-info").prepend($(this));
+	});
+	
 
+	// 检查视频是否观看过
+	$(ObjM_local).find("span.resume-playback-background").remove();
+	$(ObjM_local).find("span.resume-playback-progress-bar").remove();
+	Objresume = $(VedioInfo.il).find("span.resume-playback-progress-bar");
+	if($(Objresume).length > 0){
+		$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").append($(VedioInfo.il).find("span.resume-playback-background"));
+		$(ObjM_local).find("div.yt-lockup-thumbnail.contains-percent-duration-watched.contains-addto").append($(Objresume));
+		
+	}
+	
 	return ObjM_local;
 }
 
