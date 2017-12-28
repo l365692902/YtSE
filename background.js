@@ -512,10 +512,10 @@ browser.browserAction.onClicked.addListener(() => {
 
 		//// debug
 
-		for (let i = 0; i < list_vedio.length; i++) {
-			console.log("<-----" + i + "-th video----->");
-			list_vedio[i].show();
-		}
+		//for (let i = 0; i < list_vedio.length; i++) {
+		//	console.log("<-----" + i + "-th video----->");
+		//	list_vedio[i].show();
+		//}
 
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
