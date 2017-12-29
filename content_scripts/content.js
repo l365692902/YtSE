@@ -235,7 +235,7 @@ gettingItem.then((Obj) => {
 					vInfo = getFeedVideoInfo(this); // 没有title和videoUrl
 					if(vInfo.upTime < list_vedio[i].upTime){
 						ObjIn = $(convertSearchToFeed(ObjInsertModel, list_vedio[i]));
-						$(ObjIn).css("border", "2px dashed #4CAF50"); //outline: #4CAF50 solid 10px;
+						$(ObjIn).css("border", "1px dashed #4CAF50"); //outline: #4CAF50 solid 10px;
 						//$(ObjIn).css("outline", "#4CAF50 solid 5px"); 
 						$(ObjIn).insertBefore($(this));
 						
