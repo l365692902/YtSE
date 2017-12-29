@@ -234,7 +234,13 @@ gettingItem.then((Obj) => {
 					//let vInfo = new infoVideo();
 					vInfo = getFeedVideoInfo(this); // 没有title和videoUrl
 					if(vInfo.upTime < list_vedio[i].upTime){
-						$(convertSearchToFeed(ObjInsertModel, list_vedio[i])).insertBefore($(this));
+						ObjIn = $(convertSearchToFeed(ObjInsertModel, list_vedio[i]));
+						$(ObjIn).css("border", "2px dashed #4CAF50"); //outline: #4CAF50 solid 10px;
+						//$(ObjIn).css("outline", "#4CAF50 solid 5px"); 
+						$(ObjIn).insertBefore($(this));
+						
+						// 添加框线
+						//$(this).next().css("border", "1px solid red");
 						indexBegin = indexBegin + 1;
 						haveLoaded = true;
 					}
@@ -245,7 +251,14 @@ gettingItem.then((Obj) => {
 		}
 		//console.log(list_vedio[13].il);
 		
-
+		//// 尝试给提第一个视频添加边框
+		//$(Obj).each(function (index) {
+		//	if (index == 0) {
+		//		$(this).css("border", "1px solid red");
+		//		console.log(ObjInsertModel);
+		//	}
+		//
+		//});		
 
 
 	});
