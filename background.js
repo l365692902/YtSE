@@ -416,6 +416,66 @@ function initialUrl(key_word) {
 
 }
 
+// 查找关键词对应的视频
+function updateSearchList(list_KeyWord){
+	// 筛选出符合关键词的视频
+	//console.log("start update search list");
+	let list_vedio = new Array();
+	searchListOnline(list_KeyWord).then((list_SearchResults) => {
+		//console.log("final:");
+		//console.log(list_SearchResults)
+		//console.log(list_SearchResults.length);
+
+		list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord, list_SearchResults));
+		//console.log("num video : ", list_vedio.length);
+		// debug
+		//for (let i = 0; i < list_vedio.length; i++) {
+		//	console.log("<-----" + i+"-th video----->");
+		//	list_vedio[i].show();
+		//}		
+
+		return searchPlayListOnline(list_KeyWord);
+	}).then((list_Playlistmainpage) => {
+		//console.log("final:");
+		console.log("num video : ", list_vedio.length);
+		console.log(list_Playlistmainpage.length);
+
+		// 或得playList更新时间
+		for (let i = 0; i < list_KeyWord.length; i++) {
+			if (list_KeyWord[i].playList != "") {
+				for (let j = 0; j < list_vedio.length; j++) {
+					if (list_KeyWord[i].channel == list_vedio[j].channelName && list_KeyWord[i].playList == list_vedio[j].title) {
+						updatePlayListInfo(list_vedio[j], list_Playlistmainpage[i]);
+					}
+				}
+			}
+		}
+		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
+		//console.log("num video : ", list_vedio.length);
+		list_vedio = videoMergeSort(list_vedio);
+
+		//// debug
+
+		//for (let i = 0; i < list_vedio.length; i++) {
+		//	console.log("<-----" + i + "-th video----->");
+		//	list_vedio[i].show();
+		//}
+
+		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
+		let storageVideo = browser.storage.local.set({ list_vedio });
+	});
+	// //按按钮发消息
+	// browser.tabs.query({
+	// 	url: "*://*.youtube.com/feed/subscription*"
+	// }).then((tabs) => {
+	// 	for (let tab of tabs) {
+	// 		browser.tabs.sendMessage(
+	// 			tab.id,
+	// 			{ greeting: "Hey boy, from background" }
+	// 		)
+	// 	}
+	// }).catch((error) => { console.log(`Error:${error}`) })
+}
 
 
 
@@ -473,65 +533,31 @@ console.log("初始化完成");
 //}
 //console.log("----------");
 
+// 点击按钮刷新视频列表
+//browser.browserAction.onClicked.addListener(() =>{
+//	//console.log("click");
+//	updateSearchList(list_KeyWord)
+//});
 
-browser.browserAction.onClicked.addListener(() => {
-	// 筛选出符合关键词的视频
-	let list_vedio = new Array();
-	searchListOnline(list_KeyWord).then((list_SearchResults) => {
-		console.log("final:");
-		//console.log(list_SearchResults)
-		console.log(list_SearchResults.length);
+// 自动更新视频列表
 
-		list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord, list_SearchResults));
-		console.log("num video : ", list_vedio.length);
-		// debug
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	console.log("<-----" + i+"-th video----->");
-		//	list_vedio[i].show();
-		//}		
 
-		return searchPlayListOnline(list_KeyWord);
-	}).then((list_Playlistmainpage) => {
-		console.log("final:");
-		console.log("num video : ", list_vedio.length);
-		console.log(list_Playlistmainpage.length);
+function updateSearchListIterator(list_KeyWord,timeGap){
+	// 如果list_KeyWord更新了,这里list_KeyWord是否也会更新?
+	var Now = new Date();
+	console.log("updat time : ", Now);
+	updateSearchList(list_KeyWord);
+	setTimeout(() => { updateSearchListIterator(list_KeyWord,timeGap) }, timeGap)
+}
 
-		// 或得playList更新时间
-		for (let i = 0; i < list_KeyWord.length; i++) {
-			if (list_KeyWord[i].playList != "") {
-				for (let j = 0; j < list_vedio.length; j++) {
-					if (list_KeyWord[i].channel == list_vedio[j].channelName && list_KeyWord[i].playList == list_vedio[j].title) {
-						updatePlayListInfo(list_vedio[j], list_Playlistmainpage[i]);
-					}
-				}
-			}
-		}
-		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
-		//console.log("num video : ", list_vedio.length);
-		list_vedio = videoMergeSort(list_vedio);
+let timeGap = 5*60*1000; // 5 min
+setTimeout(() => {
+	
+	console.log("First Search List");
+	updateSearchListIterator(list_KeyWord,timeGap);
+	
+	}, 60*1000); //浏览器启动一分钟后再执行
 
-		//// debug
-
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	console.log("<-----" + i + "-th video----->");
-		//	list_vedio[i].show();
-		//}
-
-		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
-		let storageVideo = browser.storage.local.set({ list_vedio });
-	});
-	// //按按钮发消息
-	// browser.tabs.query({
-	// 	url: "*://*.youtube.com/feed/subscription*"
-	// }).then((tabs) => {
-	// 	for (let tab of tabs) {
-	// 		browser.tabs.sendMessage(
-	// 			tab.id,
-	// 			{ greeting: "Hey boy, from background" }
-	// 		)
-	// 	}
-	// }).catch((error) => { console.log(`Error:${error}`) })
-})
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
 // 	console.log(details);
@@ -560,7 +586,9 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 				browser.tabs.reload(tab.Id)
 			}
 			browser.tabs.onUpdated.removeListener(handleTabUpdate)
+			
 			setTimeout(() => { browser.tabs.onUpdated.addListener(handleTabUpdate) }, 30000)
+			
 		}).catch((error) => { console.log(`Error:${error}`) })
 	}
 }
