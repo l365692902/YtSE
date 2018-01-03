@@ -8,6 +8,17 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan02-L
+* radio button 点击后checked状态已经改成true，所以无法得知点击之前的真正状态，必须创建一个变量保存之前状态，可以在radio里加一个属性作为保存，也可以另设全局变量
+* 在jquery的callback里用()=>{}会继承window作为this，必须用function(){}才能正确继承
+
+## 2017Dec29-L
+* trello似乎也用了和youtube一样的刷新机制，以下是一些可能的解决方案，基本还是靠手动注入脚本
+  * https://stackoverflow.com/questions/34077641/how-to-detect-page-navigation-on-youtube-and-modify-html-before-page-is-rendered
+  * https://stackoverflow.com/questions/20865581/chrome-extension-content-script-not-loaded-until-page-is-refreshed/21071357#21071357
+  * https://stackoverflow.com/questions/11473105/is-it-possible-to-run-the-injected-script-without-reload
+  * https://www.w3schools.com/jsref/event_onhashchange.asp
+
 ### 2017Dec25-BS
 
 发现youtube搜索对一些字符不支持

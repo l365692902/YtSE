@@ -434,7 +434,7 @@ list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
 for (let i = 0; i < list_KeyWord.length; i++) {
 	// searchChannelNum(list_KeyWord[i]);
 	//list_KeyWord[i].show();
-	initialUrl(list_KeyWord[i]);
+	// initialUrl(list_KeyWord[i]);
 	console.log("=======");
 
 }
@@ -452,41 +452,7 @@ console.log("初始化完成");
 
 
 browser.browserAction.onClicked.addListener(() => {
-	// 筛选出符合关键词的视频
-	let list_vedio = new Array();
-	searchListOnline(list_KeyWord).then((list_SearchResults) => {
-		console.log("final:");
-		//console.log(list_SearchResults)
-		console.log(list_SearchResults.length);
-
-		list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord, list_SearchResults));
-		console.log("num video : ", list_vedio.length);
-		// debug
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	console.log("<-----" + i+"-th video----->");
-		//	list_vedio[i].show();
-		//}		
-
-		return searchPlayListOnline(list_KeyWord);
-	}).then((list_Playlistmainpage) => {
-		console.log("final:");
-		console.log("num video : ", list_vedio.length);
-		console.log(list_Playlistmainpage.length);
-
-		// 或得playList更新时间
-		for (let i = 0; i < list_KeyWord.length; i++) {
-			if (list_KeyWord[i].playList != "") {
-				updatePlayListInfo(list_vedio[i], list_Playlistmainpage[i])
-			}
-		}
-		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
-		//console.log("num video : ", list_vedio.length);
-		//// debug
-		for (let i = 0; i < list_vedio.length; i++) {
-			console.log("<-----" + i + "-th video----->");
-			list_vedio[i].show();
-		}
-	});
+	browser.runtime.openOptionsPage()
 })
 
 
