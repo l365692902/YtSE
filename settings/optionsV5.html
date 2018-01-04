@@ -15,7 +15,13 @@
   <div class="row">
     <p>YtSE</p>
   </div>
-  <div class="row">add keyword, you can double click on keyword
+  <div class="row">
+    add keyword, you can double click on keyword
+    <br> format example "keyword1, keyword2; channel"
+    <br> blank space near , ; will be omitted,
+    <br> if keyword contain blank space in the beginning or the end
+    <br> wrap the whole keyword with ''
+    <br> example 'keyword1 ',' keyword2 ';' channel '
     <br>
     <div class="col right">
       <ul>
@@ -24,44 +30,22 @@
           <input type="image" class="add png" src="if_plus-square_2561371.png">
         </li>
 
-        <li>
+        <li style="display: none">
           <img src="if_move_2561476.png" width="128" height="128" alt="" />
           <input type="text" class="txtKeyword" style="display: none">
-          <label >hello world</label>
+          <label class="labKeyword">hello world</label>
           <input type="image" class="remove png" src="if_minus-square_2561471.png">
           <div class="asPl">
-            <input type="radio">
+            <input type="radio" class="playlist">
             <label>playlist</label>
-            <input type="radio">
-            <label>on/off&nbsp;</label>
+            <input type="radio" class="onoff">
+            <label>on/off</label>
           </div>
         </li>
-        <li>
-          <img src="if_move_2561476.png" width="128" height="128" alt="" />
-          <input type="text" class="txtKeyword" style="display: none">
-          <label >hello world</label>
-          <input type="image" class="remove png" src="if_minus-square_2561471.png">
-          <div class="asPl">
-            <input type="radio">
-            <label>playlist</label>
-            <input type="radio">
-            <label>on/off&nbsp;</label>
-          </div>
-        </li>
-        <li>
-          <img src="if_move_2561476.png" width="128" height="128" alt="" />
-          <input type="text" class="txtKeyword" style="display: none">
-          <label >hello world</label>
-          <input type="image" class="remove png" src="if_minus-square_2561471.png">
-          <div class="asPl">
-            <input type="radio">
-            <label>playlist</label>
-            <input type="radio">
-            <label>on/off&nbsp;</label>
-          </div>
-        </li>
-      </ul>
     </div>
+    </li>
+    </ul>
+  </div>
   </div>
 </body>
 

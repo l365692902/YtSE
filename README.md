@@ -8,6 +8,14 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan05-L
+* 设置页完成，关键词列表存储在local(list_KeyWord)中，只等整合
+* 在core中的keyWord类中加了一项属性onOff，具体功能需要搜索部分提供支援
+* 之前用;分割关键词的规则被我改成用,分割多个关键词，同时用;分割关键词与频道（分隔符为英文半角）
+
+## 2018Jan04-L
+* maybe make box resizeable latter
+
 ## 2018Jan02-L
 * radio button 点击后checked状态已经改成true，所以无法得知点击之前的真正状态，必须创建一个变量保存之前状态，可以在radio里加一个属性作为保存，也可以另设全局变量
 * 在jquery的callback里用()=>{}会继承window作为this，必须用function(){}才能正确继承

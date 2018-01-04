@@ -59,7 +59,7 @@ function searchListOnline(list) {
 			// 对keyword查询
 			if (list[i].channel != "") {
 				if (list[i].channelUrl != "") {
-					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(';').join(' ');
+					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(',').join(' ');
 					console.log(i + "th " + url);
 					list_p[i] = asynHttpRequest("GET", url);
 				} else {
@@ -67,7 +67,7 @@ function searchListOnline(list) {
 					//console.log("need update channel info 1");
 				}
 			} else {
-				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(';').join(' ');
+				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(',').join(' ');
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			}
