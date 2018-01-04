@@ -81,7 +81,7 @@ function searchListOnline(list) {
 			// 对keyword查询
 			if (list[i].channel != "") {
 				if (list[i].channelUrl != "") {
-					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(';').join(' ');
+					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(',').join(' ');
 					console.log(i + "th " + url);
 					list_p[i] = asynHttpRequest("GET", url);
 				} else {
@@ -89,7 +89,7 @@ function searchListOnline(list) {
 					//console.log("need update channel info 1");
 				}
 			} else {
-				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(';').join(' ');
+				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(',').join(' ');
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			}
@@ -517,7 +517,7 @@ list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官�
 for (let i = 0; i < list_KeyWord.length; i++) {
 	// searchChannelNum(list_KeyWord[i]);
 	//list_KeyWord[i].show();
-	initialUrl(list_KeyWord[i]);
+	// initialUrl(list_KeyWord[i]);
 	console.log("=======");
 
 }
@@ -593,6 +593,9 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 	}
 }
 browser.tabs.onUpdated.addListener(handleTabUpdate);
+browser.browserAction.onClicked.addListener(() => {
+	browser.runtime.openOptionsPage()
+})
 
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {

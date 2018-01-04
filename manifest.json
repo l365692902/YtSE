@@ -37,9 +37,9 @@
         "96": "icons/red_96.png"
     },
     "options_ui": {
-        "page": "settings/options.html",
+        "page": "settings/optionsV5.html",
         // "page": "lib/test.html",
-        "open_in_tab": false
+        "open_in_tab": true
     },
     "permissions": [
         // "activeTab",

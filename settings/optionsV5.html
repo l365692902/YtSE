@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>optionsV5</title>
+  <link href="optionsV5.css" rel="stylesheet" type="text/css">
+  <script src="../lib/jquery-3.2.1.min.js"></script>
+  <script src="../lib/jquery-ui.min.js"></script>
+  <script src="../lib/core.js"></script>
+  <script src="optionsV5.js"></script>
+</head>
+
+<body>
+  <div class="row">
+    <p>YtSE</p>
+  </div>
+  <div class="row">
+    add keyword, you can double click on keyword
+    <br> format example "keyword1, keyword2; channel"
+    <br> blank space near , ; will be omitted,
+    <br> if keyword contain blank space in the beginning or the end
+    <br> wrap the whole keyword with ''
+    <br> example 'keyword1 ',' keyword2 ';' channel '
+    <br>
+    <div class="col right">
+      <ul>
+        <li id="add">
+          <input type="text" class="addKeyword">
+          <input type="image" class="add png" src="if_plus-square_2561371.png">
+        </li>
+
+        <li style="display: none">
+          <img src="if_move_2561476.png" width="128" height="128" alt="" />
+          <input type="text" class="txtKeyword" style="display: none">
+          <label class="labKeyword">hello world</label>
+          <input type="image" class="remove png" src="if_minus-square_2561471.png">
+          <div class="asPl">
+            <input type="radio" class="playlist">
+            <label>playlist</label>
+            <input type="radio" class="onoff">
+            <label>on/off</label>
+          </div>
+        </li>
+    </div>
+    </li>
+    </ul>
+  </div>
+  </div>
+</body>
+
+</html>
