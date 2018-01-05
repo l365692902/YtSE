@@ -261,7 +261,7 @@ function updatePlayListInfo(vInfo, ListPage) {
 	var Zhftime2 = "更新";
 
 	var Entime1 = "Last updated on ";
-	var Entime1 = "Updated";
+	var Entime2 = "Updated";
 	// 获取更新时间
 	uptimeObj = $(ListPage).find("div.pl-header-content").find("ul.pl-header-details").find("li").toArray()[3];
 	var uptimeStr = $(uptimeObj).text();
@@ -550,13 +550,13 @@ function updateSearchListIterator(list_KeyWord,timeGap){
 	setTimeout(() => { updateSearchListIterator(list_KeyWord,timeGap) }, timeGap)
 }
 
-let timeGap = 5*60*1000; // 5 min
-setTimeout(() => {
+// let timeGap = 5*60*1000; // 5 min
+// setTimeout(() => {
 	
-	console.log("First Search List");
-	updateSearchListIterator(list_KeyWord,timeGap);
+// 	console.log("First Search List");
+// 	updateSearchListIterator(list_KeyWord,timeGap);
 	
-	}, 60*1000); //浏览器启动一分钟后再执行
+// 	}, 60*1000); //浏览器启动一分钟后再执行
 
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
@@ -595,6 +595,13 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 browser.tabs.onUpdated.addListener(handleTabUpdate);
 browser.browserAction.onClicked.addListener(() => {
 	browser.runtime.openOptionsPage()
+	for (let i = 0; i < list_KeyWord.length; i++) {
+		// searchChannelNum(list_KeyWord[i]);
+		//list_KeyWord[i].show();
+		initialUrl(list_KeyWord[i]);
+		console.log("=======");
+	}
+	updateSearchList(list_KeyWord);
 })
 
 
