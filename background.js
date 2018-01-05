@@ -411,7 +411,16 @@ function initialUrl(key_word) {
 				console.log("没有找到Url");
 			}
 			console.log("-------------->");
+			//let rFinish = new Promise((resolve, reject) => {
+			//	resolve(true);
+			//	});
+			//return rFinish;
 		});
+	}else{
+		//let rFinish = new Promise((resolve, reject) => {
+		//	resolve(false);
+		//	});
+		//return rFinish;
 	}
 
 }
@@ -429,10 +438,10 @@ function updateSearchList(list_KeyWord){
 		list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord, list_SearchResults));
 		//console.log("num video : ", list_vedio.length);
 		// debug
-		//for (let i = 0; i < list_vedio.length; i++) {
-		//	console.log("<-----" + i+"-th video----->");
-		//	list_vedio[i].show();
-		//}		
+		for (let i = 0; i < list_vedio.length; i++) {
+			console.log("<-----" + i+"-th video----->");
+			list_vedio[i].show();
+		}		
 
 		return searchPlayListOnline(list_KeyWord);
 	}).then((list_Playlistmainpage) => {
@@ -455,11 +464,10 @@ function updateSearchList(list_KeyWord){
 		list_vedio = videoMergeSort(list_vedio);
 
 		//// debug
-
-		for (let i = 0; i < list_vedio.length; i++) {
-			console.log("<-----" + i + "-th video----->");
-			list_vedio[i].show();
-		}
+		//for (let i = 0; i < list_vedio.length; i++) {
+		//	console.log("<-----" + i + "-th video----->");
+		//	list_vedio[i].show();
+		//}
 
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
@@ -514,16 +522,16 @@ list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官�
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 
 // 寻找youtuber对应字符
-for (let i = 0; i < list_KeyWord.length; i++) {
-	// searchChannelNum(list_KeyWord[i]);
-	//list_KeyWord[i].show();
-	// initialUrl(list_KeyWord[i]);
-	console.log("=======");
-
-}
+//for (let i = 0; i < list_KeyWord.length; i++) {
+//	// searchChannelNum(list_KeyWord[i]);
+//	//list_KeyWord[i].show();
+//	// initialUrl(list_KeyWord[i]);
+//	console.log("=======");
+//
+//}
 
 //browser.storage.local.clear();
-console.log("初始化完成");
+//console.log("初始化完成");
 //convertReTime2Int("2 小时前");
 
 // 输出关键字信息
@@ -595,13 +603,19 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 browser.tabs.onUpdated.addListener(handleTabUpdate);
 browser.browserAction.onClicked.addListener(() => {
 	browser.runtime.openOptionsPage()
+	
+
+	
 	for (let i = 0; i < list_KeyWord.length; i++) {
 		// searchChannelNum(list_KeyWord[i]);
-		//list_KeyWord[i].show();
-		initialUrl(list_KeyWord[i]);
-		console.log("=======");
+		 initialUrl(list_KeyWord[i]);
 	}
-	updateSearchList(list_KeyWord);
+	
+	setTimeout(() => {
+		updateSearchList(list_KeyWord);
+	}, 10*1000); 
+	
+
 })
 
 
