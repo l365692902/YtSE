@@ -9,6 +9,7 @@ YouTube subscribe extension
 * dim the uninteresting content or make it 50% transpatent
 
 ## 2018Jan05-L
+* 设置页的li label中的文字如果超长会改变排版，暂时靠拉长来避免，恐怕之后要改个V6出来
 * 设置页完成，关键词列表存储在local(list_KeyWord)中，只等整合
 * 在core中的keyWord类中加了一项属性onOff，具体功能需要搜索部分提供支援
 * 之前用;分割关键词的规则被我改成用,分割多个关键词，同时用;分割关键词与频道（分隔符为英文半角）
