@@ -489,16 +489,16 @@ function updateSearchList(list_KeyWord) {
 
 console.log("开始初始化");
 // 目前只储存两个
-browser.storage.local.get("list_KeyWord").then((o) => {
-	if (o.list_KeyWord === undefined) {
-		console.log("no settings, so making some")
-		let list_KeyWord = new Array();
-		list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
-		list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
-		list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
-		browser.storage.local.set({ list_KeyWord })
-	}
-})
+//browser.storage.local.get("list_KeyWord").then((o) => {
+//	if (o.list_KeyWord === undefined) {
+//		console.log("no settings, so making some")
+//		let list_KeyWord = new Array();
+//		list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+//		list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+//		list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+//		browser.storage.local.set({ list_KeyWord })
+//	}
+//})
 
 // list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 // list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
