@@ -44,7 +44,7 @@ function checkResponse(xhr) {
 //promise based asynchronous xmlHttpRequest
 function asynHttpRequest(method, url) {
 	return new Promise((resolve, reject) => {
-		// console.log("%c" + "requesting...: " + url, "color:#00ff00")//DEBUG
+		console.log("%c" + "requesting...: " + url, "color:#00ff00")//DEBUG
 		const xhr = new XMLHttpRequest();
 		xhr.open(method, url, true);
 		xhr.onload = () => {
@@ -71,7 +71,7 @@ function searchListOnline(list) {
 	let url_list;
 	let list_p = new Array(list.length);
 
-	//console.log("debug : " + list.length);
+	// console.log("debug : " + list.length);
 
 	for (let i = 0; i < list.length; i++) {
 		//console.log("debug : " + i);
@@ -417,11 +417,6 @@ function initialUrl(key_word) {
 
 // 查找关键词对应的视频
 function updateSearchList(list_KeyWord) {
-	console.log("updateSearchList input: ")
-	for (let i = 0; i < list_KeyWord.length; i++) {
-		console.log("<-----" + i + "-th video----->");
-		list_KeyWord[i].show();
-	}
 	// 筛选出符合关键词的视频
 	console.log("start update search list");
 	let list_vedio = new Array();
@@ -459,12 +454,10 @@ function updateSearchList(list_KeyWord) {
 		list_vedio = videoMergeSort(list_vedio);
 
 		// debug
-		console.log("updateSearchList output: ")
-		for (let i = 0; i < list_vedio.length; i++) {
-			console.log("<-----" + i + "-th video----->");
-			list_vedio[i].show();
-		}
-
+		// for (let i = 0; i < list_vedio.length; i++) {
+		// 	console.log("<-----" + i + "-th video----->");
+		// 	list_vedio[i].show();
+		// }
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
 	});
@@ -491,27 +484,25 @@ function updateSearchList(list_KeyWord) {
 // list 储存关键字所属列表, 空为不指定
 // word channel list 三个变量不能同时为零
 
-
-
 // 储存关键词
-let list_KeyWord = new Array();
 // 关键词对应的搜索页面
-//let list_SearchResults = new Array();
-//let list_Playlistmainpage = new Array();
-
-
-if (jQuery) {
-	console.log("jQuery loaded");
-
-}
 
 console.log("开始初始化");
 // 目前只储存两个
+browser.storage.local.get("list_KeyWord").then((o) => {
+	if (o.list_KeyWord === undefined) {
+		console.log("no settings, so making some")
+		let list_KeyWord = new Array();
+		list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+		list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+		list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+		browser.storage.local.set({ list_KeyWord })
+	}
+})
 
-
-list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
-list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
-list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+// list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+// list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+// list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 //list_KeyWord[0] = new keyWord("Christmas Songs for Kids | Christmas Songs | Nursery Rhymes and Baby Songs from Dave and Ava");
 //list_KeyWord[0] = new keyWord("","","【超清】《爸爸去哪儿》第五季Dad Where Are We Going S05——王牌亲子综艺节目再度回归【马来西亚地区已可以观看全13期+特别版】");
 //list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
@@ -529,19 +520,6 @@ list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官�
 //browser.storage.local.clear();
 //console.log("初始化完成");
 //convertReTime2Int("2 小时前");
-
-// 输出关键字信息
-//console.log("list_length :" + list_KeyWord.length);
-//for (let i = 0; i < list_KeyWord.length; i++) {
-//	console.log((i + 1), "-th \n关键词 : " + list_KeyWord[i].self + "\nchannel : " + list_KeyWord[i].channel + "\nchannel Url : " + list_KeyWord[i].channelUrl);
-//}
-//console.log("----------");
-
-// 点击按钮刷新视频列表
-//browser.browserAction.onClicked.addListener(() =>{
-//	//console.log("click");
-//	updateSearchList(list_KeyWord)
-//});
 
 // 自动更新视频列表
 
@@ -597,20 +575,23 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 	}
 }
 browser.tabs.onUpdated.addListener(handleTabUpdate);
+
+
 browser.browserAction.onClicked.addListener(() => {
 	// browser.runtime.openOptionsPage()
 
-
-	let listPromise = new Array()
-	for (let i = 0; i < list_KeyWord.length; i++) {
-		// searchChannelNum(list_KeyWord[i]);
-		listPromise.push(initialUrl(list_KeyWord[i]))
-	}
-	Promise.all(listPromise).then((list_KeyWord) => {
-		updateSearchList(list_KeyWord);
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		// let tempList = o.list_KeyWord
+		let listPromise = new Array()
+		for (let i = 0; i < o.list_KeyWord.length; i++) {
+			// searchChannelNum(list_KeyWord[i]);
+			listPromise.push(initialUrl(o.list_KeyWord[i]))
+		}
+		Promise.all(listPromise).then((list_KeyWord) => {
+			updateSearchList(list_KeyWord);
+		})
 	})
 })
-
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
 // 	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
