@@ -524,21 +524,30 @@ browser.storage.local.get("list_KeyWord").then((o) => {
 // 自动更新视频列表
 
 
-function updateSearchListIterator(list_KeyWord, timeGap) {
+function updateSearchListIterator(timeGap) {
 	// 如果list_KeyWord更新了,这里list_KeyWord是否也会更新?
 	var Now = new Date();
 	console.log("updat time : ", Now);
-	updateSearchList(list_KeyWord);
-	setTimeout(() => { updateSearchListIterator(list_KeyWord, timeGap) }, timeGap)
+	// updateSearchList(list_KeyWord);
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		// let tempList = o.list_KeyWord
+		let listPromise = new Array()
+		for (let i = 0; i < o.list_KeyWord.length; i++) {
+			// searchChannelNum(list_KeyWord[i]);
+			listPromise.push(initialUrl(o.list_KeyWord[i]))
+		}
+		Promise.all(listPromise).then((list_KeyWord) => {
+			updateSearchList(list_KeyWord);
+		})
+	})
+	setTimeout(() => { updateSearchListIterator(timeGap) }, timeGap)
 }
 
-// let timeGap = 5*60*1000; // 5 min
-// setTimeout(() => {
-
-// 	console.log("First Search List");
-// 	updateSearchListIterator(list_KeyWord,timeGap);
-
-// 	}, 60*1000); //浏览器启动一分钟后再执行
+let timeGap = 5 * 60 * 1000; // 5 min
+setTimeout(() => {
+	console.log("First Search List");
+	updateSearchListIterator(timeGap);
+}, 60 * 1000); //浏览器启动一分钟后再执行
 
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
