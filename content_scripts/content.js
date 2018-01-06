@@ -25,10 +25,13 @@ function convertSearchToFeed(ObjM, VedioInfo) {
 	//		}
 	//	}
 	//)
+	//$(ObjM_local).find("div.yt-lockup-thumbnail.contains-addto").find("a.yt-uix-sessionlink.spf-link")
+	//.attr("href",  $(VedioInfo.il).find("div.yt-lockup-thumbnail.yt-pl-thumb")
+	//.find("a.yt-pl-thumb-link.yt-uix-sessionlink.spf-link").attr("href"));
 	$(ObjM_local).find("div.yt-lockup-thumbnail.contains-addto").find("a.yt-uix-sessionlink.spf-link")
-	.attr("href",  $(VedioInfo.il).find("div.yt-lockup-thumbnail.yt-pl-thumb")
-	.find("a.yt-pl-thumb-link.yt-uix-sessionlink.spf-link").attr("href"));
-	
+	.attr("href",  $(VedioInfo.il).find("h3.yt-lockup-title").find("a").attr("href"));	
+	//console.log($(VedioInfo.il).find("h3.yt-lockup-title").find("a").attr("href")
+	//);
 	//console.log("change cover");
 	//$(ObjM_local).find("div.yt-lockup-thumbnail.contains-addto").prepend(
 	//	function () {
