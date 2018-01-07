@@ -583,10 +583,38 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 		}).catch((error) => { console.log(`Error:${error}`) })
 	}
 }
-browser.tabs.onUpdated.addListener(handleTabUpdate);
+//browser.tabs.onUpdated.addListener(handleTabUpdate);
 
 
-browser.browserAction.onClicked.addListener(() => {
+function sendMessageToTabs(tabs) {
+  for (let tab of tabs) {
+    browser.tabs.sendMessage(
+      tab.id,
+      {greeting: "Hi from background script"}
+    ).then(response => {
+      //console.log("Message from the content script:");
+      //console.log(response.response);
+    }).catch((error) => { console.log(`Error:${error}`) });
+  }
+}
+
+// 一直监测
+function ListenActiveYoutube(timeGap){
+	var querying = browser.tabs.query({active: true, lastFocusedWindow : true, url : "*://*.youtube.com/feed/subscription*"});
+	querying.then((tabs) => {
+		sendMessageToTabs(tabs);
+		//for (let tab of tabs) {
+		//	//browser.tabs.reload(tab.Id)
+		//}
+		setTimeout(() => { ListenActiveYoutube(timeGap) }, timeGap)
+	}
+	)
+}
+
+ListenActiveYoutube(5000);
+
+
+browser.browserAction.onClicked.addListener((tab) => {
 	// browser.runtime.openOptionsPage()
 
 	browser.storage.local.get("list_KeyWord").then((o) => {
@@ -600,6 +628,9 @@ browser.browserAction.onClicked.addListener(() => {
 			updateSearchList(list_KeyWord);
 		})
 	})
+	
+
+  
 })
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
