@@ -8,6 +8,26 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan07-BS
+关于监测https://www.youtube.com/feed/subscriptions页面
+通过点击youtube的slidebar上subscriptions按钮,不会触发content脚本, 导致无法插入视频.
+针对这个问题, 
+- 发现当页面刷新会执行插入视频脚本
+- browser.tabs.onUpdated.addListener可以监测tab的变化
+  基于上面两点,之前的解决办法是
+  当tab发生变化,检查是否含有subscriptions页面,有的话就刷新页面,激活插入视频脚本.
+  存在问题,
+  刷新页面会导致激活browser.tabs.onUpdated.addListener函数,会导致刷新页面...陷入死循环
+  所以加了一个30秒的延时,来等待刷新页面动作结束. 但是这样导致,
+
+- 30秒之内, 如果重新返回订阅页面,无法触发插入视频脚本.
+
+现在通过后台向前台传递消息的机制来实现.主要基于,
+**打开subscriptions虽然无法触发插入视频脚本,但是监听后台消息函数使用有效**.
+所以后台检查是否打开subscriptions tab,打开就向该tab发送消息.
+tab接到消息就执行插入视频脚本. 为避免重复插入,会在插入视频后,在页面留下`<div id="insertYtse"></div>`元素.
+
+
 ## 2018Jan05-L
 * 设置页的li label中的文字如果超长会改变排版，暂时靠拉长来避免，恐怕之后要改个V6出来
 * 设置页完成，关键词列表存储在local(list_KeyWord)中，只等整合
