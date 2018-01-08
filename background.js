@@ -599,19 +599,34 @@ function sendMessageToTabs(tabs) {
 }
 
 // 一直监测
-function ListenActiveYoutube(timeGap){
-	var querying = browser.tabs.query({active: true, lastFocusedWindow : true, url : "*://*.youtube.com/feed/subscription*"});
-	querying.then((tabs) => {
-		sendMessageToTabs(tabs);
-		//for (let tab of tabs) {
-		//	//browser.tabs.reload(tab.Id)
-		//}
-		setTimeout(() => { ListenActiveYoutube(timeGap) }, timeGap)
-	}
-	)
-}
+//function ListenActiveYoutube(timeGap){
+//	var querying = browser.tabs.query({active: true, lastFocusedWindow : true, url : "*://*.youtube.com/feed/subscription*"});
+//	querying.then((tabs) => {
+//		sendMessageToTabs(tabs);
+//		//for (let tab of tabs) {
+//		//	//browser.tabs.reload(tab.Id)
+//		//}
+//		setTimeout(() => { ListenActiveYoutube(timeGap) }, timeGap)
+//	}
+//	)
+//}
+//ListenActiveYoutube(5000);
 
-ListenActiveYoutube(5000);
+function handleTabUpdate(tabId, changeInfo, tabInfo) {
+	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
+		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+		console.log(changeInfo)
+		browser.tabs.query({
+			active: true,
+			lastFocusedWindow : true,
+			url : "*://*.youtube.com/feed/subscription*"
+						   }).then((tabs) => {
+			sendMessageToTabs(tabs);
+		}).catch((error) => { console.log(`Error:${error}`) })
+	}
+}
+browser.tabs.onUpdated.addListener(handleTabUpdate);
+
 
 
 browser.browserAction.onClicked.addListener((tab) => {
