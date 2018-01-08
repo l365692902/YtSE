@@ -594,7 +594,7 @@ function sendMessageToTabs(tabs) {
     ).then(response => {
       //console.log("Message from the content script:");
       //console.log(response.response);
-    }).catch((error) => { console.log(`Error:${error}`) });
+    }).catch((error) => { console.log(`sendMessageToTabs :${error}`) });
   }
 }
 
@@ -622,7 +622,7 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 			url : "*://*.youtube.com/feed/subscription*"
 						   }).then((tabs) => {
 			sendMessageToTabs(tabs);
-		}).catch((error) => { console.log(`Error:${error}`) })
+		}).catch((error) => { console.log(`browser.tabs.query :${error}`) })
 	}
 }
 browser.tabs.onUpdated.addListener(handleTabUpdate);
