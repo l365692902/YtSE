@@ -1,3 +1,25 @@
+
+// 对infoVideo数组中,视频更新顺序进行排序. 从新到旧
+function videoMergeSort(array) {  //采用自上而下的递归方法
+	var length = array.length;
+	if (length < 2) {
+		return array;
+	}
+	var m = (length >> 1),
+		left = array.slice(0, m),
+		right = array.slice(m); //拆分为两个子数组
+	return merge(videoMergeSort(left), videoMergeSort(right));//子数组继续递归拆分,然后再合并
+}
+function merge(left, right) { //合并两个子数组
+	var result = [];
+	while (left.length && right.length) {
+		var item = left[0].upTime >= right[0].upTime ? left.shift() : right.shift();//注意:判断的条件是小于或等于,如果只是小于,那么排序将不稳定.
+		result.push(item);
+	}
+	return result.concat(left.length ? left : right);
+}
+
+
 //for debug
 function popUpNotification(message) {
 	browser.notifications.create({
@@ -22,16 +44,16 @@ function checkResponse(xhr) {
 //promise based asynchronous xmlHttpRequest
 function asynHttpRequest(method, url) {
 	return new Promise((resolve, reject) => {
-		// console.log("%c" + "requesting...: " + url, "color:#00ff00")//DEBUG
+		console.log("%c" + "requesting...: " + url, "color:#00ff00")//DEBUG
 		const xhr = new XMLHttpRequest();
 		xhr.open(method, url, true);
 		xhr.onload = () => {
-			checkResponse(xhr);//DEBUG
+			// checkResponse(xhr);//DEBUG
 			resolve(xhr.response);
 		};
 		xhr.onerror = () => {
 			console.log("error occur while accessing " + url);
-			reject("error");
+			reject("error when http requesting");
 		};
 		if (method == "POST") {
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
@@ -49,7 +71,7 @@ function searchListOnline(list) {
 	let url_list;
 	let list_p = new Array(list.length);
 
-	//console.log("debug : " + list.length);
+	// console.log("debug : " + list.length);
 
 	for (let i = 0; i < list.length; i++) {
 		//console.log("debug : " + i);
@@ -179,7 +201,7 @@ function getChannelInfo(il_video) {
 	var tNow = new Date();
 	uptimeStr = tNow.valueOf();
 
-	vInfo = new infoVideo(il_video, "", "", coverUrl, "", channelName, channelUrl, "", tNow);
+	vInfo = new infoVideo($(il_video).html(), "", "", coverUrl, "", channelName, channelUrl, "", tNow);
 
 	//vInfo.show();
 	return vInfo;
@@ -222,7 +244,7 @@ function getPlayListInfo(il_video) {
 	uptimeStr = '' // 更新时间无法在搜索页面拿到,要在主页拿到; 在updatePlayListInfo函数中
 	var videoUrl = $(listUrlObj).find("li").children().attr("href");
 
-	vInfo = new infoVideo(il_video, title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, new Date());
+	vInfo = new infoVideo($(il_video).html(), title, videoUrl, coverUrl, videoTime, channelName, channelUrl, uptimeStr, new Date());
 
 	return vInfo;
 	// vInfo.show();
@@ -239,13 +261,14 @@ function updatePlayListInfo(vInfo, ListPage) {
 	var Zhftime2 = "更新";
 
 	var Entime1 = "Last updated on ";
-	var Entime1 = "Updated";
+	var Entime2 = "Updated";
 	// 获取更新时间
 	uptimeObj = $(ListPage).find("div.pl-header-content").find("ul.pl-header-details").find("li").toArray()[3];
 	var uptimeStr = $(uptimeObj).text();
-	// console.log(uptimeStr);
+	//console.log("-----debug--------");
+	//console.log(uptimeStr);
 
-	if (uptimeStr.includes(Zhtime1)) {
+	if (uptimeStr.includes(Zhftime1)) {
 		// 繁体中文 "上次更新時間：xxxx年xx月xx日"
 		var timeStr = uptimeStr.substring(Zhftime1.length);
 
@@ -254,7 +277,7 @@ function updatePlayListInfo(vInfo, ListPage) {
 	} else if (uptimeStr.includes(Zhtime1)) {
 		// 中文 "最后更新时间：xxxx年xx月xx日"
 		var timeStr = uptimeStr.substring(Zhtime1.length);
-
+		//console.log(timeStr);
 		vInfo.upTime = convertAbTime2Int(timeStr);
 
 	} else if (uptimeStr.includes(Zhtime2)) {
@@ -332,67 +355,124 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 
 // 在添加关键字后查找channel或list对应的Url
 function initialUrl(key_word) {
-	// class赋值 直接 key_word_local=key_word 是指针, 两个变量指向一个地址
-	let key_word_local = new keyWord(key_word.self, key_word.channel, key_word.playList);
-
-	console.log("----查找URL------");
-	//key_word_local.show();
-	//console.log(key_world.playList)
-	let vedio = new Array();
-	key_word_local.self = "";
-
-
-	if (key_word.playList != "" || key_word.channel != "") {
-		searchListOnline([key_word_local]).then((list_SearchResults) => {
-
-			//console.log("initial final : ",list_SearchResults.length);
-			//console.log(list_SearchResults)
-			//key_word_local.show();
-			if (key_word.playList != "" && key_word.playListUrl == "") {
-				//key_word.show();
-				console.log("查找play list");
-				////key_word.show();
-				vedio.push.apply(vedio, filterSearch([key_word_local], list_SearchResults));
-			} else if (key_word.channel != "" && key_word.channelUrl == "") {
-				//key_word.show();
-				console.log("查找channel");
-				////key_word.show();
-				vedio.push.apply(vedio, filterChannelSearch([key_word_local], list_SearchResults));
-			}
-
-			//console.log("initial num video : ", vedio.length);
-			// debug
-
-			if (vedio.length > 0) {
-				// 我们只用查找出来第一个的
-				//vedio[0].show();
+	return new Promise((resolve, reject) => {
+		// class赋值 直接 key_word_local=key_word 是指针, 两个变量指向一个地址
+		let key_word_local = new keyWord(key_word.self, key_word.channel, key_word.playList);
+		console.log("----查找URL------");
+		//key_word_local.show();
+		//console.log(key_world.playList)
+		let vedio = new Array();
+		key_word_local.self = "";
+		if (key_word.playList != "" || key_word.channel != "") {
+			searchListOnline([key_word_local]).then((list_SearchResults) => {
+				//console.log("initial final : ",list_SearchResults.length);
+				//console.log(list_SearchResults)
+				//key_word_local.show();
 				if (key_word.playList != "" && key_word.playListUrl == "") {
-					//需要查找playlist的URL
-
-					//key_word_local.show();
-					key_word.channel = vedio[0].channelName;
-					key_word.channelUrl = vedio[0].channelUrl;
-					key_word.playListUrl = vedio[0].videoUrl;
-					console.log("找到play list");
-					//key_word.show();		
-				} else if (key_word.channel != "" && key_word.channelUrl == "") {
-
-					key_word.channel = vedio[0].channelName;
-					key_word.channelUrl = vedio[0].channelUrl;
-					console.log("找到Channel");
 					//key_word.show();
+					console.log("查找play list");
+					////key_word.show();
+					vedio.push.apply(vedio, filterSearch([key_word_local], list_SearchResults));
+				} else if (key_word.channel != "" && key_word.channelUrl == "") {
+					//key_word.show();
+					console.log("查找channel");
+					////key_word.show();
+					vedio.push.apply(vedio, filterChannelSearch([key_word_local], list_SearchResults));
 				}
+				//console.log("initial num video : ", vedio.length);
+				// debug
+				if (vedio.length > 0) {
+					// 我们只用查找出来第一个的
+					//vedio[0].show();
+					if (key_word.playList != "" && key_word.playListUrl == "") {
+						//需要查找playlist的URL
 
-			} else {
-				//没有查找到list
-				console.log("没有找到Url");
-			}
-			console.log("-------------->");
-		});
-	}
+						//key_word_local.show();
+						key_word.channel = vedio[0].channelName;
+						key_word.channelUrl = vedio[0].channelUrl;
+						key_word.playListUrl = vedio[0].videoUrl;
+						console.log("找到play list");
+						//key_word.show();		
+					} else if (key_word.channel != "" && key_word.channelUrl == "") {
 
+						key_word.channel = vedio[0].channelName;
+						key_word.channelUrl = vedio[0].channelUrl;
+						console.log("找到Channel");
+						//key_word.show();
+					}
+				} else {
+					//没有查找到list
+					console.log("没有找到Url");
+				}
+				console.log("-------------->");
+				resolve(key_word)
+			}).catch((error) => {
+				console.log(error)
+				reject("error when initializing " + key_word.self)
+			});
+		} else {
+		}
+	})
 }
 
+// 查找关键词对应的视频
+function updateSearchList(list_KeyWord) {
+	// 筛选出符合关键词的视频
+	console.log("start update search list");
+	let list_vedio = new Array();
+	searchListOnline(list_KeyWord).then((list_SearchResults) => {
+		//console.log("final:");
+		//console.log(list_SearchResults)
+		//console.log(list_SearchResults.length);
+
+		list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord, list_SearchResults));
+		//console.log("num video : ", list_vedio.length);
+		// debug
+		// for (let i = 0; i < list_vedio.length; i++) {
+		// 	console.log("<-----" + i + "-th video----->");
+		// 	list_vedio[i].show();
+		// }
+
+		return searchPlayListOnline(list_KeyWord);
+	}).then((list_Playlistmainpage) => {
+		//console.log("final:");
+		console.log("num video : ", list_vedio.length);
+		console.log(list_Playlistmainpage.length);
+
+		// 或得playList更新时间
+		for (let i = 0; i < list_KeyWord.length; i++) {
+			if (list_KeyWord[i].playList != "") {
+				for (let j = 0; j < list_vedio.length; j++) {
+					if (list_KeyWord[i].channel == list_vedio[j].channelName && list_KeyWord[i].playList == list_vedio[j].title) {
+						updatePlayListInfo(list_vedio[j], list_Playlistmainpage[i]);
+					}
+				}
+			}
+		}
+		//list_vedio.push.apply(list_vedio, filterSearch(list_KeyWord,list_SearchResults));
+		//console.log("num video : ", list_vedio.length);
+		list_vedio = videoMergeSort(list_vedio);
+
+		// debug
+		// for (let i = 0; i < list_vedio.length; i++) {
+		// 	console.log("<-----" + i + "-th video----->");
+		// 	list_vedio[i].show();
+		// }
+		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
+		let storageVideo = browser.storage.local.set({ list_vedio });
+	});
+	// //按按钮发消息
+	// browser.tabs.query({
+	// 	url: "*://*.youtube.com/feed/subscription*"
+	// }).then((tabs) => {
+	// 	for (let tab of tabs) {
+	// 		browser.tabs.sendMessage(
+	// 			tab.id,
+	// 			{ greeting: "Hey boy, from background" }
+	// 		)
+	// 	}
+	// }).catch((error) => { console.log(`Error:${error}`) })
+}
 
 
 
@@ -404,57 +484,140 @@ function initialUrl(key_word) {
 // list 储存关键字所属列表, 空为不指定
 // word channel list 三个变量不能同时为零
 
-
-
 // 储存关键词
-let list_KeyWord = new Array();
 // 关键词对应的搜索页面
-//let list_SearchResults = new Array();
-//let list_Playlistmainpage = new Array();
-
-
-
-if (jQuery) {
-	console.log("jQuery loaded");
-
-}
 
 console.log("开始初始化");
 // 目前只储存两个
+browser.storage.local.get("list_KeyWord").then((o) => {
+	if (o.list_KeyWord === undefined) {
+		console.log("no settings, so making some")
+		let list_KeyWord = new Array();
+		list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+		list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+		list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+		browser.storage.local.set({ list_KeyWord })
+	}
+})
 
-
-list_KeyWord[0] = new keyWord("爸爸去哪儿5;完整版;ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
-list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+// list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+// list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
+// list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 //list_KeyWord[0] = new keyWord("Christmas Songs for Kids | Christmas Songs | Nursery Rhymes and Baby Songs from Dave and Ava");
 //list_KeyWord[0] = new keyWord("","","【超清】《爸爸去哪儿》第五季Dad Where Are We Going S05——王牌亲子综艺节目再度回归【马来西亚地区已可以观看全13期+特别版】");
 //list_KeyWord[1] = new keyWord("老师;","阅后即瞎 - 官方频道");
 //list_KeyWord[2] = new keyWord("爸爸去哪儿5 ENG SUB","湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 
 // 寻找youtuber对应字符
-for (let i = 0; i < list_KeyWord.length; i++) {
-	// searchChannelNum(list_KeyWord[i]);
-	//list_KeyWord[i].show();
-	// initialUrl(list_KeyWord[i]);
-	console.log("=======");
+//for (let i = 0; i < list_KeyWord.length; i++) {
+//	// searchChannelNum(list_KeyWord[i]);
+//	//list_KeyWord[i].show();
+//	// initialUrl(list_KeyWord[i]);
+//	console.log("=======");
+//
+//}
 
-}
-
-
-console.log("初始化完成");
+//browser.storage.local.clear();
+//console.log("初始化完成");
 //convertReTime2Int("2 小时前");
 
-// 输出关键字信息
-//console.log("list_length :" + list_KeyWord.length);
-//for (let i = 0; i < list_KeyWord.length; i++) {
-//	console.log((i + 1), "-th \n关键词 : " + list_KeyWord[i].self + "\nchannel : " + list_KeyWord[i].channel + "\nchannel Url : " + list_KeyWord[i].channelUrl);
-//}
-//console.log("----------");
+// 自动更新视频列表
+
+
+function updateSearchListIterator(timeGap) {
+	// 如果list_KeyWord更新了,这里list_KeyWord是否也会更新?
+	var Now = new Date();
+	console.log("updat time : ", Now);
+	// updateSearchList(list_KeyWord);
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		// let tempList = o.list_KeyWord
+		let listPromise = new Array()
+		for (let i = 0; i < o.list_KeyWord.length; i++) {
+			// searchChannelNum(list_KeyWord[i]);
+			listPromise.push(initialUrl(o.list_KeyWord[i]))
+		}
+		Promise.all(listPromise).then((list_KeyWord) => {
+			updateSearchList(list_KeyWord);
+		})
+	})
+	setTimeout(() => { updateSearchListIterator(timeGap) }, timeGap)
+}
+
+let timeGap = 5 * 60 * 1000; // 5 min
+setTimeout(() => {
+	console.log("First Search List");
+	updateSearchListIterator(timeGap);
+}, 60 * 1000); //浏览器启动一分钟后再执行
+
+
+// browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
+// 	console.log(details);
+// 	browser.tabs.query({
+// 		url: "*://*.youtube.com/feed/subscription*"
+// 	}).then((tabs) => {
+// 		for (let tab of tabs) {
+// 			browser.tabs.sendMessage(
+// 				tab.id,
+// 				{ greeting: "Hey boy, from background" }
+// 			)
+// 		}
+// 	}).catch((error) => { console.log(`Error:${error}`) })
+// }, { url: [{ urlPrefix: "https://www.youtube.com/feed/subscriptions" }] });
+
+
+function handleTabUpdate(tabId, changeInfo, tabInfo) {
+	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
+		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+		console.log(changeInfo)
+		browser.tabs.query({
+			url: "*://*.youtube.com/feed/subscription*"
+		}).then((tabs) => {
+			console.log("refreshing it")
+			for (let tab of tabs) {
+				browser.tabs.reload(tab.Id)
+			}
+			browser.tabs.onUpdated.removeListener(handleTabUpdate)
+
+			setTimeout(() => { browser.tabs.onUpdated.addListener(handleTabUpdate) }, 30000)
+
+		}).catch((error) => { console.log(`Error:${error}`) })
+	}
+}
+browser.tabs.onUpdated.addListener(handleTabUpdate);
 
 
 browser.browserAction.onClicked.addListener(() => {
-	browser.runtime.openOptionsPage()
+	// browser.runtime.openOptionsPage()
+
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		// let tempList = o.list_KeyWord
+		let listPromise = new Array()
+		for (let i = 0; i < o.list_KeyWord.length; i++) {
+			// searchChannelNum(list_KeyWord[i]);
+			listPromise.push(initialUrl(o.list_KeyWord[i]))
+		}
+		Promise.all(listPromise).then((list_KeyWord) => {
+			updateSearchList(list_KeyWord);
+		})
+	})
 })
 
-
-
+// browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
+// 	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
+// 		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+// 		console.log(changeInfo)
+// 		browser.tabs.query({
+// 			url: "*://*.youtube.com/feed/subscription*"
+// 		}).then((tabs) => {
+// 			console.log("manually injecting...")
+// 			for (let tab of tabs) {
+// 				browser.tabs.executeScript({ file: "lib/jquery-3.2.1.min.js" }).then(() => {
+// 					return browser.tabs.executeScript({ file: "lib/core.js" })
+// 				}).then(() => {
+// 					return browser.tabs.executeScript({ file: "content_scripts/content.js" })
+// 				})
+// 			}
+// 		}).catch((error) => { console.log(`Error:${error}`) })
+// 	}
+// });
 
