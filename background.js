@@ -587,19 +587,19 @@ browser.tabs.onUpdated.addListener(handleTabUpdate);
 
 
 browser.browserAction.onClicked.addListener(() => {
-	// browser.runtime.openOptionsPage()
+	browser.runtime.openOptionsPage()
 
-	browser.storage.local.get("list_KeyWord").then((o) => {
-		// let tempList = o.list_KeyWord
-		let listPromise = new Array()
-		for (let i = 0; i < o.list_KeyWord.length; i++) {
-			// searchChannelNum(list_KeyWord[i]);
-			listPromise.push(initialUrl(o.list_KeyWord[i]))
-		}
-		Promise.all(listPromise).then((list_KeyWord) => {
-			updateSearchList(list_KeyWord);
-		})
-	})
+	// browser.storage.local.get("list_KeyWord").then((o) => {
+	// 	// let tempList = o.list_KeyWord
+	// 	let listPromise = new Array()
+	// 	for (let i = 0; i < o.list_KeyWord.length; i++) {
+	// 		// searchChannelNum(list_KeyWord[i]);
+	// 		listPromise.push(initialUrl(o.list_KeyWord[i]))
+	// 	}
+	// 	Promise.all(listPromise).then((list_KeyWord) => {
+	// 		updateSearchList(list_KeyWord);
+	// 	})
+	// })
 })
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {

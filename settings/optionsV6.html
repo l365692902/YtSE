@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>optioinsV6</title>
+	<link href="optionsV6.css" rel="stylesheet" type="text/css">
+	<link href="../lib/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<script src="../lib/jquery-3.2.1.min.js"></script>
+	<script src="../lib/jquery-ui.min.js"></script>
+	<script src="optionsV6.js"></script>
+</head>
+
+<body>
+	<div class="row">Content of row
+		<div class="col">Content of col
+			<ul>
+				<li class="liTop">
+					<span id="spAdd">
+						<input name="textfield" type="text" id="tfAdd" value="input keyword here">
+						<input name="button" type="button" id="btAdd" value="Add">
+					</span>
+				</li>
+				<ul id="ulKeyword">
+					<li class="liKeyword">
+						<span class="spKeyword">
+							<input name="textfield" type="text" class="tfKeyword">
+							<span class="spRight">
+								<input type="radio">
+								<label for="radio2">Playlist</label>
+								<input type="radio">
+								<label for="radio">On/Off</label>
+								<input type="button" class="btDelete" value="Delete">
+							</span>
+						</span>
+					</li>
+					<li class="liKeyword">
+						<span class="spKeyword">
+							<label for="textfield2" class="labKeyword">爸爸去哪儿5;完整版;ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel</label>
+							<span class="spRight">
+								<input type="radio">
+								<label for="radio3">Playlist</label>
+								<input type="radio">
+								<label for="radio3">On/Off</label>
+								<input type="button" class="btDelete" value="Delete">
+							</span>
+						</span>
+					</li>
+				</ul>
+
+				<li class="liBottom">
+					<span id="spImport">
+						<input name="button2" type="button" class="btGroup" id="ImportPlaylist" value="Import Playlist">
+						<input name="button3" type="button" class="btGroup" id="Import" value="Import Settings">
+						<input name="button4" type="button" class="btGroup" id="Export" value="Export Settings">
+					</span>
+				</li>
+			</ul>
+			<div id="test">Content for New div Tag Goes Here</div>
+		</div>
+	</div>
+</body>
+
+</html>
