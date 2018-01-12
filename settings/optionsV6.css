@@ -39,8 +39,8 @@ ul li label .legacy {
 	overflow-x: hidden;
 	display: inline-block;
 	position: relative;
-	height: 298px;
-	width: 379px;
+	height: 50vh;
+	width: 63vw;
 	overflow-y: hidden;
 }
 
@@ -58,12 +58,13 @@ ul .liTop #spAdd {
 	position: relative;
 }
 ul .liTop #tfAdd {
-	background-color: rgba(205,205,205,1.00);
+	background-color: rgba(228,228,228,1.00);
 	border: 0;
 	width: 100%;
 	border-top-left-radius: 5px;
 	position: relative;
 	padding-left: 7px;
+	font-size: large;
 }
 ul .liTop #btAdd {
 	border: 0;
@@ -92,12 +93,22 @@ ul .liTop #btAdd {
 	-webkit-box-shadow: inset 0px 0px 16px rgba(136,136,136,1.00);
 	box-shadow: inset 0px 0px 16px rgba(136,136,136,1.00);
 	display: inline-block;
-	padding: 0;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-bottom: 0px;
 	list-style-type: none;
 	right: 0px;
 	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 ul #ulKeyword .liKeyword {
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	font-family: 'Roboto', sans-serif;
 
 }
 #ulKeyword .liKeyword .spKeyword {
@@ -106,6 +117,9 @@ ul #ulKeyword .liKeyword {
 }
 .liKeyword .spKeyword .tfKeyword {
 	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 
 
 }
@@ -121,6 +135,15 @@ ul #ulKeyword .liKeyword {
 	display: flex;
 	position: relative;
 }
+.spKeyword .spRight .btDelete {
+	border: 0;
+	margin-left: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0px 0px 2px 1px rgba(136,136,136,1.00);
+	box-shadow: 0px 0px 2px 1px rgba(136,136,136,1.00);
+	background-color: rgba(235,235,235,1.00);
+}
+
 
 
 
@@ -154,6 +177,44 @@ ul .liBottom #spImport {
 	box-shadow: 0px 0px 2px 0px rgba(136,136,136,1.00);
 	background-color: rgba(235,235,235,1.00);
 }
+#dialog {
+	position: relative;
+	text-align: center;
+}
+
+#dialog .ulDialog {
+	list-style-type: none;
+	padding-left: 0px;
+}
+
+#dialog ul .liDialog {
+	position: relative;
+
+}
+ul .liDialog .spDialog {
+	display: flex;
+	justify-content: space-between;
+}
+.liDialog .spDialog .labDialog {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.liDialog .spDialog .spDialogRight {
+	position: relative;
+	right: 0px;
+}
+
+.spDialog span .ckDialog {
+
+}
+
+
+
+
+
+
+
 
 #test   {
 	width: 100px;

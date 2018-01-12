@@ -8,6 +8,19 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan12-L
+* svg很好玩
+
+## 2018Jan11-L
+* 父元素用flex，和justify-content:space-between可以很好地拉开首尾子元素
+* span用来包裹inline，div包裹block
+* ul的list-style:none 并且左边padding为0，可以消除li缩进
+* 如果Roboto的加载速度不够，备用几个看起来像的web safe font
+  * Tahoma, Geneva, sans-serif
+  * "Lucida Sans Unicode", "Lucida Grande", sans-serif
+  * Verdana, Geneva, sans-serif
+  * Arial, Helvetica, sans-serif
+
 ## 2018Jan05-L
 * 设置页的li label中的文字如果超长会改变排版，暂时靠拉长来避免，恐怕之后要改个V6出来
 * 设置页完成，关键词列表存储在local(list_KeyWord)中，只等整合
