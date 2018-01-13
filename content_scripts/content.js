@@ -281,15 +281,13 @@ function Insert(){
 
 								ObjIn = $(convertSearchToFeed(ObjInsertModel, list_vedio[i], vYoutube));
 								// console.log($(ObjIn).html());
-								$(ObjIn).attr("insert","insert");
+								// $(ObjIn).attr("insert","insert");
 								$(ObjIn).css("border", "1px dashed #4CAF50"); //outline: #4CAF50 solid 10px;
 								//$(ObjIn).css("outline", "#4CAF50 solid 5px"); 
 								$(ObjIn).insertBefore($(this));
 								// console.log($(ObjIn).find("a#thumbnail").attr("href"));
 								// array_insertObj.push($(ObjIn).html());
 								// indexArray.push(index);
-								// 添加框线
-								//$(this).next().css("border", "1px solid red");
 								indexBegin = indexBegin + 1;
 								haveLoaded = true;
 							}
