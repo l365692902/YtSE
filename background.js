@@ -474,7 +474,26 @@ function updateSearchList(list_KeyWord) {
 	// }).catch((error) => { console.log(`Error:${error}`) })
 }
 
+// 获取用户已订阅的播放列表
+function getFeedPlayList(){
 
+	let url = "https://www.youtube.com/";
+	let list_title = new Array();
+	let homePage = asynHttpRequest("GET", url);
+
+	homePage.then((Page) => {
+		$(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
+			
+			list_title.push($(this).attr("title"));
+
+
+		});
+		console.log(list_title);
+		return list_title;
+		
+	});
+
+}
 
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
@@ -644,6 +663,7 @@ browser.browserAction.onClicked.addListener((tab) => {
 		})
 	})
 	
+	getFeedPlayList();
 
   
 })
