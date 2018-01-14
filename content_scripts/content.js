@@ -1,4 +1,5 @@
 //================================FUNCTIONS====================================
+
 function convertSearchToFeed(ObjM, VedioInfo, vYoutube = 0) {
 	// 替换观看历史
 	// 替换标题
@@ -60,6 +61,7 @@ function convertSearchToFeed(ObjM, VedioInfo, vYoutube = 0) {
 
 		// console.log("3");
 		// 替换时长
+		// console.log($(ObjM_local).find("span.style-scope.ytd-thumbnail-overlay-time-status-renderer").text());
 		$(ObjM_local).find("span.style-scope.ytd-thumbnail-overlay-time-status-renderer").text(VedioInfo.videoTime);
 		// console.log("4");
 		// 替换标题
@@ -76,6 +78,7 @@ function convertSearchToFeed(ObjM, VedioInfo, vYoutube = 0) {
 		.text($(VedioInfo.il).find("h3.yt-lockup-title").find("a").text()); 
 		// console.log("5");
 		// 替换up
+
 		$(ObjM_local).find("yt-formatted-string#byline").find("a")
 		.attr('href', $(VedioInfo.il).find("div.yt-lockup-byline").find("a.yt-uix-sessionlink").attr('href'));
 
@@ -84,11 +87,11 @@ function convertSearchToFeed(ObjM, VedioInfo, vYoutube = 0) {
 
 		// console.log("6");
 		// 替换观看次数 更新时间
-
+		// 新版本 : 观看次数 更新时间
 		$($(ObjM_local).find("div#metadata-line").children()[0])
-		.text($($(VedioInfo.il).find("ul.yt-lockup-meta-info").children()[0]).text());
-		$($(ObjM_local).find("div#metadata-line").children()[1])
 		.text($($(VedioInfo.il).find("ul.yt-lockup-meta-info").children()[1]).text());
+		$($(ObjM_local).find("div#metadata-line").children()[1])
+		.text($($(VedioInfo.il).find("ul.yt-lockup-meta-info").children()[0]).text());
 
 
 
@@ -186,6 +189,10 @@ function getFeedVideoInfo(il_video,vYoutube=0) {
 
 // 读取已获得的列表
 console.log("load video list");
+sLastTime="<ytd-thumbnail-overlay-time-status-renderer class=\"style-scope ytd-thumbnail\"\
+ overlay-style=\"DEFAULT\"><span class=\"style-scope ytd-thumbnail-overlay-time-status-renderer\" aria-label=\"\">\
+4:57\
+</span></ytd-thumbnail-overlay-time-status-renderer>";
 
 //let  getListVedio = browser.storage.local.get("list_vedio");
 //getListVedio.then(onGot);
@@ -197,7 +204,7 @@ function Insert(){
 		console.log("insert now");
 		let vYoutube = 0; //区分youtube版本， 旧版为0，新版为1. 考虑以后有更多版本，为整数
 		let gettingItem = browser.storage.local.get("list_vedio");
-		// let array_insertObj = new Array();
+		let array_insertObj = new Array();
 		// let indexArray = new Array();
 		gettingItem.then((Obj) => {
 			if (isObjEmpty(Obj)) {
@@ -255,7 +262,12 @@ function Insert(){
 				//console.log("<li class=\"yt-shelf-grid-item\">"+list_vedio[0].il +"</li>");
 
 				ObjInsertModel= $($(Obj).toArray()[0]).clone();
-
+				
+				if(vYoutube == 1){
+					// 新版本,模板缺少关键字, 需要补充
+					// 补充视频时长
+					$(ObjInsertModel).find("#overlays").prepend(sLastTime);
+				}
 				// $(Obj).each(function (index) {
 				// 	if (index == 0) {
 				// 		ObjInsertModel = $(this).clone();
@@ -277,23 +289,26 @@ function Insert(){
 							//let vInfo = new infoVideo();
 							vInfo = getFeedVideoInfo(this, vYoutube); // 没有title和videoUrl
 							if(vInfo.upTime < list_vedio[i].upTime){
-								console.log(i,index);
+								// console.log(i,index);
 
 								ObjIn = $(convertSearchToFeed(ObjInsertModel, list_vedio[i], vYoutube));
 								// console.log($(ObjIn).html());
-								// $(ObjIn).attr("insert","insert");
+								
+								$(ObjIn).attr("insert","insert");
 								$(ObjIn).css("border", "1px dashed #4CAF50"); //outline: #4CAF50 solid 10px;
 								//$(ObjIn).css("outline", "#4CAF50 solid 5px"); 
+								
+								array_insertObj.push($(ObjIn).html());
 								$(ObjIn).insertBefore($(this));
 								// console.log($(ObjIn).find("a#thumbnail").attr("href"));
-								// array_insertObj.push($(ObjIn).html());
+								
 								// indexArray.push(index);
 								indexBegin = indexBegin + 1;
 								haveLoaded = true;
 							}
 							//vInfo.show();
 						}
-		
+
 					});
 				}
 				
@@ -302,14 +317,111 @@ function Insert(){
 				$("#content").append( $(markLoaded ) );
 				//console.log(list_vedio[13].il);
 				
-				//// 尝试给提第一个视频添加边框
-				//$(Obj).each(function (index) {
-				//	if (index == 0) {
-				//		$(this).css("border", "1px solid red");
-				//		console.log(ObjInsertModel);
-				//	}
-				//
-				//});		
+
+				// 对于新版本Youtube会抹除掉视频信息. 用延时多次写入避免该问题
+				if(vYoutube == 1){
+					let iSecond = 0;
+					setTimeout(() => {
+						console.log("start second");
+						Obj = $("div#items").children();
+						$(Obj).each(function (index) {
+							
+							if($(this).attr("insert") == "insert"){
+								// 一步一步替换
+								//虽然全部替换，但是只有题目加载出来了
+								
+								$(this).find("#dismissable").remove();
+								$(this).prepend($(array_insertObj[iSecond]).toArray()[0]);
+
+								// console.log($($(array_insertObj[iSecond]).toArray()[0]).find("a#thumbnail").attr("href"));
+								// $(this).find("div#dismissable").find("a#thumbnail").attr("href","test");
+								// console.log($(this).find("div#dismissable").find("a#thumbnail").attr("href"));
+								$(this).find("div#dismissable").find("a#thumbnail").attr("href",
+									$($(array_insertObj[iSecond]).toArray()[0]).find("a#thumbnail").attr("href"));
+
+								// 替换img
+								ObjImgP = $(this).find("img#img").parent();
+								$(this).find("img#img").remove();
+								$(ObjImgP).prepend(	$($(array_insertObj[iSecond]).toArray()[0]).find("img#img") );
+
+								// 添加时长
+								// console.log($($(array_insertObj[iSecond]).toArray()[0])
+								// .find("div#overlays").html());
+								// $(this).find("div#mouseover-overlay").prepend("<div test=\"test\"></div>");
+								// console.log($(this).find("div#mouseover-overlay"));
+								// console.log($($(array_insertObj[iSecond]).toArray()[0]).find("div#mouseover-overlay").children());
+								$(this).find("div#overlays").prepend(
+									$($(array_insertObj[iSecond]).toArray()[0])
+									.find("div#overlays").children());
+								// $(this).find("div#overlays").prepend($($(array_insertObj[iSecond]).toArray()[0]).find("div#overlays").children());
+
+								// 替换 up
+								$(this).find("#byline").remove();
+								$(this).find("#byline-container").prepend(
+									$($(array_insertObj[iSecond]).toArray()[0])
+									.find("#byline"));
+
+								iSecond ++;
+							}
+
+						});
+						setTimeout(() => {
+							console.log("start third");
+							let iSecond = 0;
+							Obj = $("div#items").children();
+							$(Obj).each(function (index) {
+								
+								if($(this).attr("insert") == "insert"){
+									// 一步一步替换
+									//虽然全部替换，但是只有题目加载出来了
+									$(this).find("div#dismissable").find("a#thumbnail").attr("href", 
+										$($(array_insertObj[iSecond]).toArray()[0]).find("a#thumbnail").attr("href"));
+
+									// 替换img
+									ObjImgP = $(this).find("img#img").parent();
+									$(this).find("img#img").remove();
+									$(ObjImgP).prepend(	$($(array_insertObj[iSecond]).toArray()[0]).find("img#img") );	
+
+									// 添加时长
+									// $(this).find("div#mouseover-overlay").prepend("<div test=\"test\"></div>");									
+									$(this).find("div#overlays").prepend(
+										$($(array_insertObj[iSecond]).toArray()[0])
+										.find("div#overlays").children());
+
+									$(this).find("span.style-scope.ytd-thumbnail-overlay-time-status-renderer").text(
+										$($(array_insertObj[iSecond]).toArray()[0]).find("span.style-scope.ytd-thumbnail-overlay-time-status-renderer").text()
+									);
+									// $(this).find("div#overlays").prepend($($(array_insertObj[iSecond]).toArray()[0]).find("div#overlays").children());
+
+									
+									// 替换 up
+									$(this).find("#byline").prepend(
+										$($(array_insertObj[iSecond]).toArray()[0])
+										.find("#byline").find("a"));
+									iSecond ++;
+								}
+	
+							});		
+							setTimeout(() => {
+								console.log("start 4th");
+								let iSecond = 0;
+								Obj = $("div#items").children();
+								$(Obj).each(function (index) {
+									
+									if($(this).attr("insert") == "insert"){
+	
+										// 添加时长
+										$(this).find("span.style-scope.ytd-thumbnail-overlay-time-status-renderer").text(
+											$($(array_insertObj[iSecond]).toArray()[0]).find("span.style-scope.ytd-thumbnail-overlay-time-status-renderer").text()
+										);
+										iSecond ++;
+									}
+		
+								});							
+							}, 100);
+						}, 100);
+					}, 100);	
+				}
 			});
 		});
 	}
