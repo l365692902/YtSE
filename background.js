@@ -474,7 +474,26 @@ function updateSearchList(list_KeyWord) {
 	// }).catch((error) => { console.log(`Error:${error}`) })
 }
 
+// 获取用户已订阅的播放列表
+function getFeedPlayList(){
 
+	let url = "https://www.youtube.com/";
+	let list_title = new Array();
+	let homePage = asynHttpRequest("GET", url);
+
+	homePage.then((Page) => {
+		$(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
+			
+			list_title.push($(this).attr("title"));
+
+
+		});
+		console.log(list_title);
+		return list_title;
+		
+	});
+
+}
 
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
@@ -583,10 +602,53 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 		}).catch((error) => { console.log(`Error:${error}`) })
 	}
 }
+//browser.tabs.onUpdated.addListener(handleTabUpdate);
+
+
+function sendMessageToTabs(tabs) {
+  for (let tab of tabs) {
+    browser.tabs.sendMessage(
+      tab.id,
+      {greeting: "Hi from background script"}
+    ).then(response => {
+      //console.log("Message from the content script:");
+      //console.log(response.response);
+    }).catch((error) => { console.log(`sendMessageToTabs :${error}`) });
+  }
+}
+
+// 一直监测
+//function ListenActiveYoutube(timeGap){
+//	var querying = browser.tabs.query({active: true, lastFocusedWindow : true, url : "*://*.youtube.com/feed/subscription*"});
+//	querying.then((tabs) => {
+//		sendMessageToTabs(tabs);
+//		//for (let tab of tabs) {
+//		//	//browser.tabs.reload(tab.Id)
+//		//}
+//		setTimeout(() => { ListenActiveYoutube(timeGap) }, timeGap)
+//	}
+//	)
+//}
+//ListenActiveYoutube(5000);
+
+function handleTabUpdate(tabId, changeInfo, tabInfo) {
+	if (String(changeInfo.url).includes("https://www.youtube.com/feed/subscriptions")) {
+		console.log("Tab: " + tabId + " URL changed to " + changeInfo.url);
+		console.log(changeInfo)
+		browser.tabs.query({
+			active: true,
+			lastFocusedWindow : true,
+			url : "*://*.youtube.com/feed/subscription*"
+						   }).then((tabs) => {
+			sendMessageToTabs(tabs);
+		}).catch((error) => { console.log(`browser.tabs.query :${error}`) })
+	}
+}
 browser.tabs.onUpdated.addListener(handleTabUpdate);
 
 
-browser.browserAction.onClicked.addListener(() => {
+
+browser.browserAction.onClicked.addListener((tab) => {
 	// browser.runtime.openOptionsPage()
 
 	browser.storage.local.get("list_KeyWord").then((o) => {
@@ -600,6 +662,10 @@ browser.browserAction.onClicked.addListener(() => {
 			updateSearchList(list_KeyWord);
 		})
 	})
+	
+	getFeedPlayList();
+
+  
 })
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
