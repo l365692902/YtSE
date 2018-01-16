@@ -65,6 +65,7 @@ ul .liTop #tfAdd {
 	position: relative;
 	padding-left: 7px;
 	font-size: large;
+	color: rgba(136,136,136,1.00);
 }
 ul .liTop #btAdd {
 	border: 0;
@@ -77,6 +78,8 @@ ul .liTop #btAdd {
 	-webkit-box-shadow: 0px 0px 2px rgba(136,136,136,1.00);
 	box-shadow: 0px 0px 2px rgba(136,136,136,1.00);
 	background-color: rgba(235,235,235,1.00);
+	padding-left: 12px;
+	padding-right: 12px;
 
 
 
@@ -168,7 +171,7 @@ ul .liBottom #spImport {
 }
 .liBottom #spImport .btGroup {
 	display: inline-block;
-	width: 33.4%;
+	width: 25.1%;
 	color: rgba(255,0,0,1.00);
 	font-family: 'Roboto', sans-serif;
 	border: 0;

@@ -8,6 +8,11 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan17-L
+* 给帮助预留的弹窗
+* 对于显示不完全的keyword添加了主动的悬浮提示
+* 但是发现浏览器其实默认也有个悬浮提示，只是延迟很高。用哪个好？添加的还是默认的？
+
 ## 2018Jan12-L
 * svg很好玩
 
