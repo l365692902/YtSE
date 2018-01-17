@@ -8,7 +8,92 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan17-BS
+
+修改keyWord里self变量类型.
+
+从单个字符串,改成数组字符串. 矩阵元为用户输入的单个关键词.
+
+
+
+需要修改的地方有:
+
+### core.js
+
+#### class keyWord 
+
+> 12 : this.self = keyWord
+
+self的声明和初始化.
+
+####class keyWord :  show()
+
+> 22 : console.log("keyword : " + this.self);
+
+输出关键字.该函数主要是为了调试.
+
+#### class keyWord :  clone(target)
+
+> 32 : target.self = this.self;
+
+类的复制函数. 但是这个函数在代码里没用上.
+
+#### function satisfyKeyWord(keyWord, vInfo)
+
+> 432 : if (keyWord.self.length > 0) {
+
+判断有没有关键词
+
+> 434 : list_world = keyWord.self.split(',');
+
+用","分割关键词, 储存在数组里.
+
+
+
+### backound.js
+
+#### function searchListOnline(list) 
+
+> 79 :  if (list[i].self != "") {
+
+判断关键字是否为空. 如果是空,说明是要查找播放列表或者channel.
+
+> 84 : url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(',').join(' ');
+
+关键词按照","分割, 用" "拼接, 作为Youtube的搜索词
+
+> 92 : url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(',').join(' ');
+
+不指定channel. 关键词按照","分割, 用" "拼接, 作为Youtube的搜索词.  
+
+#### function searchPlayListOnline(list) 
+
+> 123 : if (list[i].self != "") {
+
+判断关键字是否为空. 如果是空,说明是要查找播放列表或者channel.
+
+
+
+#### function initialUrl(key_word) 
+
+> 360 : let key_word_local = new keyWord(key_word.self, key_word.channel, key_word.playList);
+
+复制一个key_word变量. 这里不能直接用=连接进行复制. 
+
+> 365 : key_word_local.self = "";
+
+讲key_word_local的关键词抹掉. 在随后的搜索中,会只搜索频道或playlist. 不抹掉searchListOnline函数无法搜索playlist或者频道的主页.
+
+> 411 : reject("error when initializing " + key_word.self)
+
+初始化频道url或playlist失败,返回错误信息.这里可以不用key_word.self.
+
+
+
+
+
 ## 2018Jan07-BS
+
 关于监测https://www.youtube.com/feed/subscriptions页面
 通过点击youtube的slidebar上subscriptions按钮,不会触发content脚本, 导致无法插入视频.
 针对这个问题, 
