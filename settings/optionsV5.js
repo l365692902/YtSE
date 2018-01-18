@@ -9,10 +9,11 @@ function save() {
             console.log($(".labKeyword", o).text())
             let [saveKeyword, saveChannel] = $(".labKeyword", o).text().split(";", 2)
             if (saveChannel === undefined) { saveChannel = "" }
-            saveList[i] = new keyWord("", saveChannel, saveKeyword)
+            saveList[i] = new keyWord([""], saveChannel, saveKeyword)
 
         } else {//如果是一般keyword
             let [saveKeyword, saveChannel] = $(".labKeyword", o).text().split(";", 2)
+            saveKeyword = saveKeyword.split(",")
             if (saveChannel === undefined) { saveChannel = "" }
             saveList[i] = new keyWord(saveKeyword, saveChannel, "")
         }

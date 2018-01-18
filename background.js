@@ -76,12 +76,12 @@ function searchListOnline(list) {
 	for (let i = 0; i < list.length; i++) {
 		//console.log("debug : " + i);
 		//list[i].show();
-		if (list[i].self != "") {
+		if (list[i].self.join() != "") {
 			//console.log("debug : key word");
 			// 对keyword查询
 			if (list[i].channel != "") {
 				if (list[i].channelUrl != "") {
-					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(',').join(' ');
+					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNCharInArray(list[i].self).join(' ');
 					console.log(i + "th " + url);
 					list_p[i] = asynHttpRequest("GET", url);
 				} else {
@@ -89,7 +89,7 @@ function searchListOnline(list) {
 					//console.log("need update channel info 1");
 				}
 			} else {
-				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(',').join(' ');
+				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNCharInArray(list[i].self).join(' ');
 				console.log(i + "th " + url);
 				list_p[i] = asynHttpRequest("GET", url);
 			}
@@ -120,7 +120,7 @@ function searchPlayListOnline(list) {
 
 	for (let i = 0; i < list.length; i++) {
 
-		if (list[i].self != "") {
+		if (list[i].self.join() != "") {
 			// 对keyword查询
 			if (list[i].channel != "") {
 				if (list[i].channelUrl != "") {
@@ -145,6 +145,13 @@ function searchPlayListOnline(list) {
 	return Promise.all(list_playList);
 }
 
+function removeNCharInArray(strArray) {
+	let result = new Array(strArray.length)
+	for (let i = 0; i < strArray.length; i++) {
+		result[i] = removeNChar(strArray[i])
+	}
+	return result
+}
 
 //移除youtube不识别的字符
 function removeNChar(str) {
@@ -362,7 +369,7 @@ function initialUrl(key_word) {
 		//key_word_local.show();
 		//console.log(key_world.playList)
 		let vedio = new Array();
-		key_word_local.self = "";
+		key_word_local.self = [""];
 		if (key_word.playList != "" || key_word.channel != "") {
 			searchListOnline([key_word_local]).then((list_SearchResults) => {
 				//console.log("initial final : ",list_SearchResults.length);
@@ -475,7 +482,7 @@ function updateSearchList(list_KeyWord) {
 }
 
 // 获取用户已订阅的播放列表
-function getFeedPlayList(){
+function getFeedPlayList() {
 
 	let url = "https://www.youtube.com/";
 	let list_title = new Array();
@@ -483,14 +490,14 @@ function getFeedPlayList(){
 
 	homePage.then((Page) => {
 		$(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
-			
+
 			list_title.push($(this).attr("title"));
 
 
 		});
 		console.log(list_title);
 		return list_title;
-		
+
 	});
 
 }
@@ -519,7 +526,19 @@ console.log("开始初始化");
 //	}
 //})
 
-// list_KeyWord[0] = new keyWord("爸爸去哪儿5,完整版,ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+// let list_KeyWord = new Array();
+// list_KeyWord[0] = new keyWord(["爸爸去哪儿5", "完整版", "ENG SUB"], "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
+// list_KeyWord[0].show()
+// list_KeyWord[1] = new keyWord(["《萌仔萌萌宅》"], "湖南卫视芒果TV官方频道 China HunanTV Official Channel")
+// list_KeyWord[1].show()
+// list_KeyWord[2] = new keyWord()
+// list_KeyWord[2].show()
+// console.log(list_KeyWord[2].self.join().length)
+// console.log(list_KeyWord[1].self.length)
+// console.log(list_KeyWord[1].self[0].length)
+// browser.storage.local.set({ list_KeyWord })
+// console.log("end")
+
 // list_KeyWord[1] = new keyWord("", "", "Season One - THE Acapella Producer");
 // list_KeyWord[2] = new keyWord("《萌仔萌萌宅》", "湖南卫视芒果TV官方频道 China HunanTV Official Channel");
 //list_KeyWord[0] = new keyWord("Christmas Songs for Kids | Christmas Songs | Nursery Rhymes and Baby Songs from Dave and Ava");
@@ -606,15 +625,15 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 
 
 function sendMessageToTabs(tabs) {
-  for (let tab of tabs) {
-    browser.tabs.sendMessage(
-      tab.id,
-      {greeting: "Hi from background script"}
-    ).then(response => {
-      //console.log("Message from the content script:");
-      //console.log(response.response);
-    }).catch((error) => { console.log(`sendMessageToTabs :${error}`) });
-  }
+	for (let tab of tabs) {
+		browser.tabs.sendMessage(
+			tab.id,
+			{ greeting: "Hi from background script" }
+		).then(response => {
+			//console.log("Message from the content script:");
+			//console.log(response.response);
+		}).catch((error) => { console.log(`sendMessageToTabs :${error}`) });
+	}
 }
 
 // 一直监测
@@ -637,9 +656,9 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 		console.log(changeInfo)
 		browser.tabs.query({
 			active: true,
-			lastFocusedWindow : true,
-			url : "*://*.youtube.com/feed/subscription*"
-						   }).then((tabs) => {
+			lastFocusedWindow: true,
+			url: "*://*.youtube.com/feed/subscription*"
+		}).then((tabs) => {
 			sendMessageToTabs(tabs);
 		}).catch((error) => { console.log(`browser.tabs.query :${error}`) })
 	}
@@ -662,10 +681,10 @@ browser.browserAction.onClicked.addListener((tab) => {
 			updateSearchList(list_KeyWord);
 		})
 	})
-	
+
 	getFeedPlayList();
 
-  
+
 })
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {

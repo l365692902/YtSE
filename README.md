@@ -8,6 +8,10 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan18-L
+* 修改过程中疑似发现一个bug，如果list_KeyWord中有一个全空的Keyword，将不能获取到视频信息
+* 取消background.js中r529-r540的注释可以重现bug
+
 ## 2018Jan17-BS
 
 修改keyWord里self变量类型.
@@ -20,25 +24,25 @@ YouTube subscribe extension
 
 ### core.js
 
-#### class keyWord 
+#### class keyWord DONE
 
 > 12 : this.self = keyWord
 
 self的声明和初始化.
 
-####class keyWord :  show()
+####class keyWord :  show() NO NEED
 
 > 22 : console.log("keyword : " + this.self);
 
 输出关键字.该函数主要是为了调试.
 
-#### class keyWord :  clone(target)
+#### class keyWord :  clone(target) NO NEED
 
 > 32 : target.self = this.self;
 
 类的复制函数. 但是这个函数在代码里没用上.
 
-#### function satisfyKeyWord(keyWord, vInfo)
+#### function satisfyKeyWord(keyWord, vInfo) MODIFIED
 
 > 432 : if (keyWord.self.length > 0) {
 
@@ -52,7 +56,7 @@ self的声明和初始化.
 
 ### backound.js
 
-#### function searchListOnline(list) 
+#### function searchListOnline(list) DONE if error here, might mean .self is not a array
 
 > 79 :  if (list[i].self != "") {
 
@@ -66,7 +70,7 @@ self的声明和初始化.
 
 不指定channel. 关键词按照","分割, 用" "拼接, 作为Youtube的搜索词.  
 
-#### function searchPlayListOnline(list) 
+#### function searchPlayListOnline(list) DONE
 
 > 123 : if (list[i].self != "") {
 
@@ -74,7 +78,7 @@ self的声明和初始化.
 
 
 
-#### function initialUrl(key_word) 
+#### function initialUrl(key_word) DONE
 
 > 360 : let key_word_local = new keyWord(key_word.self, key_word.channel, key_word.playList);
 
