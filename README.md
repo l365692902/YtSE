@@ -8,6 +8,115 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan18-L
+* 修改过程中疑似发现一个bug，如果list_KeyWord中有一个全空的Keyword，将不能获取到视频信息
+* 取消background.js中r529-r540的注释可以重现bug
+
+## 2018Jan17-BS
+
+修改keyWord里self变量类型.
+
+从单个字符串,改成数组字符串. 矩阵元为用户输入的单个关键词.
+
+
+
+需要修改的地方有:
+
+### core.js
+
+#### class keyWord DONE
+
+> 12 : this.self = keyWord
+
+self的声明和初始化.
+
+####class keyWord :  show() NO NEED
+
+> 22 : console.log("keyword : " + this.self);
+
+输出关键字.该函数主要是为了调试.
+
+#### class keyWord :  clone(target) NO NEED
+
+> 32 : target.self = this.self;
+
+类的复制函数. 但是这个函数在代码里没用上.
+
+#### function satisfyKeyWord(keyWord, vInfo) MODIFIED
+
+> 432 : if (keyWord.self.length > 0) {
+
+判断有没有关键词
+
+> 434 : list_world = keyWord.self.split(',');
+
+用","分割关键词, 储存在数组里.
+
+
+
+### backound.js
+
+#### function searchListOnline(list) DONE if error here, might mean .self is not a array
+
+> 79 :  if (list[i].self != "") {
+
+判断关键字是否为空. 如果是空,说明是要查找播放列表或者channel.
+
+> 84 : url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNChar(list[i].self).split(',').join(' ');
+
+关键词按照","分割, 用" "拼接, 作为Youtube的搜索词
+
+> 92 : url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNChar(list[i].self).split(',').join(' ');
+
+不指定channel. 关键词按照","分割, 用" "拼接, 作为Youtube的搜索词.  
+
+#### function searchPlayListOnline(list) DONE
+
+> 123 : if (list[i].self != "") {
+
+判断关键字是否为空. 如果是空,说明是要查找播放列表或者channel.
+
+
+
+#### function initialUrl(key_word) DONE
+
+> 360 : let key_word_local = new keyWord(key_word.self, key_word.channel, key_word.playList);
+
+复制一个key_word变量. 这里不能直接用=连接进行复制. 
+
+> 365 : key_word_local.self = "";
+
+讲key_word_local的关键词抹掉. 在随后的搜索中,会只搜索频道或playlist. 不抹掉searchListOnline函数无法搜索playlist或者频道的主页.
+
+> 411 : reject("error when initializing " + key_word.self)
+
+初始化频道url或playlist失败,返回错误信息.这里可以不用key_word.self.
+
+
+
+
+
+## 2018Jan07-BS
+
+关于监测https://www.youtube.com/feed/subscriptions页面
+通过点击youtube的slidebar上subscriptions按钮,不会触发content脚本, 导致无法插入视频.
+针对这个问题, 
+- 发现当页面刷新会执行插入视频脚本
+- browser.tabs.onUpdated.addListener可以监测tab的变化
+  基于上面两点,之前的解决办法是
+  当tab发生变化,检查是否含有subscriptions页面,有的话就刷新页面,激活插入视频脚本.
+  存在问题,
+  刷新页面会导致激活browser.tabs.onUpdated.addListener函数,会导致刷新页面...陷入死循环
+  所以加了一个30秒的延时,来等待刷新页面动作结束. 但是这样导致,
+
+- 30秒之内, 如果重新返回订阅页面,无法触发插入视频脚本.
+
+现在通过后台向前台传递消息的机制来实现.主要基于,
+**打开subscriptions虽然无法触发插入视频脚本,但是监听后台消息函数使用有效**.
+所以后台检查是否打开subscriptions tab,打开就向该tab发送消息.
+tab接到消息就执行插入视频脚本. 为避免重复插入,会在插入视频后,在页面留下`<div id="insertYtse"></div>`元素.
+
+
 ## 2018Jan17-L
 * 给帮助预留的弹窗
 * 对于显示不完全的keyword添加了主动的悬浮提示
