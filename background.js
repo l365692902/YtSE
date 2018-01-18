@@ -570,13 +570,16 @@ function updateSearchListIterator(timeGap) {
 	browser.storage.local.get("list_KeyWord").then((o) => {
 		// let tempList = o.list_KeyWord
 		let listPromise = new Array()
-		for (let i = 0; i < o.list_KeyWord.length; i++) {
-			// searchChannelNum(list_KeyWord[i]);
-			listPromise.push(initialUrl(o.list_KeyWord[i]))
+		if (o.list_KeyWord !== undefined) {
+			console.log("got settings")
+			for (let i = 0; i < o.list_KeyWord.length; i++) {
+				// searchChannelNum(list_KeyWord[i]);
+				listPromise.push(initialUrl(o.list_KeyWord[i]))
+			}
+			Promise.all(listPromise).then((list_KeyWord) => {
+				updateSearchList(list_KeyWord);
+			})
 		}
-		Promise.all(listPromise).then((list_KeyWord) => {
-			updateSearchList(list_KeyWord);
-		})
 	})
 	setTimeout(() => { updateSearchListIterator(timeGap) }, timeGap)
 }
