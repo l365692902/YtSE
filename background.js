@@ -407,17 +407,24 @@ function initialUrl(key_word) {
 						console.log("找到Channel");
 						//key_word.show();
 					}
+					resolve(key_word)
 				} else {
 					//没有查找到list
 					console.log("没有找到Url");
+					reject("error when initializing empty keyword")
 				}
 				console.log("-------------->");
-				resolve(key_word)
+				
 			}).catch((error) => {
 				console.log(error)
+
 				reject("error when initializing " + key_word.self)
+
 			});
 		} else {
+			console.log("empty Playlist or channel name")
+
+			reject("error when initializing empty keyword")
 		}
 	})
 }
