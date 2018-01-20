@@ -380,6 +380,47 @@ function loadSetting() {
     // })
 }
 
+// 获取用户已订阅的播放列表
+function getFeedPlayList() {
+    let url = "https://www.youtube.com/";
+    let list_title = new Array();
+    let homePage = asynHttpRequest("GET", url);
+
+    return homePage.then((Page) => {
+        return new Promise((resolve, reject) => {
+            $(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
+                list_title.push($(this).attr("title"));
+            });
+            // console.log(list_title);
+            resolve(list_title)
+        })
+    });
+}
+
+function handleImportPlaylist() {
+    getFeedPlayList().then((list_title) => {
+        $("svg").css("display", "none")
+        for (let i = 0; i < list_title.length; i++) {
+            $(".ulDialog").append('\
+            <li class="liDialog">\
+                <span class="spDialog">\
+                    <label class="labDialog">'+ list_title[i] + '</label>\
+                    <span class="spDialogRight">\
+                        <input name="checkbox" type="checkbox" class="ckDialog">\
+                    </span>\
+                </span>\
+            </li>')
+        }
+        // console.log(list_title)//debug
+    })
+}
+
+function handleDialogOK() {
+    $(".ulDialog").empty()
+    $("svg").css("display", "inline")
+    $("#dialog").dialog("close")
+}
+
 $(document).ready(function () {
     $(".col > ul").resizable()
     $("button").button()
@@ -411,6 +452,9 @@ $(document).ready(function () {
             $(this).prop("value", "")
         }
     })
+    //setting for function buttons
+    $("#ImportPlaylist").on("click", handleImportPlaylist)
+    $("#DialogOK").on("click", handleDialogOK)
 
     loadSetting()
 

@@ -41,29 +41,6 @@ function checkResponse(xhr) {
 	})
 }
 
-//promise based asynchronous xmlHttpRequest
-function asynHttpRequest(method, url) {
-	return new Promise((resolve, reject) => {
-		console.log("%c" + "requesting...: " + url, "color:#00ff00")//DEBUG
-		const xhr = new XMLHttpRequest();
-		xhr.open(method, url, true);
-		xhr.onload = () => {
-			// checkResponse(xhr);//DEBUG
-			resolve(xhr.response);
-		};
-		xhr.onerror = () => {
-			console.log("error occur while accessing " + url);
-			reject("error when http requesting");
-		};
-		if (method == "POST") {
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-		};//needed in post mode
-		//counter-anit-scraping
-		xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:37.0) Gecko/20100101 Firefox/37.0');
-		xhr.send();
-		// popUpNotification("in asyn... request sent");//DEBUG)
-	});
-}
 
 // 根据关键字列表索取youtube页面
 function searchListOnline(list) {
@@ -481,26 +458,6 @@ function updateSearchList(list_KeyWord) {
 	// }).catch((error) => { console.log(`Error:${error}`) })
 }
 
-// 获取用户已订阅的播放列表
-function getFeedPlayList() {
-
-	let url = "https://www.youtube.com/";
-	let list_title = new Array();
-	let homePage = asynHttpRequest("GET", url);
-
-	homePage.then((Page) => {
-		$(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
-
-			list_title.push($(this).attr("title"));
-
-
-		});
-		console.log(list_title);
-		return list_title;
-
-	});
-
-}
 
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
