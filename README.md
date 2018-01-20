@@ -8,6 +8,21 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan21-L
+* 又要跳票了
+* save机制改完
+* 优化initialURL改完
+* 添加了一个initialAllURL函数，并在其中加入on/off判断
+* 现在的流程是，启动后(也就是background第一次运行)，将存储的list取出initialURL再存回
+* 当设置页中出现修改会发消息到background，用initialURL更新特定的某个keyword再存回
+* 等bug report
+* 还剩import playlist
+
+## 2018Jan20-L
+* focusout 在其子元素失去焦点时也会触发
+* blur 仅在自己失去焦点时触发
+* splice 原处修改，slice返回新数组
+
 ## 2018Jan18-L
 * 修改过程中疑似发现一个bug，如果list_KeyWord中有一个全空的Keyword，将不能获取到视频信息
 * 取消background.js中r529-r540的注释可以重现bug

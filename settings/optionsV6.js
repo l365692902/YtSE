@@ -1,31 +1,74 @@
-function save() {
-    console.log("saving...")
-    let saveList = new Array()
-    let offList = new Array()
+// abandoned
+// function save() {
+//     console.log("saving...")
+//     let saveList = new Array()
+//     let offList = new Array()
+//     let tempKeyword
+//     $("#ulKeyword .spKeyword:visible").each(function (idx, elm) {
+//         // console.log(idx)
+//         // console.log(elm)
+//         let [keyword, channel] = parseInputLine($(".labKeyword", elm).prop("longOutput"))
+//         if ($(".ckPlaylist", elm).prop("checked")) {
+//             //this is a playlist
+//             tempKeyword = new keyWord([""], channel, keyword.join())
+//         } else {
+//             //this is a keyword
+//             tempKeyword = new keyWord(keyword, channel, "")
+//         }
+//         if ($(".ckOnoff", elm).prop("checked") == false) {
+//             tempKeyword.onOff = false
+//             offList.push(tempKeyword)
+//         } else {
+//             saveList.push(tempKeyword)
+//         }
+//     })
+//     // console.log(saveList)
+//     // console.log("from")
+//     // console.log($("#ulKeyword .spKeyword:visible"))
+//     return Promise.all([
+//         browser.storage.local.set({ list_KeyWord: saveList }),
+//         browser.storage.local.set({ list_OffKeyWord: offList })
+//     ])
+// }
+
+function labelToKeyword(index) {
+    // console.log("saving one item...")
+    let spKeyword = $("#ulKeyword .spKeyword:visible:eq(" + index + ")")
+    // console.log(spKeyword)//debug
+    let longOutput = $(".labKeyword", spKeyword).prop("longOutput")
+    // console.log(longOutput)//debug
+    let [keyword, channel] = parseInputLine(longOutput)
     let tempKeyword
-    $("#ulKeyword .spKeyword:visible").each(function (idx, elm) {
-        // console.log(idx)
-        // console.log(elm)
-        let [keyword, channel] = parseInputLine($(".labKeyword", elm).prop("longOutput"))
-        if ($(".ckPlaylist", elm).prop("checked")) {
-            //this is a playlist
-            tempKeyword = new keyWord([""], channel, keyword.join())
-        } else {
-            //this is a keyword
-            tempKeyword = new keyWord(keyword, channel, "")
-        }
-        if ($(".ckOnoff", elm).prop("checked") == false) {
-            tempKeyword.onOff = false
-            offList.push(tempKeyword)
-        } else {
-            saveList.push(tempKeyword)
-        }
+    if ($(".ckPlaylist", spKeyword).prop("checked")) {
+        tempKeyword = new keyWord([""], channel, keyword.join())
+    } else {
+        tempKeyword = new keyWord(keyword, channel, "")
+    }
+    if ($(".ckOnoff", spKeyword).prop("checked") == false) {
+        tempKeyword.onOff = false
+    }
+    return tempKeyword
+    // return browser.storage.local.get("list_KeyWord").then((o) => {
+    //     o.list_KeyWord[index] = tempKeyword
+    //     return browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+    // })
+}
+
+
+function handleSortUpdate() {
+    // console.log($(this).sortable("toArray"))//debug
+    let order = $(this).sortable("toArray")
+    let newList = new Array()
+    //set sort id
+    $("#ulKeyword .liKeyword:visible").each(function (idx, elm) {
+        $(this).prop("id", idx)
     })
-    // console.log(saveList)
-    // console.log("from")
-    // console.log($("#ulKeyword .spKeyword:visible"))
-    browser.storage.local.set({ list_KeyWord: saveList })
-    browser.storage.local.set({ list_OffKeyWord: offList })
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        for (let i = 0; i < o.list_KeyWord.length; i++) {
+            newList[i] = o.list_KeyWord[order[i]]
+        }
+        return browser.storage.local.set({ list_KeyWord: newList })
+    })
 }
 
 function handleLabel() {
@@ -35,21 +78,64 @@ function handleLabel() {
 }
 
 function handleTextfield() {
-    console.log("did it focus out?")
+    $(this).next().css("display", "inline")
+    $(this).css("display", "none")
+    // console.log( saveOneChange($(this).closest(".liKeyword").index()))
+}
+
+function handlePlaylist() {
+    let index = $(this).closest(".liKeyword").index()
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        o.list_KeyWord[index] = labelToKeyword(index)
+        return browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+    }).then(() => {
+        browser.runtime.sendMessage({ idxToBeInit: index })
+    })
+}
+
+function handleOnoff() {
+    let index = $(this).closest(".liKeyword").index()
+    let isChecked = $(this).prop("checked")
+    let save = browser.storage.local.get("list_KeyWord").then((o) => {
+        o.list_KeyWord[index].onOff = isChecked
+        return browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+    })
+    if (isChecked) {
+        save.then(() => {
+            browser.runtime.sendMessage({ idxToBeInit: index })
+        })
+    }
+}
+
+//subtle save version done
+function handleTextfieldChange() {
     let [keyword, channel] = parseInputLine($(this).prop("value"))
     let longOutput = reverseParseKeyword(keyword, channel)
     let shortOutput = keyword.join(",") + ";" + channel
     $(this).next().text(shortOutput)
     $(this).next().prop("longOutput", longOutput)
-    $(this).next().css("display", "inline")
-    $(this).css("display", "none")
-    console.log("did it work?")
-    save()
+    let index = $(this).closest(".liKeyword").index()
+    //send this message
+    // labelToKeyword(index)
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        o.list_KeyWord[index] = labelToKeyword(index)
+        return browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+    }).then(() => {
+        browser.runtime.sendMessage({ idxToBeInit: index })
+    })
 }
 
+//subtle save version
 function handleDelete() {
+    let index = $(this).closest(".liKeyword").index()
+    //delete on paage
     $(this).closest(".liKeyword").remove()
-    save()
+    //delete in browser
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        o.list_KeyWord.splice(index, 1)
+        browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+    })
+    // save()
 }
 
 function parseInputLine(keyString) {
@@ -129,6 +215,7 @@ function htmlSnippet(shortOutput, longOutput) {
     </li>'
 }
 
+//subtle save version done except handler for checkbox
 function handleAdd() {
     console.log("adding keyword...")
 
@@ -144,11 +231,16 @@ function handleAdd() {
 
     // console.log($("#ulKeyword span:first"))
     //add event listener
-    $("#ulKeyword .spKeyword:first").on("dblclick", ".labKeyword", handleLabel)
-    $("#ulKeyword .spKeyword:first").on("focusout", ".tfKeyword", handleTextfield)
-    $("#ulKeyword .spKeyword:first").on("click", ".btDelete", handleDelete)
-    $("#ulKeyword .spKeyword:first .ckPlaylist").on("click", save)
-    $("#ulKeyword .spKeyword:first .ckOnoff").on("click", save)
+    $("#ulKeyword .spKeyword:first .labKeyword").on("dblclick", handleLabel)
+    $("#ulKeyword .spKeyword:first .tfKeyword").on("change", handleTextfieldChange)
+    $("#ulKeyword .spKeyword:first .tfKeyword").on("focusout", handleTextfield)
+    $("#ulKeyword .spKeyword:first .tfKeyword").on("keypress", function (e) {
+        let code = e.keyCode || e.which
+        if (code == 13) { this.blur() }
+    })
+    $("#ulKeyword .spKeyword:first .btDelete").on("click", handleDelete)
+    $("#ulKeyword .spKeyword:first .ckPlaylist").on("click", handlePlaylist)
+    $("#ulKeyword .spKeyword:first .ckOnoff").on("click", handleOnoff)
     // set tooltip
     $("#ulKeyword .labKeyword").tooltip({
         open: function () {
@@ -160,7 +252,21 @@ function handleAdd() {
     })
     $("#ulKeyword").on("sortstart", function () { $("#ulKeyword .labKeyword").tooltip("disable") })
     $("#ulKeyword").on("sortstop", function () { $("#ulKeyword .labKeyword").tooltip("enable") })
-    save()
+    //set sort id
+    $("#ulKeyword .liKeyword:visible").each(function (idx, elm) {
+        $(this).prop("id", idx)
+    })
+    // save()
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        if (o.list_KeyWord === undefined) {
+            return browser.storage.local.set({ list_KeyWord: [labelToKeyword(0)] })
+        } else {
+            o.list_KeyWord.unshift(labelToKeyword(0))
+            return browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+        }
+    }).then(() => {
+        browser.runtime.sendMessage({ idxToBeInit: 0 })
+    })
 }
 
 function loadSetting() {
@@ -200,10 +306,15 @@ function loadSetting() {
             $("#ulKeyword .spKeyword:last .ckPlaylist").prop("checked", isPlaylist)
             //add event listener
             $("#ulKeyword .spKeyword:last .labKeyword").on("dblclick", handleLabel)
+            $("#ulKeyword .spKeyword:last .tfKeyword").on("change", handleTextfieldChange)
             $("#ulKeyword .spKeyword:last .tfKeyword").on("focusout", handleTextfield)
+            $("#ulKeyword .spKeyword:last .tfKeyword").on("keypress", function (e) {
+                let code = e.keyCode || e.which
+                if (code == 13) { this.blur() }
+            })
             $("#ulKeyword .spKeyword:last .btDelete").on("click", handleDelete)
-            $("#ulKeyword .spKeyword:last .ckPlaylist").on("click", save)
-            $("#ulKeyword .spKeyword:last .ckOnoff").on("click", save)
+            $("#ulKeyword .spKeyword:last .ckPlaylist").on("click", handlePlaylist)
+            $("#ulKeyword .spKeyword:last .ckOnoff").on("click", handleOnoff)
             //set tooltip
             $("#ulKeyword .spKeyword .labKeyword").tooltip({
                 open: function () {
@@ -216,6 +327,10 @@ function loadSetting() {
             $("#ulKeyword").on("sortstart", function () { $("#ulKeyword .labKeyword").tooltip("disable") })
             $("#ulKeyword").on("sortstop", function () { $("#ulKeyword .labKeyword").tooltip("enable") })
         }
+        //set sort id
+        $("#ulKeyword .liKeyword:visible").each(function (idx, elm) {
+            $(this).prop("id", idx)
+        })
     })
 
     // browser.storage.local.get("list_KeyWord").then((o) => {
@@ -265,7 +380,6 @@ function loadSetting() {
     // })
 }
 
-
 $(document).ready(function () {
     $(".col > ul").resizable()
     $("button").button()
@@ -287,7 +401,7 @@ $(document).ready(function () {
 
     $("#ulKeyword").sortable({
         axis: "y",
-        update: save
+        update: handleSortUpdate
     })
     $("#btAdd").on("click", handleAdd)
     $("#tfAdd").on("keypress", function (e) {

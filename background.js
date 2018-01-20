@@ -560,6 +560,23 @@ console.log("开始初始化");
 //convertReTime2Int("2 小时前");
 
 // 自动更新视频列表
+function initialAllUrl() {
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		let listPromise = new Array()
+		if (o.list_KeyWord !== undefined) {
+			console.log("got settings")
+			for (let i = 0; i < o.list_KeyWord.length; i++) {
+				// searchChannelNum(list_KeyWord[i]);
+				if (o.list_KeyWord[i].onOff) {
+					listPromise.push(initialUrl(o.list_KeyWord[i]))
+				}
+			}
+			Promise.all(listPromise).then((list) => {
+				browser.storage.local.set({ list_KeyWord: list })
+			})
+		}
+	})
+}
 
 
 function updateSearchListIterator(timeGap) {
@@ -568,27 +585,20 @@ function updateSearchListIterator(timeGap) {
 	console.log("updat time : ", Now);
 	// updateSearchList(list_KeyWord);
 	browser.storage.local.get("list_KeyWord").then((o) => {
-		// let tempList = o.list_KeyWord
-		let listPromise = new Array()
 		if (o.list_KeyWord !== undefined) {
-			console.log("got settings")
-			for (let i = 0; i < o.list_KeyWord.length; i++) {
-				// searchChannelNum(list_KeyWord[i]);
-				listPromise.push(initialUrl(o.list_KeyWord[i]))
-			}
-			Promise.all(listPromise).then((list_KeyWord) => {
-				updateSearchList(list_KeyWord);
-			})
+			console.log("updating...")
+			updateSearchList(o.list_KeyWord);
 		}
 	})
 	setTimeout(() => { updateSearchListIterator(timeGap) }, timeGap)
 }
 
+initialAllUrl()
 let timeGap = 5 * 60 * 1000; // 5 min
-setTimeout(() => {
-	console.log("First Search List");
-	updateSearchListIterator(timeGap);
-}, 60 * 1000); //浏览器启动一分钟后再执行
+// setTimeout(() => {
+// 	console.log("First Search List");
+// 	updateSearchListIterator(timeGap);
+// }, 60 * 1000); //浏览器启动一分钟后再执行
 
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
@@ -687,6 +697,18 @@ browser.browserAction.onClicked.addListener(() => {
 	// getFeedPlayList();
 
 
+})
+
+browser.runtime.onMessage.addListener((ms) => {
+	console.log(ms)
+	if (ms.idxToBeInit !== undefined) {
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			initialUrl(o.list_KeyWord[ms.idxToBeInit]).then((initializedKeyword) => {
+				o.list_KeyWord[ms.idxToBeInit] = initializedKeyword
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+			})
+		})
+	}
 })
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
