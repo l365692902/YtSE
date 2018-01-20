@@ -8,7 +8,17 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan20-BS
+
+**UI bug report**
+
+- 如果只添加一个关键字, initialURL函数会返回错误报告. 这个bug, 应该在initialURL最后添加else if(keyword.self != 空)的判断. 已修正
+- on/off : 取消关键词再开启, 在终端会显示"没有找到Url". 排查错误后, 发现可能是由于关键词已经存在url导致不进行再次查找. 已修正.
+
+
+
 ## 2018Jan21-L
+
 * 又要跳票了
 * save机制改完
 * 优化initialURL改完

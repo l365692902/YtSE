@@ -365,36 +365,52 @@ function initialUrl(key_word) {
 				}
 				//console.log("initial num video : ", vedio.length);
 				// debug
-				if (vedio.length > 0) {
-					// 我们只用查找出来第一个的
-					//vedio[0].show();
-					if (key_word.playList != "" && key_word.playListUrl == "") {
-						//需要查找playlist的URL
+				if( (key_word.playList != "" && key_word.playListUrl != "" ) || (key_word.channel != "" && key_word.channelUrl != "") ){
+					console.log("url 已存在");
+					console.log("-------------->");
+					resolve(key_word)					
+				}else{
 
-						//key_word_local.show();
-						key_word.channel = vedio[0].channelName;
-						key_word.channelUrl = vedio[0].channelUrl;
-						key_word.playListUrl = vedio[0].videoUrl;
-						console.log("找到play list");
-						//key_word.show();		
-					} else if (key_word.channel != "" && key_word.channelUrl == "") {
+					if (vedio.length > 0) {
+						// 我们只用查找出来第一个的
+						//vedio[0].show();
+						if (key_word.playList != "" && key_word.playListUrl == "") {
+							//需要查找playlist的URL
 
-						key_word.channel = vedio[0].channelName;
-						key_word.channelUrl = vedio[0].channelUrl;
-						console.log("找到Channel");
-						//key_word.show();
+							//key_word_local.show();
+							key_word.channel = vedio[0].channelName;
+							key_word.channelUrl = vedio[0].channelUrl;
+							key_word.playListUrl = vedio[0].videoUrl;
+							console.log("找到play list");
+							//key_word.show();		
+						} else if (key_word.channel != "" && key_word.channelUrl == "") {
+
+							key_word.channel = vedio[0].channelName;
+							key_word.channelUrl = vedio[0].channelUrl;
+							console.log("找到Channel");
+							//key_word.show();
+						}
+						console.log("-------------->");
+						resolve(key_word)						
+					} else {
+						//没有查找到list
+						console.log("没有找到Url");
+						reject("error when initializing " + key_word.self)
 					}
-				} else {
-					//没有查找到list
-					console.log("没有找到Url");
 				}
-				console.log("-------------->");
-				resolve(key_word)
+
 			}).catch((error) => {
 				console.log(error)
 				reject("error when initializing " + key_word.self)
 			});
-		} else {
+		} else if(key_word.self.join() != ""){
+			// 不需要查找url
+			console.log("不需要初始化url");
+			resolve(key_word)	
+		}else {
+			console.log("empty Playlist or channel name") 
+ 
+			reject("error when initializing empty keyword")			
 		}
 	})
 }
