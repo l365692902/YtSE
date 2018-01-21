@@ -158,6 +158,7 @@ function getChannelInfo(il_video) {
 	// 不是列表
 	channelObj = $(il_video).find("a.yt-uix-tile-link.yt-ui-ellipsis.yt-ui-ellipsis-2.yt-uix-sessionlink.spf-link");
 	var channelName = $(channelObj).text();
+	// console.log(channelName)
 	var channelUrl = $(channelObj).attr("href");
 
 	//获取时长,和封面
@@ -320,7 +321,7 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 				vInfo = getChannelInfo(this);
 				//vInfo.show();
 				if (vInfo.channelName == list_Keyword[i].channel) {
-					//vInfo.show();
+					// vInfo.show();
 					list_vInfo.push(vInfo);
 				} else {
 					//console.log("not satisfied keyword.");
@@ -332,7 +333,9 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 
 			if(list_vInfo.length == 0) {
 				// 我们强行认为第一个就是
+				console.log("smart choose")
 				vInfo = getChannelInfo(doc.find('ol.item-section').children()[0])
+				// console.log(vInfo.channelName)
 				list_vInfo.push(vInfo);
 			}
 
@@ -412,6 +415,7 @@ function filterPlayListSearch(list_Keyword, list_SearchResults) {
 			
 			if(list_vInfo.length == 0){
 				//强行用第一个作为list
+				console.log("smart choose")
 				vInfo = getPlayListInfo(doc.find('[id*=item-section-]').children()[0]);
 				list_vInfo.push(vInfo);
 			}
@@ -474,6 +478,8 @@ function initialUrl(key_word) {
 							key_word.channel = vedio[0].channelName;
 							key_word.channelUrl = vedio[0].channelUrl;
 							console.log("找到Channel");
+							// console.log(vedio[0].channelName)
+							// console.log(key_word.channel)
 							// key_word.show();
 						}
 						console.log("-------------->");
