@@ -389,7 +389,25 @@ function getFeedPlayList() {
     return homePage.then((Page) => {
         return new Promise((resolve, reject) => {
             $(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
-                list_title.push($(this).attr("title"));
+                
+                // 判断是否为官方主题
+                let channel = $(this).find("p.guide-item-subtitle").text().trim();
+                
+                // 官方主题会以" - Topic"作为结尾
+                let strTopic= " - Topic";
+                console.log("channel :"+ channel, "end :"+ channel.slice(-strTopic.length), "length :" + strTopic.length);
+                if(channel.slice(-strTopic.length) == strTopic){
+                    listURL= "https://www.youtube.com" + $(this).attr("href");
+                    let playListPage = asynHttpRequest("GET", listURL);
+                    playListPage.then((ListPage) => {
+                        console.log($(ListPage).find("h1.pl-header-title").text())
+                        list_title.push($(ListPage).find("h1.pl-header-title").text()) 
+                    });
+                }else{
+                    list_title.push($(this).attr("title"));
+
+                }
+                
             });
             // console.log(list_title);
             resolve(list_title)
