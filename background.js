@@ -64,6 +64,7 @@ function searchListOnline(list) {
 				} else {
 					// 需要更新channel信息
 					//console.log("need update channel info 1");
+					list_p[i] = "";
 				}
 			} else {
 				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNCharInArray(list[i].self).join(' ');
@@ -104,6 +105,7 @@ function searchPlayListOnline(list) {
 					list_playList[i] = ""
 				} else {
 					// 需要更新channel信息
+					list_playList[i] = ""
 				}
 			} else {
 				list_playList[i] = ""
@@ -116,7 +118,7 @@ function searchPlayListOnline(list) {
 
 		} else {
 			// 只含有channel信息,返回空
-
+			list_playList[i] = ""
 		}
 	}
 	return Promise.all(list_playList);
@@ -282,6 +284,7 @@ function updatePlayListInfo(vInfo, ListPage) {
 		vInfo.upTime = convertAbTime2Int(timeStr) + tNow.valueOf();
 	} else {
 		// 其他语言,没法分析
+		// 或者为空
 	}
 
 }
@@ -397,14 +400,8 @@ function initialUrl(key_word) {
 						console.log("没有找到Url");
 						reject("error when initializing " + key_word.self)
 					}
-					resolve(key_word)
-				} else {
-					//没有查找到list
-					console.log("没有找到Url");
-					reject("error when initializing empty keyword")
 				}
-				console.log("-------------->");
-				
+
 			}).catch((error) => {
 				console.log(error)
 
@@ -420,6 +417,7 @@ function initialUrl(key_word) {
 
 			reject("error when initializing empty keyword")
 		}
+		console.log("-------------->");
 	})
 }
 
