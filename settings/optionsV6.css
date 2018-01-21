@@ -194,6 +194,11 @@ ul .liBottom #spImport {
 	position: relative;
 
 }
+#dialog ul .liDialog:hover  {
+	position: relative;
+	background-color: rgba(235,235,235,1.00);
+
+}
 ul .liDialog .spDialog {
 	display: flex;
 	justify-content: space-between;
