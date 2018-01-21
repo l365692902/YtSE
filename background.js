@@ -398,13 +398,17 @@ function initialUrl(key_word) {
 					} else {
 						//没有查找到list
 						console.log("没有找到Url");
+						key_word.onOff=false
+						resolve(key_word)
 						reject("error when initializing " + key_word.self)
 					}
 				}
 
 			}).catch((error) => {
+				// 未知错误
 				console.log(error)
-
+				key_word.onOff=false
+				resolve(key_word)
 				reject("error when initializing " + key_word.self)
 
 			});
@@ -413,8 +417,10 @@ function initialUrl(key_word) {
 			console.log("不需要初始化url");
 			resolve(key_word)
 		} else {
+			// 空keyword
 			console.log("empty Playlist or channel name")
-
+			key_word.onOff=false
+			resolve(key_word)
 			reject("error when initializing empty keyword")
 		}
 		console.log("-------------->");
