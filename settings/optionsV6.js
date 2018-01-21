@@ -539,6 +539,7 @@ function handleDialogOK() {
         }
     }).then(() => {
         browser.runtime.sendMessage({ topFewToBeInit: count })
+        
     })
 
     $(".ulDialog").empty()
@@ -576,6 +577,10 @@ $(document).ready(function () {
     })
     //setting for function buttons
     $("#ImportPlaylist").on("click", handleImportPlaylist)
+    $("button.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").on("click", ()=>{
+        $(".ulDialog").empty()
+        $("svg").css("display", "inline")
+    })
     $("#DialogOK").on("click", handleDialogOK)
 
     loadSetting()
