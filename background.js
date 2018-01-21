@@ -41,29 +41,6 @@ function checkResponse(xhr) {
 	})
 }
 
-//promise based asynchronous xmlHttpRequest
-function asynHttpRequest(method, url) {
-	return new Promise((resolve, reject) => {
-		console.log("%c" + "requesting...: " + url, "color:#00ff00")//DEBUG
-		const xhr = new XMLHttpRequest();
-		xhr.open(method, url, true);
-		xhr.onload = () => {
-			// checkResponse(xhr);//DEBUG
-			resolve(xhr.response);
-		};
-		xhr.onerror = () => {
-			console.log("error occur while accessing " + url);
-			reject("error when http requesting");
-		};
-		if (method == "POST") {
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-		};//needed in post mode
-		//counter-anit-scraping
-		xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 5.1; rv:37.0) Gecko/20100101 Firefox/37.0');
-		xhr.send();
-		// popUpNotification("in asyn... request sent");//DEBUG)
-	});
-}
 
 // 根据关键字列表索取youtube页面
 function searchListOnline(list) {
@@ -388,24 +365,37 @@ function initialUrl(key_word) {
 				}
 				//console.log("initial num video : ", vedio.length);
 				// debug
-				if (vedio.length > 0) {
-					// 我们只用查找出来第一个的
-					//vedio[0].show();
-					if (key_word.playList != "" && key_word.playListUrl == "") {
-						//需要查找playlist的URL
+				if ((key_word.playList != "" && key_word.playListUrl != "") || (key_word.channel != "" && key_word.channelUrl != "")) {
+					console.log("url 已存在");
+					console.log("-------------->");
+					resolve(key_word)
+				} else {
 
-						//key_word_local.show();
-						key_word.channel = vedio[0].channelName;
-						key_word.channelUrl = vedio[0].channelUrl;
-						key_word.playListUrl = vedio[0].videoUrl;
-						console.log("找到play list");
-						//key_word.show();		
-					} else if (key_word.channel != "" && key_word.channelUrl == "") {
+					if (vedio.length > 0) {
+						// 我们只用查找出来第一个的
+						//vedio[0].show();
+						if (key_word.playList != "" && key_word.playListUrl == "") {
+							//需要查找playlist的URL
 
-						key_word.channel = vedio[0].channelName;
-						key_word.channelUrl = vedio[0].channelUrl;
-						console.log("找到Channel");
-						//key_word.show();
+							//key_word_local.show();
+							key_word.channel = vedio[0].channelName;
+							key_word.channelUrl = vedio[0].channelUrl;
+							key_word.playListUrl = vedio[0].videoUrl;
+							console.log("找到play list");
+							//key_word.show();		
+						} else if (key_word.channel != "" && key_word.channelUrl == "") {
+
+							key_word.channel = vedio[0].channelName;
+							key_word.channelUrl = vedio[0].channelUrl;
+							console.log("找到Channel");
+							//key_word.show();
+						}
+						console.log("-------------->");
+						resolve(key_word)
+					} else {
+						//没有查找到list
+						console.log("没有找到Url");
+						reject("error when initializing " + key_word.self)
 					}
 					resolve(key_word)
 				} else {
@@ -421,6 +411,10 @@ function initialUrl(key_word) {
 				reject("error when initializing " + key_word.self)
 
 			});
+		} else if (key_word.self.join() != "") {
+			// 不需要查找url
+			console.log("不需要初始化url");
+			resolve(key_word)
 		} else {
 			console.log("empty Playlist or channel name")
 
@@ -488,26 +482,6 @@ function updateSearchList(list_KeyWord) {
 	// }).catch((error) => { console.log(`Error:${error}`) })
 }
 
-// 获取用户已订阅的播放列表
-function getFeedPlayList() {
-
-	let url = "https://www.youtube.com/";
-	let list_title = new Array();
-	let homePage = asynHttpRequest("GET", url);
-
-	homePage.then((Page) => {
-		$(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
-
-			list_title.push($(this).attr("title"));
-
-
-		});
-		console.log(list_title);
-		return list_title;
-
-	});
-
-}
 
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
@@ -567,6 +541,23 @@ console.log("开始初始化");
 //convertReTime2Int("2 小时前");
 
 // 自动更新视频列表
+function initialAllUrl() {
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		let listPromise = new Array()
+		if (o.list_KeyWord !== undefined) {
+			console.log("got settings")
+			for (let i = 0; i < o.list_KeyWord.length; i++) {
+				// searchChannelNum(list_KeyWord[i]);
+				if (o.list_KeyWord[i].onOff) {
+					listPromise.push(initialUrl(o.list_KeyWord[i]))
+				}
+			}
+			Promise.all(listPromise).then((list) => {
+				browser.storage.local.set({ list_KeyWord: list })
+			})
+		}
+	})
+}
 
 
 function updateSearchListIterator(timeGap) {
@@ -575,27 +566,20 @@ function updateSearchListIterator(timeGap) {
 	console.log("updat time : ", Now);
 	// updateSearchList(list_KeyWord);
 	browser.storage.local.get("list_KeyWord").then((o) => {
-		// let tempList = o.list_KeyWord
-		let listPromise = new Array()
 		if (o.list_KeyWord !== undefined) {
-			console.log("got settings")
-			for (let i = 0; i < o.list_KeyWord.length; i++) {
-				// searchChannelNum(list_KeyWord[i]);
-				listPromise.push(initialUrl(o.list_KeyWord[i]))
-			}
-			Promise.all(listPromise).then((list_KeyWord) => {
-				updateSearchList(list_KeyWord);
-			})
+			console.log("updating...")
+			updateSearchList(o.list_KeyWord);
 		}
 	})
 	setTimeout(() => { updateSearchListIterator(timeGap) }, timeGap)
 }
 
+initialAllUrl()
 let timeGap = 5 * 60 * 1000; // 5 min
-setTimeout(() => {
-	console.log("First Search List");
-	updateSearchListIterator(timeGap);
-}, 60 * 1000); //浏览器启动一分钟后再执行
+// setTimeout(() => {
+// 	console.log("First Search List");
+// 	updateSearchListIterator(timeGap);
+// }, 60 * 1000); //浏览器启动一分钟后再执行
 
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
@@ -676,25 +660,48 @@ function handleTabUpdate(tabId, changeInfo, tabInfo) {
 browser.tabs.onUpdated.addListener(handleTabUpdate);
 
 
+browser.browserAction.onClicked.addListener(() => {
+	browser.runtime.openOptionsPage()
 
-browser.browserAction.onClicked.addListener((tab) => {
-	// browser.runtime.openOptionsPage()
+	// browser.storage.local.get("list_KeyWord").then((o) => {
+	// 	// let tempList = o.list_KeyWord
+	// 	let listPromise = new Array()
+	// 	for (let i = 0; i < o.list_KeyWord.length; i++) {
+	// 		// searchChannelNum(list_KeyWord[i]);
+	// 		listPromise.push(initialUrl(o.list_KeyWord[i]))
+	// 	}
+	// 	Promise.all(listPromise).then((list_KeyWord) => {
+	// 		updateSearchList(list_KeyWord);
+	// 	})
+	// })
 
-	browser.storage.local.get("list_KeyWord").then((o) => {
-		// let tempList = o.list_KeyWord
-		let listPromise = new Array()
-		for (let i = 0; i < o.list_KeyWord.length; i++) {
-			// searchChannelNum(list_KeyWord[i]);
-			listPromise.push(initialUrl(o.list_KeyWord[i]))
-		}
-		Promise.all(listPromise).then((list_KeyWord) => {
-			updateSearchList(list_KeyWord);
+	// getFeedPlayList();
+
+
+})
+
+browser.runtime.onMessage.addListener((ms) => {
+	console.log(ms)
+	if (ms.idxToBeInit !== undefined) {
+		// console.log("initializing one")
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			initialUrl(o.list_KeyWord[ms.idxToBeInit]).then((initializedKeyword) => {
+				o.list_KeyWord[ms.idxToBeInit] = initializedKeyword
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+			})
 		})
-	})
-
-	getFeedPlayList();
-
-
+	} else if (ms.topFewToBeInit !== undefined) {
+		// console.log("initializing few")
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			let promiseArray = new Array()
+			for (let i = 0; i < ms.topFewToBeInit; i++) {
+				promiseArray.push(initialUrl(o.list_KeyWord[i]))
+			}
+			Promise.all(promiseArray).then((list) => {
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+			})
+		})
+	}
 })
 
 // browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {

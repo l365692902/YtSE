@@ -8,6 +8,31 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan20-BS
+
+**UI bug report**
+
+- 如果只添加一个关键字, initialURL函数会返回错误报告. 这个bug, 应该在initialURL最后添加else if(keyword.self != 空)的判断. 已修正
+- on/off : 取消关键词再开启, 在终端会显示"没有找到Url". 排查错误后, 发现可能是由于关键词已经存在url导致不进行再次查找. 已修正.
+
+
+
+## 2018Jan21-L
+
+* 又要跳票了
+* save机制改完
+* 优化initialURL改完
+* 添加了一个initialAllURL函数，并在其中加入on/off判断
+* 现在的流程是，启动后(也就是background第一次运行)，将存储的list取出initialURL再存回
+* 当设置页中出现修改会发消息到background，用initialURL更新特定的某个keyword再存回
+* 等bug report
+* 还剩import playlist
+
+## 2018Jan20-L
+* focusout 在其子元素失去焦点时也会触发
+* blur 仅在自己失去焦点时触发
+* splice 原处修改，slice返回新数组
+
 ## 2018Jan18-L
 * 修改过程中疑似发现一个bug，如果list_KeyWord中有一个全空的Keyword，将不能获取到视频信息
 * 取消background.js中r529-r540的注释可以重现bug
@@ -116,6 +141,24 @@ self的声明和初始化.
 所以后台检查是否打开subscriptions tab,打开就向该tab发送消息.
 tab接到消息就执行插入视频脚本. 为避免重复插入,会在插入视频后,在页面留下`<div id="insertYtse"></div>`元素.
 
+
+## 2018Jan17-L
+* 给帮助预留的弹窗
+* 对于显示不完全的keyword添加了主动的悬浮提示
+* 但是发现浏览器其实默认也有个悬浮提示，只是延迟很高。用哪个好？添加的还是默认的？
+
+## 2018Jan12-L
+* svg很好玩
+
+## 2018Jan11-L
+* 父元素用flex，和justify-content:space-between可以很好地拉开首尾子元素
+* span用来包裹inline，div包裹block
+* ul的list-style:none 并且左边padding为0，可以消除li缩进
+* 如果Roboto的加载速度不够，备用几个看起来像的web safe font
+  * Tahoma, Geneva, sans-serif
+  * "Lucida Sans Unicode", "Lucida Grande", sans-serif
+  * Verdana, Geneva, sans-serif
+  * Arial, Helvetica, sans-serif
 
 ## 2018Jan05-L
 * 设置页的li label中的文字如果超长会改变排版，暂时靠拉长来避免，恐怕之后要改个V6出来
