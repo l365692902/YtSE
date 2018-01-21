@@ -398,6 +398,7 @@ function getFeedPlayList() {
 }
 
 function handleImportPlaylist() {
+    $("#dialog").dialog("open")
     getFeedPlayList().then((list_title) => {
         $("svg").css("display", "none")
         for (let i = 0; i < list_title.length; i++) {
@@ -416,6 +417,59 @@ function handleImportPlaylist() {
 }
 
 function handleDialogOK() {
+    let newList = new Array()
+    $($(".ulDialog .liDialog").get().reverse()).each(function (idx, elm) {
+        let shortOutput = $(".labDialog", elm).text()
+        let longOutput = shortOutput.replace(/,/g, "\\,")
+        shortOutput += ";"
+        longOutput += ";"
+        if ($(".ckDialog", elm).prop("checked")) {
+            $("#ulKeyword").prepend(htmlSnippet(shortOutput, longOutput))
+            $("#ulKeyword .spKeyword:first .labKeyword").prop("longOutput", longOutput)
+            $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+            $("#ulKeyword .spKeyword:first .ckPlaylist").prop("checked", true)
+            //add event listener
+            $("#ulKeyword .spKeyword:first .labKeyword").on("dblclick", handleLabel)
+            $("#ulKeyword .spKeyword:first .tfKeyword").on("change", handleTextfieldChange)
+            $("#ulKeyword .spKeyword:first .tfKeyword").on("focusout", handleTextfield)
+            $("#ulKeyword .spKeyword:first .tfKeyword").on("keypress", function (e) {
+                let code = e.keyCode || e.which
+                if (code == 13) { this.blur() }
+            })
+            $("#ulKeyword .spKeyword:first .btDelete").on("click", handleDelete)
+            $("#ulKeyword .spKeyword:first .ckPlaylist").on("click", handlePlaylist)
+            $("#ulKeyword .spKeyword:first .ckOnoff").on("click", handleOnoff)
+            // set tooltip
+            $("#ulKeyword .labKeyword").tooltip({
+                open: function () {
+                    if (this.offsetWidth == this.scrollWidth) {
+                        $(this).tooltip("disable")
+                        $(this).tooltip("enable")
+                    }
+                }
+            })
+            $("#ulKeyword").on("sortstart", function () { $("#ulKeyword .labKeyword").tooltip("disable") })
+            $("#ulKeyword").on("sortstop", function () { $("#ulKeyword .labKeyword").tooltip("enable") })
+            newList.unshift(labelToKeyword(0))
+        }//if end
+
+    })//loop end
+    $("#ulKeyword .liKeyword:visible").each(function (idx, elm) {
+        $(this).prop("id", idx)
+    })
+    //save
+    let count = newList.length
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        if (o.list_KeyWord === undefined) {
+            return browser.storage.local.set({ list_KeyWord: newList })
+        } else {
+            newList = newList.concat(o.list_KeyWord)
+            return browser.storage.local.set({ list_KeyWord: newList })
+        }
+    }).then(() => {
+        browser.runtime.sendMessage({ topFewToBeInit: count })
+    })
+
     $(".ulDialog").empty()
     $("svg").css("display", "inline")
     $("#dialog").dialog("close")
@@ -431,9 +485,6 @@ $(document).ready(function () {
     $("#dlHelp").dialog({
         width: 600,
         autoOpen: false
-    })
-    $("#ImportPlaylist").on("click", function () {
-        $("#dialog").dialog("open")
     })
     $("#Help").on("click", function () {
         $("#dlHelp").dialog("open")

@@ -365,11 +365,11 @@ function initialUrl(key_word) {
 				}
 				//console.log("initial num video : ", vedio.length);
 				// debug
-				if( (key_word.playList != "" && key_word.playListUrl != "" ) || (key_word.channel != "" && key_word.channelUrl != "") ){
+				if ((key_word.playList != "" && key_word.playListUrl != "") || (key_word.channel != "" && key_word.channelUrl != "")) {
 					console.log("url 已存在");
 					console.log("-------------->");
-					resolve(key_word)					
-				}else{
+					resolve(key_word)
+				} else {
 
 					if (vedio.length > 0) {
 						// 我们只用查找出来第一个的
@@ -391,7 +391,7 @@ function initialUrl(key_word) {
 							//key_word.show();
 						}
 						console.log("-------------->");
-						resolve(key_word)						
+						resolve(key_word)
 					} else {
 						//没有查找到list
 						console.log("没有找到Url");
@@ -403,14 +403,14 @@ function initialUrl(key_word) {
 				console.log(error)
 				reject("error when initializing " + key_word.self)
 			});
-		} else if(key_word.self.join() != ""){
+		} else if (key_word.self.join() != "") {
 			// 不需要查找url
 			console.log("不需要初始化url");
-			resolve(key_word)	
-		}else {
-			console.log("empty Playlist or channel name") 
- 
-			reject("error when initializing empty keyword")			
+			resolve(key_word)
+		} else {
+			console.log("empty Playlist or channel name")
+
+			reject("error when initializing empty keyword")
 		}
 	})
 }
@@ -675,9 +675,21 @@ browser.browserAction.onClicked.addListener(() => {
 browser.runtime.onMessage.addListener((ms) => {
 	console.log(ms)
 	if (ms.idxToBeInit !== undefined) {
+		// console.log("initializing one")
 		browser.storage.local.get("list_KeyWord").then((o) => {
 			initialUrl(o.list_KeyWord[ms.idxToBeInit]).then((initializedKeyword) => {
 				o.list_KeyWord[ms.idxToBeInit] = initializedKeyword
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+			})
+		})
+	} else if (ms.topFewToBeInit !== undefined) {
+		// console.log("initializing few")
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			let promiseArray = new Array()
+			for (let i = 0; i < ms.topFewToBeInit; i++) {
+				promiseArray.push(initialUrl(o.list_KeyWord[i]))
+			}
+			Promise.all(promiseArray).then((list) => {
 				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
 			})
 		})
