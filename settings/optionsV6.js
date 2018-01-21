@@ -424,7 +424,7 @@ function getFeedPlayList() {
             // console.log(list_title);
             Promise.all(pageRequest).then((list) => {
                 list_title = list_title.concat(list)
-                console.log(list_title)
+                // console.log(list_title)
                 resolve(list_title)
             })
         })
