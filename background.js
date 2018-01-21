@@ -291,7 +291,7 @@ function updatePlayListInfo(vInfo, ListPage) {
 
 
 
-// 针对channel的查找页过滤
+// 针对channel的查找页过滤 仅限initial使用
 function filterChannelSearch(list_Keyword, list_SearchResults) {
 	/*\ 
 	|| 根据关键字过滤搜索页
@@ -330,6 +330,12 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 
 			});
 
+			if(list_vInfo.length == 0) {
+				// 我们强行认为第一个就是
+				vInfo = getChannelInfo(doc.find('ol.item-section').children()[0])
+				list_vInfo.push(vInfo);
+			}
+
 		}
 
 
@@ -338,7 +344,83 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 	return list_vInfo;
 }
 
+//过滤播放列表 仅限initial使用
+function filterPlayListSearch(list_Keyword, list_SearchResults) {
+	/*\ 
+	|| 根据关键字过滤搜索页
+	\*/
+    let list_vInfo = new Array();
+    if (list_SearchResults.length != list_Keyword.length) {
+        console.log("-----length neq-----");
+        //长度不等
+        return;
+    }
+    for (let i = 0; i < list_SearchResults.length; i++) {
+        //console.log( "K : " +  i + '------------');
+        // string to Document
+        // doc = $.parseHTML(list_SearchResults[i]);
+        doc = $($(list_SearchResults[i]))
+        if (list_Keyword[i].playList == "") {
+            if (list_Keyword[i].channel == '') {
+                doc.find('[id*=item-section-]').children().each(function (index) {
+                    //console.log("P : " + index + '------------');
+                    //console.log(this);
 
+                    vInfo = getVideoInfo(this);
+                    vInfo.show();
+                    if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+                        // vInfo.show();
+                        list_vInfo.push(vInfo);
+                    } else {
+                        // console.log("not satisfied keyword.");
+                    }
+
+                });
+            } else {
+                // 在频道搜索
+                doc.find('li.feed-item-container.yt-section-hover-container.browse-list-item-container.branded-page-box').each(function (index) {
+                    // console.log( "P : " + index + '------------');
+                    //console.log(this);
+
+                    vInfo = getVideoInfo(this);
+                    if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+                        // vInfo.show();
+                        list_vInfo.push(vInfo);
+                    } else {
+                        // console.log("not satisfied keyword.");
+                    }
+
+                });
+
+            }
+        } else {
+            // playlist不为空
+            doc.find('[id*=item-section-]').children().each(function (index) {
+                // console.log("Pl : " + index + '------------');
+                //console.log(list_Keyword[i].playList);
+
+                vInfo = getPlayListInfo(this);
+                // vInfo.show();
+                if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+                    // vInfo.show();
+                    list_vInfo.push(vInfo);
+                } else {
+                    // console.log("not satisfied keyword.");
+                }
+
+			});
+			
+			if(list_vInfo.length == 0){
+				//强行用第一个作为list
+				vInfo = getPlayListInfo(doc.find('[id*=item-section-]').children()[0]);
+				list_vInfo.push(vInfo);
+			}
+        }
+
+    }
+
+    return list_vInfo;
+}
 
 // 在添加关键字后查找channel或list对应的Url
 function initialUrl(key_word) {
@@ -359,7 +441,7 @@ function initialUrl(key_word) {
 					//key_word.show();
 					console.log("查找play list");
 					////key_word.show();
-					vedio.push.apply(vedio, filterSearch([key_word_local], list_SearchResults));
+					vedio.push.apply(vedio, filterPlayListSearch([key_word_local], list_SearchResults));
 				} else if (key_word.channel != "" && key_word.channelUrl == "") {
 					//key_word.show();
 					console.log("查找channel");
@@ -384,14 +466,15 @@ function initialUrl(key_word) {
 							key_word.channel = vedio[0].channelName;
 							key_word.channelUrl = vedio[0].channelUrl;
 							key_word.playListUrl = vedio[0].videoUrl;
+							key_word.playList = vedio[0].title;
 							console.log("找到play list");
-							//key_word.show();		
+							// console.log(key_word.);		
 						} else if (key_word.channel != "" && key_word.channelUrl == "") {
 
 							key_word.channel = vedio[0].channelName;
 							key_word.channelUrl = vedio[0].channelUrl;
 							console.log("找到Channel");
-							//key_word.show();
+							// key_word.show();
 						}
 						console.log("-------------->");
 						resolve(key_word)

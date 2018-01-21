@@ -395,25 +395,25 @@ function getFeedPlayList() {
                     //是playlist
 
                     // 判断是否为官方主题
-                    let channel = $(this).find("p.guide-item-subtitle").text().trim();
+                    // let channel = $(this).find("p.guide-item-subtitle").text().trim();
 
-                    // 官方主题会以" - Topic"作为结尾
-                    let strTopic = " - Topic";
+                    // // 官方主题会以" - Topic"作为结尾
+                    // let strTopic = " - Topic";
                     
-                    if (channel.slice(-strTopic.length) == strTopic ) {
-                        listURL = "https://www.youtube.com" + $(this).attr("href");
-                        let playListPage = asynHttpRequest("GET", listURL);
-                        pageRequest.push(playListPage.then((ListPage) => {
-                            return new Promise((resolve, reject) => {
+                    // if (channel.slice(-strTopic.length) == strTopic ) {
+                    //     listURL = "https://www.youtube.com" + $(this).attr("href");
+                    //     let playListPage = asynHttpRequest("GET", listURL);
+                    //     pageRequest.push(playListPage.then((ListPage) => {
+                    //         return new Promise((resolve, reject) => {
 
-                                console.log($(ListPage).find("h1.pl-header-title").text())
-                                resolve("≡ | " + $(ListPage).find("h1.pl-header-title").text())
-                            })
-                        }))
-                    } else {
+                    //             console.log($(ListPage).find("h1.pl-header-title").text())
+                    //             resolve("≡ | " + $(ListPage).find("h1.pl-header-title").text())
+                    //         })
+                    //     }))
+                    // } else {
                         
                         list_title.push("≡ | " + $(this).attr("title"));
-                    }
+                    // }
                 
                 }else{
                     //是合集
