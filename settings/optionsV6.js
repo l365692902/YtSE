@@ -384,49 +384,22 @@ function loadSetting() {
 function getFeedPlayList() {
     let url = "https://www.youtube.com/";
     let list_title = new Array();
-    let pageRequest = new Array()
     let homePage = asynHttpRequest("GET", url);
 
     return homePage.then((Page) => {
         return new Promise((resolve, reject) => {
             $(Page).find("a.guide-item.yt-uix-sessionlink.yt-valign.spf-link.has-subtitle").each(function (index) {
                 // console.log($(this).find(".guide-mix-icon").length)
-                if($(this).find(".guide-mix-icon").length <= 0){
+                if ($(this).find(".guide-mix-icon").length <= 0) {
                     //是playlist
-
-                    // 判断是否为官方主题
-                    // let channel = $(this).find("p.guide-item-subtitle").text().trim();
-
-                    // // 官方主题会以" - Topic"作为结尾
-                    // let strTopic = " - Topic";
-                    
-                    // if (channel.slice(-strTopic.length) == strTopic ) {
-                    //     listURL = "https://www.youtube.com" + $(this).attr("href");
-                    //     let playListPage = asynHttpRequest("GET", listURL);
-                    //     pageRequest.push(playListPage.then((ListPage) => {
-                    //         return new Promise((resolve, reject) => {
-
-                    //             console.log($(ListPage).find("h1.pl-header-title").text())
-                    //             resolve("≡ | " + $(ListPage).find("h1.pl-header-title").text())
-                    //         })
-                    //     }))
-                    // } else {
-                        
-                        list_title.push("≡ | " + $(this).attr("title"));
-                    // }
-                
-                }else{
+                    list_title.push("≡ | " + $(this).attr("title"));
+                } else {
                     //是合集
                     list_title.push("‣ | " + $(this).attr("title"));
-                }       
+                }
             });
-        
             // console.log(list_title);
-            Promise.all(pageRequest).then((list) => {
-                list_title = list_title.concat(list)
-                // console.log(list_title)
-                resolve(list_title)
-            })
+            resolve(list_title)
         })
     });
 }
@@ -453,7 +426,7 @@ function handleImportPlaylist() {
 function handleDialogOK() {
     let newList = new Array()
     $($(".ulDialog .liDialog").get().reverse()).each(function (idx, elm) {
-        if($(".labDialog", elm).text()[0] == "≡"){
+        if ($(".labDialog", elm).text()[0] == "≡") {
             let shortOutput = $(".labDialog", elm).text().slice(4)
             let longOutput = shortOutput.replace(/,/g, "\\,")
             shortOutput += ";"
@@ -487,7 +460,7 @@ function handleDialogOK() {
                 $("#ulKeyword").on("sortstop", function () { $("#ulKeyword .labKeyword").tooltip("enable") })
                 newList.unshift(labelToKeyword(0))
             }//if end
-        }else{
+        } else {
             // 是合集
             let shortOutput = $(".labDialog", elm).text().slice(4)
             let longOutput = shortOutput.replace(/,/g, "\\,")
@@ -539,7 +512,7 @@ function handleDialogOK() {
         }
     }).then(() => {
         browser.runtime.sendMessage({ topFewToBeInit: count })
-        
+
     })
 
     $(".ulDialog").empty()
@@ -577,7 +550,7 @@ $(document).ready(function () {
     })
     //setting for function buttons
     $("#ImportPlaylist").on("click", handleImportPlaylist)
-    $("button.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").on("click", ()=>{
+    $("button.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close").on("click", () => {
         $(".ulDialog").empty()
         $("svg").css("display", "inline")
     })
