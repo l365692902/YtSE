@@ -10,7 +10,8 @@
             "32": "icons/red_32.png",
             "64": "icons/red_64.png"
         },
-        "default_title": "left click to run, right click to configure"
+        "default_title": "left click to run, right click to configure",
+        "default_popup":"popup/popup.html"
     },
     "content_scripts": [
         {

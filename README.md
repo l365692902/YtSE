@@ -8,6 +8,16 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan29-L
+* 哇。。。这个星期又差点划水划过去了
+* 基本写好，求bug
+
+## 2018Jan23-L
+* 今天游戏又要开新章了欸
+* 话说所有链接都是直接/watch?v=cqsLR7d8sr4，这种没有主域名的
+* 在popup页面中要注意加上当前的主域名https://www.youtube.com
+* 话说这个主域名会变吗？
+
 ## 2018Jan20-BS
 
 **UI bug report**
