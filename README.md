@@ -8,6 +8,12 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Jan29-BS
+
+目前发现的bug
+* on/off开关失效,总是处于打开状态
+* 存在时间排序错乱问题
+
 ## 2018Jan29-L
 * 哇。。。这个星期又差点划水划过去了
 * 基本写好，求bug
