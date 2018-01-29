@@ -142,7 +142,9 @@ function removeNChar(str) {
 			result += " "; //String.fromCharCode(str.charCodeAt(i)-12256);
 		} else if (str.charCodeAt(i) == 12299) { //》
 			result += " "; //String.fromCharCode(str.charCodeAt(i)-12256);
-		} else {
+		} else if(str.charCodeAt(i) == 35) {  //#
+			result += "%23"; //String.fromCharCode(str.charCodeAt(i)-12256);
+		}else {
 			result += String.fromCharCode(str.charCodeAt(i));
 		}
 	}
