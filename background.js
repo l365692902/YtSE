@@ -496,6 +496,7 @@ function initialUrl(key_word) {
 			}).catch((error) => {
 				// 未知错误
 				console.log(error)
+				browser.runtime.sendMessage({ debugOutput: "error when checking channel url" })
 				key_word.onOff = false
 				resolve(key_word)
 				reject("error when initializing " + key_word.self)
@@ -520,6 +521,7 @@ function initialUrl(key_word) {
 function updateSearchList(list_KeyWord) {
 	// 筛选出符合关键词的视频
 	console.log("start update search list");
+	browser.runtime.sendMessage({ debugOutput: "updating..." })
 	let list_vedio = new Array();
 	searchListOnline(list_KeyWord).then((list_SearchResults) => {
 		//console.log("final:");
@@ -539,6 +541,7 @@ function updateSearchList(list_KeyWord) {
 		//console.log("final:");
 		console.log("num video : ", list_vedio.length);
 		console.log(list_Playlistmainpage.length);
+		browser.runtime.sendMessage({ debugOutput: "got " + list_vedio.length + " video(s)" })
 
 		// 或得playList更新时间
 		for (let i = 0; i < list_KeyWord.length; i++) {
@@ -561,6 +564,9 @@ function updateSearchList(list_KeyWord) {
 		// }
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
+		storageVideo.then(() => {
+			browser.runtime.sendMessage({ updateComplete: "update complete" })
+		})
 	});
 	// //按按钮发消息
 	// browser.tabs.query({

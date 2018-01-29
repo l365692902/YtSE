@@ -40,14 +40,32 @@ function htmlSnippet(videoInfo) {
     </div>'
 }
 
+function debugHtmlSnippet(debugOutput) {
+    return debugOutput + "<br>"
+}
+
+function output(htmlString){
+    if ($("span").hasClass("thumbnail")) {
+        $(".videoList").empty()
+        $(".videoList").append(htmlString)
+        console.log("clean up and append")
+    } else {
+        $(".videoList").append(htmlString)
+        console.log("directly append")
+    }
+}
+
 function handleReload() {
     console.log("reloading...")
-    $(".videoList").empty()
+    output(debugHtmlSnippet("reloading..."))
     browser.storage.local.get("list_vedio").then((o) => {
-        if (o.list_vedio !== undefined) {
+        if (o.list_vedio !== undefined && o.list_vedio.length > 0) {
+            $(".videoList").empty()
             for (let i = 0; i < o.list_vedio.length; i++) {
                 $(".videoList").append(htmlSnippet(o.list_vedio[i]))
             }
+        }else{
+            output(debugHtmlSnippet("no video found"))
         }
     })
 }
@@ -56,8 +74,19 @@ $(document).ready(function () {
         browser.runtime.openOptionsPage()
     })
     $("#update").on("click", function () {
+        if ($("span").hasClass("thumbnail")) {
+            $(".videoList").empty()
+        }
         browser.runtime.sendMessage({ updateAll: true })
     })
     $("#reload").on("click", handleReload)
     handleReload()
+    browser.runtime.onMessage.addListener((ms) => {
+        console.log(ms)
+        if (ms.debugOutput !== undefined) {
+            output(debugHtmlSnippet(ms.debugOutput))
+        } else if (ms.updateComplete !== undefined) {
+            handleReload()
+        }
+    })
 })
