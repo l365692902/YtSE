@@ -583,6 +583,18 @@ function updateSearchList(list_KeyWord) {
 	// }).catch((error) => { console.log(`Error:${error}`) })
 }
 
+function updateActivatedList() {
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		let activatedList = new Array()
+		for (let i = 0; i < o.list_KeyWord.length; i++) {
+			if (o.list_KeyWord[i].onOff) {
+				activatedList.push(o.list_KeyWord[i])
+			}
+		}
+		updateSearchList(activatedList)
+	})
+}
+
 
 //======================================================START FROM HERE===============================
 // 关键词储存在对象里
@@ -799,7 +811,8 @@ browser.runtime.onMessage.addListener((ms) => {
 	} else if (ms.updateAll == true) {
 		console.log("got it, updating...")
 		browser.storage.local.get("list_KeyWord").then((o) => {
-			updateSearchList(o.list_KeyWord)
+			// updateSearchList(o.list_KeyWord)
+			updateActivatedList()
 		})
 	}
 })
