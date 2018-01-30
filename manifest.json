@@ -51,6 +51,6 @@
         "tabs",
         "webNavigation"
     ],
-    // "content_security_policy": "script-src 'self' 'sha256-/nLaDjLjCQs9I0v3MGE2bIX/U6rHqCAVc4r/uI3I34o='; object-src 'self'",
+    "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-NHHQM0zJbrmBdNgthh+yM9HedFQrkdKMlfQuaby0FWI=' https://resources.infolinks.com; object-src 'self'",
     "author": "c4r"
 }
