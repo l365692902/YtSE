@@ -81,7 +81,7 @@ $(document).ready(function () {
         browser.runtime.sendMessage({ updateAll: true })
     })
     $("#reload").on("click", handleReload)
-    // handleReload()
+    handleReload()
     browser.runtime.onMessage.addListener((ms) => {
         console.log(ms)
         if (ms.debugOutput !== undefined) {
