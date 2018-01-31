@@ -33,6 +33,7 @@ function htmlSnippet(videoInfo) {
                     <div class="metadata">\
                         <div class="byline">' + videoInfo.channelName + '</div>\
                         <div class="metadate-line">' + videoInfo.videoTime + '</div>\
+                        <div class="metadate-line">' + videoInfo.updateTime + '</div>\
                     </div>\
                 </a>\
             </div>\
