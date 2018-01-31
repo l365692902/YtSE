@@ -142,9 +142,9 @@ function removeNChar(str) {
 			result += " "; //String.fromCharCode(str.charCodeAt(i)-12256);
 		} else if (str.charCodeAt(i) == 12299) { //》
 			result += " "; //String.fromCharCode(str.charCodeAt(i)-12256);
-		} else if(str.charCodeAt(i) == 35) {  //#
+		} else if (str.charCodeAt(i) == 35) {  //#
 			result += "%23"; //String.fromCharCode(str.charCodeAt(i)-12256);
-		}else {
+		} else {
 			result += String.fromCharCode(str.charCodeAt(i));
 		}
 	}
@@ -803,6 +803,16 @@ browser.runtime.onMessage.addListener((ms) => {
 			let promiseArray = new Array()
 			for (let i = 0; i < ms.topFewToBeInit; i++) {
 				promiseArray.push(initialUrl(o.list_KeyWord[i]))
+			}
+			Promise.all(promiseArray).then((list) => {
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+			})
+		})
+	} else if (ms.bottomFewToBeInit !== undefined) {
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			let promiseArray = new Array()
+			for (let i = 0; i < ms.bottomFewToBeInit; i++) {
+				promiseArray.push(initialUrl(o.list_KeyWord[o.list_KeyWord.length - 1 - i]))
 			}
 			Promise.all(promiseArray).then((list) => {
 				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })

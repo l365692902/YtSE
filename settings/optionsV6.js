@@ -269,6 +269,64 @@ function handleAdd() {
     })
 }
 
+function addListKeyword(listKeyword) {
+    let keywordContent, shortOutput, longOutput, isPlaylist
+    for (let i = 0; i < listKeyword.length; i++) {
+        isPlaylist = false
+        if (listKeyword[i].playList == "") {
+            keywordContent = listKeyword[i].self
+            shortOutput = listKeyword[i].self.join(",") + ";" + listKeyword[i].channel
+        } else {
+            isPlaylist = true
+            keywordContent = listKeyword[i].playList
+            shortOutput = listKeyword[i].playList + ";" + listKeyword[i].channel
+        }
+        longOutput = reverseParseKeyword(keywordContent, listKeyword[i].channel)
+        $("#ulKeyword").append(htmlSnippet(shortOutput, longOutput))
+        $("#ulKeyword .spKeyword:last .labKeyword").prop("longOutput", longOutput)
+        $("#ulKeyword .spKeyword:last .ckOnoff").prop("checked", listKeyword[i].onOff)
+        $("#ulKeyword .spKeyword:last .ckPlaylist").prop("checked", isPlaylist)
+        //add event listener
+        $("#ulKeyword .spKeyword:last .labKeyword").on("dblclick", handleLabel)
+        $("#ulKeyword .spKeyword:last .tfKeyword").on("change", handleTextfieldChange)
+        $("#ulKeyword .spKeyword:last .tfKeyword").on("focusout", handleTextfield)
+        $("#ulKeyword .spKeyword:last .tfKeyword").on("keypress", function (e) {
+            let code = e.keyCode || e.which
+            if (code == 13) { this.blur() }
+        })
+        $("#ulKeyword .spKeyword:last .btDelete").on("click", handleDelete)
+        $("#ulKeyword .spKeyword:last .ckPlaylist").on("click", handlePlaylist)
+        $("#ulKeyword .spKeyword:last .ckOnoff").on("click", handleOnoff)
+        //set tooltip
+        $("#ulKeyword .spKeyword .labKeyword").tooltip({
+            open: function () {
+                if (this.offsetWidth == this.scrollWidth) {
+                    $(this).tooltip("disable")
+                    $(this).tooltip("enable")
+                }
+            }
+        })
+        $("#ulKeyword").on("sortstart", function () { $("#ulKeyword .labKeyword").tooltip("disable") })
+        $("#ulKeyword").on("sortstop", function () { $("#ulKeyword .labKeyword").tooltip("enable") })
+    }
+    //set sort id
+    $("#ulKeyword .liKeyword:visible").each(function (idx, elm) {
+        $(this).prop("id", idx)
+    })
+    //save keyword list
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        let allList
+        if (o.list_KeyWord === undefined) {
+            return browser.storage.local.set({ list_KeyWord: listKeyword })
+        } else {
+            allList = o.list_KeyWord.concat(listKeyword)
+            return browser.storage.local.set({ list_KeyWord: allList })
+        }//maybe don't need to sendMessage, if need check handleAdd()
+    }).then(() => {
+        browser.runtime.sendMessage({ bottomFewToBeInit: listKeyword.length })
+    })
+}
+
 function loadSetting() {
     let prmsSaveList = browser.storage.local.get("list_KeyWord")
     let prmsOffList = browser.storage.local.get("list_OffKeyWord")
@@ -536,8 +594,16 @@ function handleExport() {
     })
 }
 
-function handleImport(){
-
+function handleImport() {
+    // console.log(this.files[0])//debug
+    let settingFile = this.files[0]
+    fileReader = new FileReader()
+    fileReader.readAsText(settingFile)
+    fileReader.onload = (event) => {
+        let parseObj = JSON.parse(event.target.result)
+        // console.log(parseObj)//debug
+        addListKeyword(parseObj)
+    }
 }
 
 $(document).ready(function () {
@@ -576,6 +642,8 @@ $(document).ready(function () {
     })
     $("#DialogOK").on("click", handleDialogOK)
     $("#Export").on("click", handleExport)
+    $("#Import").on("click", function () { $("#flImport").click() })
+    $("#flImport").on("change", handleImport)
 
     loadSetting()
 
