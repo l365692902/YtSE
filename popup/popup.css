@@ -6,6 +6,7 @@
 	overflow-y: scroll;
 	max-height: 600px;
 	min-height: 300px;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
 }
 .row .col {
 	/* [disabled]max-width: 426px; */
@@ -34,10 +35,10 @@ a h3 .video-title {
 	overflow: hidden;
 	display: block;
 	max-height: 3.2rem;
-	font-size: 1.4rem;
+	font-size: 1.3rem;
 	font-weight: 500;
 	margin: 0 0 4px 0;
-	line-height: 1.6rem;
+	line-height: 1.5rem;
 	padding: 0;
 	border: 0;
 	font-family: Roboto,Arial,sans-serif;
@@ -46,9 +47,9 @@ a .metadata .byline {
 	overflow-x: hidden;
 	white-space: nowrap;
 	display: flex;
-	font-size: 1.3rem;
+	font-size: 1.2rem;
 	font-weight: 400;
-	line-height: 1.8rem;
+	line-height: 1.5rem;
 	text-transform: none;
 	text-overflow: ellipsis;
 }
@@ -56,8 +57,8 @@ a .metadata .metadate-line {
 	padding: 0;
 	border: 0;
 	margin: 0;
-	line-height: 1.8rem;
-	font-size: 1.3rem;
+	line-height: 1.5rem;
+	font-size: 1.2rem;
 	font-weight: 400;
 	text-transform: none;
 }

@@ -114,6 +114,15 @@ ul #ulKeyword .liKeyword {
 	font-family: 'Roboto', sans-serif;
 
 }
+ul #ulKeyword .liKeyword:hover  {
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	font-family: 'Roboto', sans-serif;
+	background-color: rgba(230,230,230,1.00);
+
+}
 #ulKeyword .liKeyword .spKeyword {
 	display: flex;
 	justify-content: space-between;
@@ -216,6 +225,10 @@ ul .liDialog .spDialog {
 .spDialog span .ckDialog {
 
 }
+#dlHelp .help {
+	text-indent: 2pc;
+}
+
 
 
 
