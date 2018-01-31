@@ -245,17 +245,21 @@ function updatePlayListInfo(vInfo, ListPage) {
 
 	var Zhtime1 = "最后更新时间：";
 	var Zhtime2 = "更新";
+	var Zhtime3 = "今日更新"
 
 	var Zhftime1 = "上次更新時間：";
 	var Zhftime2 = "更新";
 
 	var Entime1 = "Last updated on ";
 	var Entime2 = "Updated";
+	var Entime3 = "Updated today"
 	// 获取更新时间
 	uptimeObj = $(ListPage).find("div.pl-header-content").find("ul.pl-header-details").find("li").toArray()[3];
 	var uptimeStr = $(uptimeObj).text();
-	//console.log("-----debug--------");
-	//console.log(uptimeStr);
+
+	vInfo.updateTime= uptimeStr
+	// console.log("-----debug--------");
+	// console.log(uptimeStr);
 
 	if (uptimeStr.includes(Zhftime1)) {
 		// 繁体中文 "上次更新時間：xxxx年xx月xx日"
@@ -275,19 +279,32 @@ function updatePlayListInfo(vInfo, ListPage) {
 		var tNow = new Date();
 		vInfo.upTime = convertReTime2Int(timeStr) + tNow.valueOf();;
 
-	} else if (uptimeStr.includes(Entime2)) {
-		// 英文 Last updated on Jul xx,xxxx
-		var timeStr = uptimeStr.substring(Entime2.length);
-
-		vInfo.upTime = convertReTime2Int(timeStr);
-	} else if (uptimeStr.includes(Entime1)) {
-		// 英文 Updated xx days ago
-		var timeStr = uptimeStr.substring(Entime1.length);
+	} else if (uptimeStr.includes(Zhtime3)) {
+		// 中文 "今日更新"
+		// var timeStr = uptimeStr.substring(0, uptimeStr.length - Zhtime2.length);
 		var tNow = new Date();
-		vInfo.upTime = convertAbTime2Int(timeStr) + tNow.valueOf();
+		vInfo.upTime = convertReTime2Int("今日") + tNow.valueOf();
+
+	} else if (uptimeStr.includes(Entime1)) {
+		// 英文 Last updated on Jul xx,xxxx
+		var timeStr = uptimeStr.substring(Entime1.length);
+
+		vInfo.upTime = convertAbTime2Int(timeStr);
+	} else if (uptimeStr.includes(Entime2)) {
+		// 英文 Updated xx days ago
+		var timeStr = uptimeStr.substring(Entime2.length);
+		var tNow = new Date();
+		vInfo.upTime = convertReTime2Int(timeStr) + tNow.valueOf();
+	}else if (uptimeStr.includes(Entime3)) {
+		// 英文 Updated today
+		// var timeStr = uptimeStr.substring(Entime3.length);
+		var tNow = new Date();
+		vInfo.upTime = convertReTime2Int("today") + tNow.valueOf();
 	} else {
 		// 其他语言,没法分析
 		// 或者为空
+		var tNow = new Date();
+		vInfo.upTime = tNow.valueOf();
 	}
 
 }
@@ -372,7 +389,7 @@ function filterPlayListSearch(list_Keyword, list_SearchResults) {
 					//console.log(this);
 
 					vInfo = getVideoInfo(this);
-					vInfo.show();
+					// vInfo.show();
 					if (satisfyKeyWord(list_Keyword[i], vInfo)) {
 						// vInfo.show();
 						list_vInfo.push(vInfo);
@@ -560,10 +577,10 @@ function updateSearchList(list_KeyWord) {
 		list_vedio = videoMergeSort(list_vedio);
 
 		// debug
-		// for (let i = 0; i < list_vedio.length; i++) {
-		// 	console.log("<-----" + i + "-th video----->");
-		// 	list_vedio[i].show();
-		// }
+		for (let i = 0; i < list_vedio.length; i++) {
+			console.log("<-----" + i + "-th video----->");
+			list_vedio[i].show();
+		}
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
 		storageVideo.then(() => {
@@ -608,6 +625,8 @@ function updateActivatedList() {
 // 关键词对应的搜索页面
 
 console.log("开始初始化");
+var tNow = new Date();
+console.log( tNow,tNow.valueOf());
 // 目前只储存两个
 //browser.storage.local.get("list_KeyWord").then((o) => {
 //	if (o.list_KeyWord === undefined) {
