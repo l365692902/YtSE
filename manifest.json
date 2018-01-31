@@ -49,7 +49,8 @@
         "<all_urls>",
         "storage",
         "tabs",
-        "webNavigation"
+        "webNavigation",
+        "downloads"
     ],
     // "content_security_policy": "script-src 'self' 'sha256-/nLaDjLjCQs9I0v3MGE2bIX/U6rHqCAVc4r/uI3I34o='; object-src 'self'",
     "author": "c4r"

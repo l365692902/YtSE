@@ -520,6 +520,26 @@ function handleDialogOK() {
     $("#dialog").dialog("close")
 }
 
+function handleExport() {
+    browser.storage.local.get("list_KeyWord").then((o) => {
+        if (o.list_KeyWord !== undefined) {
+            let jsonString = JSON.stringify(o.list_KeyWord)
+            // console.log(jsonString)
+            let jsonBlob = new Blob([jsonString], { type: "application/json" })
+            browser.downloads.download({
+                url: URL.createObjectURL(jsonBlob),
+                filename: "YtSE_settings.json",
+                conflictAction: "overwrite",
+                saveAs: true
+            })
+        }
+    })
+}
+
+function handleImport(){
+
+}
+
 $(document).ready(function () {
     $(".col > ul").resizable()
     $("button").button()
@@ -555,6 +575,7 @@ $(document).ready(function () {
         $("svg").css("display", "inline")
     })
     $("#DialogOK").on("click", handleDialogOK)
+    $("#Export").on("click", handleExport)
 
     loadSetting()
 
