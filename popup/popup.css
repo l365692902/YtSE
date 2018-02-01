@@ -31,6 +31,9 @@
 	border: 0;
 	margin: 0;
 }
+a {
+	text-decoration: none;
+}
 a h3 .video-title {
 	overflow: hidden;
 	display: block;
@@ -43,6 +46,7 @@ a h3 .video-title {
 	border: 0;
 	font-family: Roboto,Arial,sans-serif;
 }
+
 a .metadata .byline {
 	overflow-x: hidden;
 	white-space: nowrap;
@@ -52,6 +56,7 @@ a .metadata .byline {
 	line-height: 1.5rem;
 	text-transform: none;
 	text-overflow: ellipsis;
+	color: rgba(100,100,100,1.00);
 }
 a .metadata .metadate-line {
 	padding: 0;
@@ -61,6 +66,7 @@ a .metadata .metadate-line {
 	font-size: 1.2rem;
 	font-weight: 400;
 	text-transform: none;
+	color: rgba(100,100,100,1.00);
 }
 .row.bottom {
 	bottom: 0px;
