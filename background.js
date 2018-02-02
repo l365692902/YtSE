@@ -685,7 +685,7 @@ function initialAllUrl() {
 				}
 			}
 			Promise.all(listPromise).then((list) => {
-				browser.storage.local.set({ list_KeyWord: list })
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
 			})
 		}
 	})
