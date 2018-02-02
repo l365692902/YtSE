@@ -646,8 +646,21 @@ function handleImport() {
     }
 }
 
+function handleResize(event, ui) {
+    console.log(ui.size)
+    browser.storage.local.set({ uiSize: ui.size })
+}
+
 $(document).ready(function () {
-    $(".col > ul").resizable()
+    browser.storage.local.get("uiSize").then((o) => {
+        if (o.uiSize !== undefined) {
+            $(".col > ul").css("width", o.uiSize.width)
+            $(".col > ul").css("height", o.uiSize.height)
+        }
+    })
+    $(".col > ul").resizable({
+        stop: handleResize
+    })
     $("button").button()
     $("#dialog").dialog({
         width: 600,
