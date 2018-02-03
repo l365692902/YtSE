@@ -258,8 +258,8 @@ function updatePlayListInfo(vInfo, ListPage) {
 	var uptimeStr = $(uptimeObj).text();
 
 	vInfo.updateTime= uptimeStr
-	// console.log("-----debug--------");
-	// console.log(uptimeStr);
+	console.log("-----debug--------");
+	console.log(uptimeStr);
 
 	if (uptimeStr.includes(Zhftime1)) {
 		// 繁体中文 "上次更新時間：xxxx年xx月xx日"
@@ -279,12 +279,6 @@ function updatePlayListInfo(vInfo, ListPage) {
 		var tNow = new Date();
 		vInfo.upTime = convertReTime2Int(timeStr) + tNow.valueOf();;
 
-	} else if (uptimeStr.includes(Zhtime3)) {
-		// 中文 "今日更新"
-		// var timeStr = uptimeStr.substring(0, uptimeStr.length - Zhtime2.length);
-		var tNow = new Date();
-		vInfo.upTime = convertReTime2Int("今日") + tNow.valueOf();
-
 	} else if (uptimeStr.includes(Entime1)) {
 		// 英文 Last updated on Jul xx,xxxx
 		var timeStr = uptimeStr.substring(Entime1.length);
@@ -295,11 +289,6 @@ function updatePlayListInfo(vInfo, ListPage) {
 		var timeStr = uptimeStr.substring(Entime2.length);
 		var tNow = new Date();
 		vInfo.upTime = convertReTime2Int(timeStr) + tNow.valueOf();
-	}else if (uptimeStr.includes(Entime3)) {
-		// 英文 Updated today
-		// var timeStr = uptimeStr.substring(Entime3.length);
-		var tNow = new Date();
-		vInfo.upTime = convertReTime2Int("today") + tNow.valueOf();
 	} else {
 		// 其他语言,没法分析
 		// 或者为空
