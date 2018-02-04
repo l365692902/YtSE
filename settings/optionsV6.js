@@ -1,35 +1,4 @@
-// abandoned
-// function save() {
-//     console.log("saving...")
-//     let saveList = new Array()
-//     let offList = new Array()
-//     let tempKeyword
-//     $("#ulKeyword .spKeyword:visible").each(function (idx, elm) {
-//         // console.log(idx)
-//         // console.log(elm)
-//         let [keyword, channel] = parseInputLine($(".labKeyword", elm).prop("longOutput"))
-//         if ($(".ckPlaylist", elm).prop("checked")) {
-//             //this is a playlist
-//             tempKeyword = new keyWord([""], channel, keyword.join())
-//         } else {
-//             //this is a keyword
-//             tempKeyword = new keyWord(keyword, channel, "")
-//         }
-//         if ($(".ckOnoff", elm).prop("checked") == false) {
-//             tempKeyword.onOff = false
-//             offList.push(tempKeyword)
-//         } else {
-//             saveList.push(tempKeyword)
-//         }
-//     })
-//     // console.log(saveList)
-//     // console.log("from")
-//     // console.log($("#ulKeyword .spKeyword:visible"))
-//     return Promise.all([
-//         browser.storage.local.set({ list_KeyWord: saveList }),
-//         browser.storage.local.set({ list_OffKeyWord: offList })
-//     ])
-// }
+const limit = 10
 
 function labelToKeyword(index) {
     // console.log("saving one item...")
@@ -94,18 +63,57 @@ function handlePlaylist() {
 }
 
 function handleOnoff() {
+    let offList = new Array()
+    let count = 0
+    let last = 0
     let index = $(this).closest(".liKeyword").index()
-    let isChecked = $(this).prop("checked")
+    let isChecked, isThisChecked = $(this).prop("checked")
+    let wait
+    //check all On/Off checkbox
+    $(".liKeyword").each(function (idx) {
+        isChecked = $(".ckOnoff", this).prop("checked")
+        // console.log(idx + ": " + $(".ckOnoff", this).prop("checked"))//debug
+        //count
+        if ($(".ckOnoff", this).prop("checked")) { count++ }
+        //if greater than limit number, uncheck it
+        if (count > limit) {
+            //great than limit and not present entry
+            if (idx != index) {
+                // console.log("!=")//debug
+                offList.push(idx)
+                $(".ckOnoff", this).prop("checked", false)
+                //present entry is great than limit, uncheck last one
+            } else {
+                // console.log("==")//debug
+                // console.log("last:" + last)//debug
+                $(".liKeyword:eq(" + last + ") .ckOnoff").prop("checked", false)
+                offList.push(last)
+            }
+        }
+        if (isChecked) {
+            last = idx
+            // console.log("lllllast: " + last)//debug
+        }
+    })
+    // console.log(offList)
+
     let save = browser.storage.local.get("list_KeyWord").then((o) => {
-        o.list_KeyWord[index].onOff = isChecked
+        o.list_KeyWord[index].onOff = isThisChecked
+        //save
+        // console.log("saving...................")
+        for (let i = 0; i < offList.length; i++) {
+            o.list_KeyWord[offList[i]].onOff = false
+        }
+        // console.log(o.list_KeyWord)
         return browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
     })
-    if (isChecked) {
+    if (isThisChecked) {
         save.then(() => {
             browser.runtime.sendMessage({ idxToBeInit: index })
         })
     }
 }
+
 
 //subtle save version done
 function handleTextfieldChange() {
@@ -225,9 +233,17 @@ function handleAdd() {
     let shortOutput = keyword.join(",") + ";" + channel
     // console.log(longOutput)
     // console.log(shortOutput)
+    //count how many ON
+    let countOnOff = 0
+    $(".liKeyword").each(function () { if ($(".ckOnoff", this).prop("checked")) { countOnOff++ } })
     $("#ulKeyword").prepend(htmlSnippet(shortOutput, longOutput))
     $("#ulKeyword .spKeyword:first .labKeyword").prop("longOutput", longOutput)
-    $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+    //turn it on or off
+    if (countOnOff < limit) {
+        $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+    } else {
+        $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", false)
+    }
 
     // console.log($("#ulKeyword span:first"))
     //add event listener
@@ -270,7 +286,7 @@ function handleAdd() {
 }
 
 function addListKeyword(listKeyword) {
-    let keywordContent, shortOutput, longOutput, isPlaylist
+    let keywordContent, shortOutput, longOutput, isPlaylist, countOnOff
     for (let i = 0; i < listKeyword.length; i++) {
         isPlaylist = false
         if (listKeyword[i].playList == "") {
@@ -282,9 +298,19 @@ function addListKeyword(listKeyword) {
             shortOutput = listKeyword[i].playList + ";" + listKeyword[i].channel
         }
         longOutput = reverseParseKeyword(keywordContent, listKeyword[i].channel)
+        //count how many ON
+        countOnOff = 0
+        $(".liKeyword").each(function () { if ($(".ckOnoff", this).prop("checked")) { countOnOff++ } })
         $("#ulKeyword").append(htmlSnippet(shortOutput, longOutput))
         $("#ulKeyword .spKeyword:last .labKeyword").prop("longOutput", longOutput)
-        $("#ulKeyword .spKeyword:last .ckOnoff").prop("checked", listKeyword[i].onOff)
+        if (countOnOff < limit) {
+            // console.log(countOnOff + ": " + i + ": false")
+            $("#ulKeyword .spKeyword:last .ckOnoff").prop("checked", listKeyword[i].onOff)
+        } else {
+            // console.log(countOnOff + ": " + i + ": " + listKeyword[i].onOff)
+            $("#ulKeyword .spKeyword:last .ckOnoff").prop("checked", false)
+            listKeyword[i].onOff = false
+        }
         $("#ulKeyword .spKeyword:last .ckPlaylist").prop("checked", isPlaylist)
         //add event listener
         $("#ulKeyword .spKeyword:last .labKeyword").on("dblclick", handleLabel)
@@ -483,6 +509,7 @@ function handleImportPlaylist() {
 
 function handleDialogOK() {
     let newList = new Array()
+    let countOnOff
     $($(".ulDialog .liDialog").get().reverse()).each(function (idx, elm) {
         if ($(".labDialog", elm).text()[0] == "≡") {
             let shortOutput = $(".labDialog", elm).text().slice(4)
@@ -490,9 +517,15 @@ function handleDialogOK() {
             shortOutput += ";"
             longOutput += ";"
             if ($(".ckDialog", elm).prop("checked")) {
+                countOnOff = 0
+                $(".liKeyword").each(function () { if ($(".ckOnoff", this).prop("checked")) { countOnOff++ } })
                 $("#ulKeyword").prepend(htmlSnippet(shortOutput, longOutput))
                 $("#ulKeyword .spKeyword:first .labKeyword").prop("longOutput", longOutput)
-                $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+                if (countOnOff < limit) {
+                    $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+                } else {
+                    $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", false)
+                }
                 $("#ulKeyword .spKeyword:first .ckPlaylist").prop("checked", true)
                 //add event listener
                 $("#ulKeyword .spKeyword:first .labKeyword").on("dblclick", handleLabel)
@@ -525,9 +558,16 @@ function handleDialogOK() {
             shortOutput += ";"
             longOutput += ";"
             if ($(".ckDialog", elm).prop("checked")) {
+                countOnOff = 0
+                $(".liKeyword").each(function () { if ($(".ckOnoff", this).prop("checked")) { countOnOff++ } })
+
                 $("#ulKeyword").prepend(htmlSnippet(shortOutput, longOutput))
                 $("#ulKeyword .spKeyword:first .labKeyword").prop("longOutput", longOutput)
-                $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+                if (countOnOff < limit) {
+                    $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", true)
+                } else {
+                    $("#ulKeyword .spKeyword:first .ckOnoff").prop("checked", false)
+                }
                 $("#ulKeyword .spKeyword:first .ckPlaylist").prop("checked", false)
                 //add event listener
                 $("#ulKeyword .spKeyword:first .labKeyword").on("dblclick", handleLabel)
@@ -606,8 +646,21 @@ function handleImport() {
     }
 }
 
+function handleResize(event, ui) {
+    console.log(ui.size)
+    browser.storage.local.set({ uiSize: ui.size })
+}
+
 $(document).ready(function () {
-    $(".col > ul").resizable()
+    browser.storage.local.get("uiSize").then((o) => {
+        if (o.uiSize !== undefined) {
+            $(".col > ul").css("width", o.uiSize.width)
+            $(".col > ul").css("height", o.uiSize.height)
+        }
+    })
+    $(".col > ul").resizable({
+        stop: handleResize
+    })
     $("button").button()
     $("#dialog").dialog({
         width: 600,

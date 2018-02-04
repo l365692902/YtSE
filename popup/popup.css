@@ -3,7 +3,7 @@
 	width: 435px;
 	/* [disabled]height: 600px; */
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 	max-height: 600px;
 	min-height: 300px;
 	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
@@ -83,7 +83,7 @@ a .metadata .metadate-line {
 .row.bottom .spButton .btGroup {
 	margin: 0;
 	padding: 0;
-	width: 140px;
+	width: 145px;
 	position: relative;
 	border: 0;
 	display: inline-block;

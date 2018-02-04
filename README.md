@@ -8,6 +8,18 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Feb03-L
+* 修改过.js后如果不reload插件, 可能会出现TypeError:can't access dead object
+* 产生原因是firefox的防内存泄漏机制，firefox推荐使用weak references存储DOM，Components.utils.getWeakReference
+* 不知道会不会成为隐患
+* 测试的时候如果点delete点超级快。。。然后马上刷新。。可能会出现最后一两项没删掉的情况。。。待测试
+
+
+## 2018Feb02-L
+* git 的.gitignore文件会被同步到远端
+* 而同样功能，同样语法的./git/info/exclude 不会同步到远端
+* 只在本地忽略某些文件的话使用excule，比如我在本地忽略了YtSE_settings.json
+
 ## 2018Jan29-BS
 
 目前发现的bug
