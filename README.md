@@ -8,6 +8,34 @@ YouTube subscribe extension
 
 * dim the uninteresting content or make it 50% transpatent
 
+## 2018Feb03-L
+* 修改过.js后如果不reload插件, 可能会出现TypeError:can't access dead object
+* 产生原因是firefox的防内存泄漏机制，firefox推荐使用weak references存储DOM，Components.utils.getWeakReference
+* 不知道会不会成为隐患
+* 测试的时候如果点delete点超级快。。。然后马上刷新。。可能会出现最后一两项没删掉的情况。。。待测试
+
+
+## 2018Feb02-L
+* git 的.gitignore文件会被同步到远端
+* 而同样功能，同样语法的./git/info/exclude 不会同步到远端
+* 只在本地忽略某些文件的话使用excule，比如我在本地忽略了YtSE_settings.json
+
+## 2018Jan29-BS
+
+目前发现的bug
+* on/off开关失效,总是处于打开状态
+* 存在时间排序错乱问题
+
+## 2018Jan29-L
+* 哇。。。这个星期又差点划水划过去了
+* 基本写好，求bug
+
+## 2018Jan23-L
+* 今天游戏又要开新章了欸
+* 话说所有链接都是直接/watch?v=cqsLR7d8sr4，这种没有主域名的
+* 在popup页面中要注意加上当前的主域名https://www.youtube.com
+* 话说这个主域名会变吗？
+
 ## 2018Jan20-BS
 
 **UI bug report**

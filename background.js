@@ -142,6 +142,8 @@ function removeNChar(str) {
 			result += " "; //String.fromCharCode(str.charCodeAt(i)-12256);
 		} else if (str.charCodeAt(i) == 12299) { //》
 			result += " "; //String.fromCharCode(str.charCodeAt(i)-12256);
+		} else if (str.charCodeAt(i) == 35) {  //#
+			result += "%23"; //String.fromCharCode(str.charCodeAt(i)-12256);
 		} else {
 			result += String.fromCharCode(str.charCodeAt(i));
 		}
@@ -243,17 +245,21 @@ function updatePlayListInfo(vInfo, ListPage) {
 
 	var Zhtime1 = "最后更新时间：";
 	var Zhtime2 = "更新";
+	var Zhtime3 = "今日更新"
 
 	var Zhftime1 = "上次更新時間：";
 	var Zhftime2 = "更新";
 
 	var Entime1 = "Last updated on ";
 	var Entime2 = "Updated";
+	var Entime3 = "Updated today"
 	// 获取更新时间
 	uptimeObj = $(ListPage).find("div.pl-header-content").find("ul.pl-header-details").find("li").toArray()[3];
 	var uptimeStr = $(uptimeObj).text();
-	//console.log("-----debug--------");
-	//console.log(uptimeStr);
+
+	vInfo.updateTime= uptimeStr
+	console.log("-----debug--------");
+	console.log(uptimeStr);
 
 	if (uptimeStr.includes(Zhftime1)) {
 		// 繁体中文 "上次更新時間：xxxx年xx月xx日"
@@ -273,19 +279,21 @@ function updatePlayListInfo(vInfo, ListPage) {
 		var tNow = new Date();
 		vInfo.upTime = convertReTime2Int(timeStr) + tNow.valueOf();;
 
-	} else if (uptimeStr.includes(Entime2)) {
-		// 英文 Last updated on Jul xx,xxxx
-		var timeStr = uptimeStr.substring(Entime2.length);
-
-		vInfo.upTime = convertReTime2Int(timeStr);
 	} else if (uptimeStr.includes(Entime1)) {
-		// 英文 Updated xx days ago
+		// 英文 Last updated on Jul xx,xxxx
 		var timeStr = uptimeStr.substring(Entime1.length);
+
+		vInfo.upTime = convertAbTime2Int(timeStr);
+	} else if (uptimeStr.includes(Entime2)) {
+		// 英文 Updated xx days ago
+		var timeStr = uptimeStr.substring(Entime2.length);
 		var tNow = new Date();
-		vInfo.upTime = convertAbTime2Int(timeStr) + tNow.valueOf();
+		vInfo.upTime = convertReTime2Int(timeStr) + tNow.valueOf();
 	} else {
 		// 其他语言,没法分析
 		// 或者为空
+		var tNow = new Date();
+		vInfo.upTime = tNow.valueOf();
 	}
 
 }
@@ -331,7 +339,7 @@ function filterChannelSearch(list_Keyword, list_SearchResults) {
 
 			});
 
-			if(list_vInfo.length == 0) {
+			if (list_vInfo.length == 0) {
 				// 我们强行认为第一个就是
 				console.log("smart choose")
 				vInfo = getChannelInfo(doc.find('ol.item-section').children()[0])
@@ -352,78 +360,78 @@ function filterPlayListSearch(list_Keyword, list_SearchResults) {
 	/*\ 
 	|| 根据关键字过滤搜索页
 	\*/
-    let list_vInfo = new Array();
-    if (list_SearchResults.length != list_Keyword.length) {
-        console.log("-----length neq-----");
-        //长度不等
-        return;
-    }
-    for (let i = 0; i < list_SearchResults.length; i++) {
-        //console.log( "K : " +  i + '------------');
-        // string to Document
-        // doc = $.parseHTML(list_SearchResults[i]);
-        doc = $($(list_SearchResults[i]))
-        if (list_Keyword[i].playList == "") {
-            if (list_Keyword[i].channel == '') {
-                doc.find('[id*=item-section-]').children().each(function (index) {
-                    //console.log("P : " + index + '------------');
-                    //console.log(this);
+	let list_vInfo = new Array();
+	if (list_SearchResults.length != list_Keyword.length) {
+		console.log("-----length neq-----");
+		//长度不等
+		return;
+	}
+	for (let i = 0; i < list_SearchResults.length; i++) {
+		//console.log( "K : " +  i + '------------');
+		// string to Document
+		// doc = $.parseHTML(list_SearchResults[i]);
+		doc = $($(list_SearchResults[i]))
+		if (list_Keyword[i].playList == "") {
+			if (list_Keyword[i].channel == '') {
+				doc.find('[id*=item-section-]').children().each(function (index) {
+					//console.log("P : " + index + '------------');
+					//console.log(this);
 
-                    vInfo = getVideoInfo(this);
-                    vInfo.show();
-                    if (satisfyKeyWord(list_Keyword[i], vInfo)) {
-                        // vInfo.show();
-                        list_vInfo.push(vInfo);
-                    } else {
-                        // console.log("not satisfied keyword.");
-                    }
+					vInfo = getVideoInfo(this);
+					// vInfo.show();
+					if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+						// vInfo.show();
+						list_vInfo.push(vInfo);
+					} else {
+						// console.log("not satisfied keyword.");
+					}
 
-                });
-            } else {
-                // 在频道搜索
-                doc.find('li.feed-item-container.yt-section-hover-container.browse-list-item-container.branded-page-box').each(function (index) {
-                    // console.log( "P : " + index + '------------');
-                    //console.log(this);
+				});
+			} else {
+				// 在频道搜索
+				doc.find('li.feed-item-container.yt-section-hover-container.browse-list-item-container.branded-page-box').each(function (index) {
+					// console.log( "P : " + index + '------------');
+					//console.log(this);
 
-                    vInfo = getVideoInfo(this);
-                    if (satisfyKeyWord(list_Keyword[i], vInfo)) {
-                        // vInfo.show();
-                        list_vInfo.push(vInfo);
-                    } else {
-                        // console.log("not satisfied keyword.");
-                    }
+					vInfo = getVideoInfo(this);
+					if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+						// vInfo.show();
+						list_vInfo.push(vInfo);
+					} else {
+						// console.log("not satisfied keyword.");
+					}
 
-                });
+				});
 
-            }
-        } else {
-            // playlist不为空
-            doc.find('[id*=item-section-]').children().each(function (index) {
-                // console.log("Pl : " + index + '------------');
-                //console.log(list_Keyword[i].playList);
+			}
+		} else {
+			// playlist不为空
+			doc.find('[id*=item-section-]').children().each(function (index) {
+				// console.log("Pl : " + index + '------------');
+				//console.log(list_Keyword[i].playList);
 
-                vInfo = getPlayListInfo(this);
-                // vInfo.show();
-                if (satisfyKeyWord(list_Keyword[i], vInfo)) {
-                    // vInfo.show();
-                    list_vInfo.push(vInfo);
-                } else {
-                    // console.log("not satisfied keyword.");
-                }
+				vInfo = getPlayListInfo(this);
+				// vInfo.show();
+				if (satisfyKeyWord(list_Keyword[i], vInfo)) {
+					// vInfo.show();
+					list_vInfo.push(vInfo);
+				} else {
+					// console.log("not satisfied keyword.");
+				}
 
 			});
-			
-			if(list_vInfo.length == 0){
+
+			if (list_vInfo.length == 0) {
 				//强行用第一个作为list
 				console.log("smart choose")
 				vInfo = getPlayListInfo(doc.find('[id*=item-section-]').children()[0]);
 				list_vInfo.push(vInfo);
 			}
-        }
+		}
 
-    }
+	}
 
-    return list_vInfo;
+	return list_vInfo;
 }
 
 // 在添加关键字后查找channel或list对应的Url
@@ -487,7 +495,7 @@ function initialUrl(key_word) {
 					} else {
 						//没有查找到list
 						console.log("没有找到Url");
-						key_word.onOff=false
+						key_word.onOff = false
 						resolve(key_word)
 						reject("error when initializing " + key_word.self)
 					}
@@ -496,7 +504,8 @@ function initialUrl(key_word) {
 			}).catch((error) => {
 				// 未知错误
 				console.log(error)
-				key_word.onOff=false
+				browser.runtime.sendMessage({ debugOutput: "error when checking channel url" })
+				key_word.onOff = false
 				resolve(key_word)
 				reject("error when initializing " + key_word.self)
 
@@ -508,7 +517,7 @@ function initialUrl(key_word) {
 		} else {
 			// 空keyword
 			console.log("empty Playlist or channel name")
-			key_word.onOff=false
+			key_word.onOff = false
 			resolve(key_word)
 			reject("error when initializing empty keyword")
 		}
@@ -520,6 +529,7 @@ function initialUrl(key_word) {
 function updateSearchList(list_KeyWord) {
 	// 筛选出符合关键词的视频
 	console.log("start update search list");
+	browser.runtime.sendMessage({ debugOutput: "updating..." })
 	let list_vedio = new Array();
 	searchListOnline(list_KeyWord).then((list_SearchResults) => {
 		//console.log("final:");
@@ -539,6 +549,7 @@ function updateSearchList(list_KeyWord) {
 		//console.log("final:");
 		console.log("num video : ", list_vedio.length);
 		console.log(list_Playlistmainpage.length);
+		browser.runtime.sendMessage({ debugOutput: "got " + list_vedio.length + " video(s)" })
 
 		// 或得playList更新时间
 		for (let i = 0; i < list_KeyWord.length; i++) {
@@ -555,12 +566,15 @@ function updateSearchList(list_KeyWord) {
 		list_vedio = videoMergeSort(list_vedio);
 
 		// debug
-		// for (let i = 0; i < list_vedio.length; i++) {
-		// 	console.log("<-----" + i + "-th video----->");
-		// 	list_vedio[i].show();
-		// }
+		for (let i = 0; i < list_vedio.length; i++) {
+			console.log("<-----" + i + "-th video----->");
+			list_vedio[i].show();
+		}
 		//let  storageVideo = browser.storage.local.set({ObjListVideo:{list_vedio}});
 		let storageVideo = browser.storage.local.set({ list_vedio });
+		storageVideo.then(() => {
+			browser.runtime.sendMessage({ updateComplete: "update complete" })
+		})
 	});
 	// //按按钮发消息
 	// browser.tabs.query({
@@ -573,6 +587,18 @@ function updateSearchList(list_KeyWord) {
 	// 		)
 	// 	}
 	// }).catch((error) => { console.log(`Error:${error}`) })
+}
+
+function updateActivatedList() {
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		let activatedList = new Array()
+		for (let i = 0; i < o.list_KeyWord.length; i++) {
+			if (o.list_KeyWord[i].onOff) {
+				activatedList.push(o.list_KeyWord[i])
+			}
+		}
+		updateSearchList(activatedList)
+	})
 }
 
 
@@ -588,6 +614,8 @@ function updateSearchList(list_KeyWord) {
 // 关键词对应的搜索页面
 
 console.log("开始初始化");
+var tNow = new Date();
+console.log( tNow,tNow.valueOf());
 // 目前只储存两个
 //browser.storage.local.get("list_KeyWord").then((o) => {
 //	if (o.list_KeyWord === undefined) {
@@ -646,7 +674,7 @@ function initialAllUrl() {
 				}
 			}
 			Promise.all(listPromise).then((list) => {
-				browser.storage.local.set({ list_KeyWord: list })
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
 			})
 		}
 	})
@@ -754,19 +782,13 @@ browser.tabs.onUpdated.addListener(handleTabUpdate);
 
 
 browser.browserAction.onClicked.addListener(() => {
-	browser.runtime.openOptionsPage()
+	// browser.runtime.openOptionsPage()
 
-	// browser.storage.local.get("list_KeyWord").then((o) => {
-	// 	// let tempList = o.list_KeyWord
-	// 	let listPromise = new Array()
-	// 	for (let i = 0; i < o.list_KeyWord.length; i++) {
-	// 		// searchChannelNum(list_KeyWord[i]);
-	// 		listPromise.push(initialUrl(o.list_KeyWord[i]))
-	// 	}
-	// 	Promise.all(listPromise).then((list_KeyWord) => {
-	// 		updateSearchList(list_KeyWord);
-	// 	})
-	// })
+	browser.storage.local.get("list_KeyWord").then((o) => {
+		if (o.list_KeyWord !== undefined) {
+			updateSearchList(o.list_KeyWord);
+		}
+	})
 
 	// getFeedPlayList();
 
@@ -793,6 +815,22 @@ browser.runtime.onMessage.addListener((ms) => {
 			Promise.all(promiseArray).then((list) => {
 				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
 			})
+		})
+	} else if (ms.bottomFewToBeInit !== undefined) {
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			let promiseArray = new Array()
+			for (let i = 0; i < ms.bottomFewToBeInit; i++) {
+				promiseArray.push(initialUrl(o.list_KeyWord[o.list_KeyWord.length - 1 - i]))
+			}
+			Promise.all(promiseArray).then((list) => {
+				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
+			})
+		})
+	} else if (ms.updateAll == true) {
+		console.log("got it, updating...")
+		browser.storage.local.get("list_KeyWord").then((o) => {
+			// updateSearchList(o.list_KeyWord)
+			updateActivatedList()
 		})
 	}
 })

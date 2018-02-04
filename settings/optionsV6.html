@@ -45,6 +45,7 @@
 						<input type="button" class="btGroup" id="ImportPlaylist" value="Import Playlist">
 						<input type="button" class="btGroup" id="Import" value="Import Settings">
 						<input type="button" class="btGroup" id="Export" value="Export Settings">
+						<input type="file" id="flImport" style="display:none" accept=".json">
 					</span>
 				</li>
 			</ul>
@@ -73,7 +74,27 @@
 		<button id="DialogOK">OK</button>
 	</div>
 	<div class="row" id="dlHelp">
-		<label>爸爸去哪儿5;完整版;ENG SUB", "湖南卫视芒果TV官方频道 China HunanTV Official Channel</label>
+		<h3>Keyword example:</h3>
+		<p class="help">
+			keyword1<b>,</b> keyword2<b>,</b> keyword3<b>;</b> channel name
+		</p>
+		<h4>Rules:</h4>
+		<ul>
+			<li>Search results will match all keywords</li>
+			<li>Every entry should have at least one keyword</li>
+			<li>Every entry should have channle name, except it is a playlist</li>
+			<li>Separate multiple keywords with comma(<b>,</b>)</li>
+			<li>Separate keywords and channel name with colon(<b>;</b>)</li>
+			<li>Prefix comma and colon (<b>,;</b>) with backslash(<b>\</b>), if your keywords contain them i.e. key<b>\,</b>word1 NOT key<b>,</b>word1.</li>
+		</ul>
+		<h5>Tips</h5>
+		<ul>
+			<li>Double click on keywords can toggle editing</li>
+			<li>Drag to sort</li>
+			<li>Invalid channel name will turn off that entry, so check your spell and turn it on manually</li>
+			<li>In order to Import your Playlist, please stay logged in YouTube</li>
+			<li>For performance considerations, up to 10 entries are allowed, the excesses will be turned off</li>
+		</ul>
 	</div>
 
 </body>
