@@ -60,7 +60,7 @@ function searchListOnline(list) {
 				if (list[i].channelUrl != "") {
 					url = "https://www.youtube.com/" + list[i].channelUrl + "/search?sp=CAISAhAB&query=" + removeNCharInArray(list[i].self).join(' ');
 					console.log(i + "th " + url);
-					list_p[i] = asynHttpRequest("GET", url);
+					list_p[i] = asynHttpRequestDelay("GET", url);
 				} else {
 					// 需要更新channel信息
 					//console.log("need update channel info 1");
@@ -69,14 +69,14 @@ function searchListOnline(list) {
 			} else {
 				url = "https://www.youtube.com/results?sp=CAI%253D&search_query=" + removeNCharInArray(list[i].self).join(' ');
 				console.log(i + "th " + url);
-				list_p[i] = asynHttpRequest("GET", url);
+				list_p[i] = asynHttpRequestDelay("GET", url);
 			}
 		} else if (list[i].playList != "") {
 			// 对list进行查询
 			//console.log("debug : list");
 			url = "https://www.youtube.com/results?sp=EgIQAw%253D%253D&search_query=" + removeNChar(list[i].playList);
 			console.log(i + "th " + url);
-			list_p[i] = asynHttpRequest("GET", url);
+			list_p[i] = asynHttpRequestDelay("GET", url);
 
 
 		} else {
@@ -84,7 +84,7 @@ function searchListOnline(list) {
 			//console.log("need update channel info 2");
 			url = "https://www.youtube.com/results?sp=EgIQAg%253D%253D&search_query=" + removeNChar(list[i].channel);
 			console.log(i + "th " + url);
-			list_p[i] = asynHttpRequest("GET", url);
+			list_p[i] = asynHttpRequestDelay("GET", url);
 		}
 	}
 	return Promise.all(list_p);
@@ -114,7 +114,7 @@ function searchPlayListOnline(list) {
 			// 对list进行查询
 
 			url_list = "https://www.youtube.com" + list[i].playListUrl;
-			list_playList[i] = asynHttpRequest("GET", url_list);
+			list_playList[i] = asynHttpRequestDelay("GET", url_list);
 
 		} else {
 			// 只含有channel信息,返回空
@@ -616,6 +616,9 @@ function updateActivatedList() {
 console.log("开始初始化");
 var tNow = new Date();
 console.log( tNow,tNow.valueOf());
+
+numOfQueueHttp = 0;
+
 // 目前只储存两个
 //browser.storage.local.get("list_KeyWord").then((o) => {
 //	if (o.list_KeyWord === undefined) {
