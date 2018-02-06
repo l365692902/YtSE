@@ -810,7 +810,9 @@ browser.runtime.onMessage.addListener((ms) => {
 		browser.storage.local.get("list_KeyWord").then((o) => {
 			let promiseArray = new Array()
 			for (let i = 0; i < ms.topFewToBeInit; i++) {
-				promiseArray.push(initialUrl(o.list_KeyWord[i]))
+				if (o.list_KeyWord[i].onOff) {
+					promiseArray.push(initialUrl(o.list_KeyWord[i]))
+				}
 			}
 			Promise.all(promiseArray).then((list) => {
 				browser.storage.local.set({ list_KeyWord: o.list_KeyWord })
