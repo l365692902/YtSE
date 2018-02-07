@@ -51,6 +51,8 @@ function searchListOnline(list) {
 	// console.log("debug : " + list.length);
 
 	for (let i = 0; i < list.length; i++) {
+
+		
 		//console.log("debug : " + i);
 		//list[i].show();
 		if (list[i].self.join() != "") {
@@ -86,6 +88,26 @@ function searchListOnline(list) {
 			console.log(i + "th " + url);
 			list_p[i] = asynHttpRequestDelay("GET", url);
 		}
+
+		// UI输出
+		list_p[i].then(()=>{
+			let max_strOut = 10;
+			let strOut = "searching : ";
+			// browser.runtime.sendMessage({ debugOutput: "searching" })
+			if(list[i].self.join(' ').length +list[i].playList.length > max_strOut){
+				strOut += (list[i].self.join(' ') +list[i].playList).substring(0,max_strOut) +"...";
+			}else{
+				strOut += (list[i].self.join(' ') +list[i].playList);
+			}
+			strOut += " ";
+			if(list[i].channel.length > max_strOut){
+				strOut += list[i].channel.substring(0,max_strOut) +"..."
+
+			}else{
+				strOut += list[i].channel
+			}			
+			browser.runtime.sendMessage({ debugOutput: strOut})
+		})
 	}
 	return Promise.all(list_p);
 }
@@ -846,6 +868,8 @@ browser.runtime.onMessage.addListener((ms) => {
 		browser.storage.local.get("list_KeyWord").then((o) => {
 			// updateSearchList(o.list_KeyWord)
 			updateActivatedList()
+
+
 		})
 	}
 })
