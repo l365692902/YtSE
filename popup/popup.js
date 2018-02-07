@@ -75,10 +75,21 @@ $(document).ready(function () {
         browser.runtime.openOptionsPage()
     })
     $("#update").on("click", function () {
-        if ($("span").hasClass("thumbnail")) {
-            $(".videoList").empty()
+        // console.log($(".videoList").attr("status"));
+        if($(".videoList").attr("status") == "updated"){
+
+            $(".videoList").attr("status","updating");
+
+            if ($("span").hasClass("thumbnail")) {
+                $(".videoList").empty()
+            }
+            browser.runtime.sendMessage({ updateAll: true })
+            browser.runtime.onMessage.addListener((ms) => {
+                if (ms.updateComplete !== undefined) {
+                    $(".videoList").attr("status","updated");
+                }                
+            })
         }
-        browser.runtime.sendMessage({ updateAll: true })
     })
     $("#reload").on("click", handleReload)
     handleReload()
