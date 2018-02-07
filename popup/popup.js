@@ -91,7 +91,7 @@ $(document).ready(function () {
             })
         }
     })
-    $("#reload").on("click", handleReload)
+    // $("#reload").on("click", handleReload)
     handleReload()
     browser.runtime.onMessage.addListener((ms) => {
         console.log(ms)
