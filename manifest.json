@@ -6,11 +6,11 @@
     "browser_action": {
         "browser_style": true,
         "default_icon": {
-            "16": "icons/red_16.png",
-            "32": "icons/red_32.png",
-            "64": "icons/red_64.png"
+            "16": "icons/c4r_16.png",
+            "32": "icons/c4r_32.png",
+            "64": "icons/c4r_64.png"
         },
-        "default_title": "left click to run, right click to configure",
+        "default_title": "Youtube Filter",
         "default_popup":"popup/popup.html"
     },
     "content_scripts": [
@@ -34,8 +34,8 @@
         ]
     },
     "icons": {
-        "48": "icons/red_48.png",
-        "96": "icons/red_96.png"
+        "48": "icons/c4r_48.png",
+        "96": "icons/c4r_96.png"
     },
     "options_ui": {
         "page": "settings/optionsV6.html",
