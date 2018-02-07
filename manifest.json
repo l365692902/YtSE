@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "YtSE",
+    "name": "YouTube Filter",
     "description": "YouTube subscribe extension, highlight interesting contents",
     "version": "2017Dec17.alpha001",
     "browser_action": {
