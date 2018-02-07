@@ -690,20 +690,28 @@ function updateSearchListIterator(timeGap) {
 	console.log("updat time : ", Now);
 	// updateSearchList(list_KeyWord);
 	browser.storage.local.get("list_KeyWord").then((o) => {
+		
 		if (o.list_KeyWord !== undefined) {
+			let activatedList = new Array()
 			console.log("updating...")
-			updateSearchList(o.list_KeyWord);
+			for (let i = 0; i < o.list_KeyWord.length; i++) {
+				if (o.list_KeyWord[i].onOff) {
+					activatedList.push(o.list_KeyWord[i])
+				}
+			}			
+			updateSearchList(activatedList);
 		}
 	})
 	setTimeout(() => { updateSearchListIterator(timeGap) }, timeGap)
+
 }
 
 initialAllUrl()
 let timeGap = 5 * 60 * 1000; // 5 min
-// setTimeout(() => {
-// 	console.log("First Search List");
-// 	updateSearchListIterator(timeGap);
-// }, 60 * 1000); //浏览器启动一分钟后再执行
+setTimeout(() => {
+	// console.log("First Search List");
+	updateSearchListIterator(timeGap);
+}, 5 * 1000); //浏览器启动5秒后再执行
 
 
 // browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
